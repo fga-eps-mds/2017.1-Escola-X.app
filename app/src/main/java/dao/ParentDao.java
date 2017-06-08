@@ -14,9 +14,7 @@ public class ParentDao extends SQLiteOpenHelper {
     private static final int VERSION = 42;
     private static ParentDao instance = null;
 
-    public static final String PARENT = "Parent";
-    private static final String DROP_TABLE_PARENT = "DROP TABLE IF EXISTS " + PARENT;
-
+    private static final String PARENT = "Parent";
     private static final String NAME_PARENT = "[nameParent]";
     private static final String PHONE_PARENT = "[phoneParent]";
     private static final String PARENT_ID = "[IDParent]";
@@ -49,20 +47,25 @@ public class ParentDao extends SQLiteOpenHelper {
 
     }
 
-    /*public boolean insertParent (Parent parent) {
+    /*public List<Alumn> getAllAlumns() {
+
+        List<Alumn> alumnList = new ArrayList<Alumn>();
 
         SQLiteDatabase database = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(PARENT_ID, parent.getIdParent());
-        contentValues.put(NAME_PARENT, parent.getName());
-        contentValues.put(PHONE_PARENT, parent.getPhone());
+        Cursor cursor = database.rawQuery("SELECT * FROM " + ALUMN_TABLE,null);
 
-        long result = database.insert(PARENT,null,contentValues);
-        database.close();
-        if(result == -1){
-            return false;
-        }else {
-            return true;
+        while(cursor.moveToNext()) {
+
+            Alumn alumn = new Alumn();
+
+            alumn.setIdAlumn(cursor.getInt(cursor.getColumnIndex("IDAlumn")));
+            alumn.setName(cursor.getString(cursor.getColumnIndex("nameAlumn")));
+            alumn.setPhone(cursor.getString(cursor.getColumnIndex("phoneAlumn")));
+            alumn.setRegistry(cursor.getInt(cursor.getColumnIndex("registry_alumn")));
+
+            alumnList.add(alumn);
         }
+
+        return alumnList;
     }*/
 }

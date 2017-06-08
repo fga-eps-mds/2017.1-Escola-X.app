@@ -5,15 +5,16 @@ import java.io.Serializable;
 public class Person implements Serializable {
 
     private String nameAlumn;
-    private String phone;
     private Integer registryAlumn;
     private String nameParent;
+    private String phoneParent;
     private String description_strike;
     private String date_strike;
     private String title_suspension;
     private String description_suspension;
     private Integer quantity_days_suspension;
-
+    private String notification_title;
+    private String notification_description;
 
     public Person () {
 
@@ -25,14 +26,6 @@ public class Person implements Serializable {
 
     public void setNameAlumn(String nameAlumn) {
         this.nameAlumn = nameAlumn;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public Integer getRegistryAlumn() {
@@ -89,5 +82,29 @@ public class Person implements Serializable {
 
     public void setQuantity_days_suspension(Integer quantity_days_suspension) {
         this.quantity_days_suspension = quantity_days_suspension;
+    }
+
+    public String getPhoneParent() {
+        return phoneParent;
+    }
+
+    public void setPhoneParent(String phoneParent) {
+        this.phoneParent = phoneParent;
+    }
+
+    public String getNotification_title() {
+        return notification_title;
+    }
+
+    public void setNotification_title(String notification_title) {
+        this.notification_title = notification_title;
+    }
+
+    public String getNotification_description() {
+        return notification_description;
+    }
+
+    public void setNotification_description(String notification_description) {
+        this.notification_description = notification_description;
     }
 }
