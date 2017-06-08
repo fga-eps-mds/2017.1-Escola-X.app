@@ -1,110 +1,150 @@
 package controller;
 
 import android.app.Activity;
-import android.app.ListFragment;
 import android.app.ProgressDialog;
-import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-
-import com.android.volley.Response;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import escola_x.escola_x.R;
-import helper.JSONParser;
-import model.Person;
+import helper.HttpHandlerHelper;
 
-public class MainActivity extends ListFragment {
+public class MainActivity extends Activity {
 
-    private ArrayList<Person> persons;
-    String url = "http://androidtutorialpoint.com/api/MobileJSONArray.json";
-    private final String EXTRA_JSON_OBJECT = "mobileObject";
+    private ProgressDialog pDialog;
+    private ListView lv;
+
+    // URL to get contacts JSON
+    private static String url = "http://api.androidhive.info/contacts/";
+
+    ArrayList<HashMap<String, String>> contactList;
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final ProgressDialog pDialog = new ProgressDialog(getActivity());
-        pDialog.setMessage("Loading...");
-        pDialog.show();
+        setContentView(R.layout.activity_main);
 
-        JsonArrayRequest jsonArrayReq = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
+        contactList = new ArrayList<>();
 
-                        persons = JSONParser.parseArrayFeed(response);
-
-                        pDialog.hide();
-                        MobileAdapter adapter = new MobileAdapter(mMobileList);
-                        setListAdapter(adapter);
-
-
-
-                    }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                //VolleyLog.d(TAG, "Error: " + error.getMessage());
-                // hide the progress dialog
-                pDialog.hide();
-            }
-        });
-
-        // Adding request to request queue
-        Volley.newRequestQueue(getActivity()).add(jsonArrayReq);
-
-
+        lv = (ListView) findViewById(R.id.list);
+        new GetContacts().execute();
     }
 
-    private class MobileAdapter extends ArrayAdapter<Person> {
-        public MobileAdapter(ArrayList<Person> persons) {
-            super(getActivity(), 0, persons);
+    private class GetContacts extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Showing progress dialog
+            pDialog = new ProgressDialog(MainActivity.this);
+            pDialog.setMessage("Please wait...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+
         }
 
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            // If we weren't given a view, inflate one
+        protected Void doInBackground(Void... arg0) {
+            HttpHandlerHelper sh = new HttpHandlerHelper();
 
+            // Making a request to url and getting response
+            String jsonStr = sh.makeServiceCall(url);
 
-            if (convertView == null) {
-                convertView = getActivity().getLayoutInflater()
-                        .inflate(R.layout.category_list_item_1, null);
-            }
-            Person person = persons.get(position);
+            //Log.e(TAG, "Response from url: " + jsonStr);
 
+            if (jsonStr != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(jsonStr);
 
-            TextView nameTextView =
-                    (TextView) convertView.findViewById(R.id.textview_name);
-            nameTextView.setText(person.getNameAlumn());
+                    // Getting JSON Array node
+                    JSONArray contacts = jsonObj.getJSONArray("contacts");
 
-            nameTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                    // looping through All Contacts
+                    for (int i = 0; i < contacts.length(); i++) {
+                        JSONObject c = contacts.getJSONObject(i);
 
-                    Intent i = new Intent(getActivity(),ParseJSONArrayObject.class);
-                    Bundle args = new Bundle();
-                    //args.putSerializable(EXTRA_JSON_MOBILE_OBJECT, mMobileList.get(position));
-                    i.putExtra(EXTRA_JSON_OBJECT, persons.get(position));
-                    startActivity(i);
+                        String id = c.getString("id");
+                        String name = c.getString("name");
+                        String email = c.getString("email");
+                        String address = c.getString("address");
+                        String gender = c.getString("gender");
+
+                        // Phone node is JSON Object
+                        JSONObject phone = c.getJSONObject("phone");
+                        String mobile = phone.getString("mobile");
+                        String home = phone.getString("home");
+                        String office = phone.getString("office");
+
+                        // tmp hash map for single contact
+                        HashMap<String, String> contact = new HashMap<>();
+
+                        // adding each child node to HashMap key => value
+                        contact.put("id", id);
+                        contact.put("name", name);
+                        contact.put("email", email);
+                        contact.put("mobile", mobile);
+
+                        // adding contact to contact list
+                        contactList.add(contact);
+                    }
+                } catch (final JSONException e) {
+                    //Log.e("Json parsing error: " + e.getMessage());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Json parsing error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
 
                 }
-            });
+            } else {
+                //Log.e("Couldn't get json from server.");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                "Couldn't get json from server. Check LogCat for possible errors!",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
 
+            }
 
-            return convertView;
+            return null;
         }
 
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            // Dismiss the progress dialog
+            if (pDialog.isShowing())
+                pDialog.dismiss();
+            /**
+             * Updating parsed JSON data into ListView
+             * */
+            ListAdapter adapter = new SimpleAdapter(
+                    MainActivity.this, contactList,
+                    R.layout.list_item, new String[]{"name", "email",
+                    "mobile"}, new int[]{R.id.name,
+                    R.id.email, R.id.mobile});
 
+            lv.setAdapter(adapter);
+        }
 
     }
 }
