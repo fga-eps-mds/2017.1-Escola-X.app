@@ -4,9 +4,9 @@ public abstract class Person {
 
     private String name;
     private String phone;
-    private String registry;
+    private Integer registry;
 
-    public Person (String name,String phone,String registry) {
+    public Person (String name,String phone,Integer registry) {
         setName(name);
         setPhone(phone);
         setRegistry(registry);
@@ -15,6 +15,10 @@ public abstract class Person {
     public Person (String name,String phone) {
         setName(name);
         setPhone(phone);
+    }
+
+    public Person () {
+
     }
 
     public String getName() {
@@ -33,11 +37,11 @@ public abstract class Person {
         this.phone = phone;
     }
 
-    public String getRegistry() {
+    public Integer getRegistry() {
         return registry;
     }
 
-    public void setRegistry(String registry) {
+    public void setRegistry(Integer registry) {
         this.registry = registry;
     }
 }

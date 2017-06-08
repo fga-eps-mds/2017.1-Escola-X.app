@@ -2,9 +2,13 @@ package dao;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import model.Alumn;
 
@@ -36,10 +40,10 @@ public class AlumnDao extends SQLiteOpenHelper{
     }
 
     private static final String CREATE_ALUMN = "CREATE TABLE IF NOT EXISTS " + ALUMN_TABLE+ " (" +
-            ALUMN_ID + "INTEGER PRIMARY KEY NOT NULL AUTOINCREMENT ," +
+            ALUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             NAME_ALUMN + " VARCHAR(64) NOT NULL, "+
             PHONE_ALUMN + " VARCHAR(13) NOT NULL, " +
-            REGISTRY_ALUMN + "VARCHAR(6)) NOT NULL; ";
+            REGISTRY_ALUMN + "INTEGER NOT NULL ) ; ";
 
     @Override
     public void onCreate(SQLiteDatabase database) {
@@ -55,7 +59,6 @@ public class AlumnDao extends SQLiteOpenHelper{
 
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ALUMN_ID, alumn.getIdAlumn());
         contentValues.put(NAME_ALUMN, alumn.getName());
         contentValues.put(PHONE_ALUMN, alumn.getPhone());
         contentValues.put(REGISTRY_ALUMN, alumn.getRegistry());
@@ -69,5 +72,25 @@ public class AlumnDao extends SQLiteOpenHelper{
         }
     }
 
+    public List<Alumn> getAllAlumns() {
 
+        List<Alumn> alumnList = new ArrayList<Alumn>();
+
+        SQLiteDatabase database = this.getWritableDatabase();
+        Cursor cursor = database.rawQuery("SELECT * FROM " + ALUMN_TABLE,null);
+
+        while(cursor.moveToNext()) {
+
+            Alumn alumn = new Alumn();
+
+            alumn.setIdAlumn(cursor.getInt(cursor.getColumnIndex("IDAlumn")));
+            alumn.setName(cursor.getString(cursor.getColumnIndex("nameAlumn")));
+            alumn.setPhone(cursor.getString(cursor.getColumnIndex("phoneAlumn")));
+            alumn.setRegistry(cursor.getInt(cursor.getColumnIndex("registry_alumn")));
+
+            alumnList.add(alumn);
+        }
+
+        return alumnList;
+    }
 }
