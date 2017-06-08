@@ -55,7 +55,7 @@ public class AlumnDao extends SQLiteOpenHelper{
 
     }
 
-    public boolean insertAlumn (Alumn alumn) {
+    /*public boolean insertAlumn (Alumn alumn) {
 
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -92,5 +92,5 @@ public class AlumnDao extends SQLiteOpenHelper{
         }
 
         return alumnList;
-    }
+    }*/
 }

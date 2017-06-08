@@ -1,32 +1,30 @@
 package model;
 
-public abstract class Person {
+import java.io.Serializable;
 
-    private String name;
+public class Person implements Serializable {
+
+    private String nameAlumn;
     private String phone;
-    private Integer registry;
+    private Integer registryAlumn;
+    private String nameParent;
+    private String description_strike;
+    private String date_strike;
+    private String title_suspension;
+    private String description_suspension;
+    private Integer quantity_days_suspension;
 
-    public Person (String name,String phone,Integer registry) {
-        setName(name);
-        setPhone(phone);
-        setRegistry(registry);
-    }
-
-    public Person (String name,String phone) {
-        setName(name);
-        setPhone(phone);
-    }
 
     public Person () {
 
     }
 
-    public String getName() {
-        return name;
+    public String getNameAlumn() {
+        return nameAlumn;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNameAlumn(String nameAlumn) {
+        this.nameAlumn = nameAlumn;
     }
 
     public String getPhone() {
@@ -37,11 +35,59 @@ public abstract class Person {
         this.phone = phone;
     }
 
-    public Integer getRegistry() {
-        return registry;
+    public Integer getRegistryAlumn() {
+        return registryAlumn;
     }
 
-    public void setRegistry(Integer registry) {
-        this.registry = registry;
+    public void setRegistryAlumn(Integer registryAlumn) {
+        this.registryAlumn = registryAlumn;
+    }
+
+    public String getNameParent() {
+        return nameParent;
+    }
+
+    public void setNameParent(String nameParent) {
+        this.nameParent = nameParent;
+    }
+
+    public String getDescription_strike() {
+        return description_strike;
+    }
+
+    public void setDescription_strike(String description_strike) {
+        this.description_strike = description_strike;
+    }
+
+    public String getDate_strike() {
+        return date_strike;
+    }
+
+    public void setDate_strike(String date_strike) {
+        this.date_strike = date_strike;
+    }
+
+    public String getTitle_suspension() {
+        return title_suspension;
+    }
+
+    public void setTitle_suspension(String title_suspension) {
+        this.title_suspension = title_suspension;
+    }
+
+    public String getDescription_suspension() {
+        return description_suspension;
+    }
+
+    public void setDescription_suspension(String description_suspension) {
+        this.description_suspension = description_suspension;
+    }
+
+    public Integer getQuantity_days_suspension() {
+        return quantity_days_suspension;
+    }
+
+    public void setQuantity_days_suspension(Integer quantity_days_suspension) {
+        this.quantity_days_suspension = quantity_days_suspension;
     }
 }
