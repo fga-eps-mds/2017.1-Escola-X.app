@@ -9,18 +9,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.ButterKnife;
+import butterknife.*;
 import escola_x.escola_x.R;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
 
-    @Bind(R.id.input_registry) EditText _registryText;
-    @Bind(R.id.input_password) EditText _passwordText;
-    @Bind(R.id.btn_login) Button _loginButton;
+    @BindViews(R.id.input_registry) EditText _registryText;
+    @BindView(R.id.input_password) EditText _passwordText;
+    @BindView(R.id.btn_login) Button _loginButton;
+    @BindView(R.id.link_signup) TextView _signupLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
                 login();
             }
         });
+
+        _signupLink.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -56,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
 
         _loginButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this, R.style.AppTheme_Dark_Dialog);
+        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Autenticando...");
         progressDialog.show();
@@ -87,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         movedTaskToback(true);
     }
 
-    public void onLoginSuccess() {
+    public void onLoginSucess() {
         _loginButton.setEnabled(true);
         finish();
     }
