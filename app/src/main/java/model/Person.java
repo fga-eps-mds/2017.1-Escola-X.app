@@ -20,6 +20,11 @@ public class Person implements Serializable {
 
     }
 
+    public Person (String nameAlumn,Integer registryAlumn) {
+        setNameAlumn(nameAlumn);
+        setRegistryAlumn(registryAlumn);
+    }
+
     public String getNameAlumn() {
         return nameAlumn;
     }
