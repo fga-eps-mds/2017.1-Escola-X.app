@@ -17,18 +17,18 @@ import butterknife.*;
 import escola_x.escola_x.R;
 
 public class LoginActivity extends AppCompatActivity {
-    /*private static final String TAG = "LoginActivity";
+    private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
 
-    @BindViews(R.id.input_registry) EditText _registryText;
+    @BindView(R.id.input_registry) EditText _registryText;
     @BindView(R.id.input_password) EditText _passwordText;
     @BindView(R.id.btn_login) Button _loginButton;
-    @BindView(R.id.link_signup) TextView _signupLink;
+//    @BindView(R.id.link_signup) TextView _signupLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
@@ -38,16 +38,16 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        _signupLink.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-                startActivityForResult(intent, REQUEST_SIGNUP);
-                finish();
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-            }
-        });
+//        _signupLink.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+//                startActivityForResult(intent, REQUEST_SIGNUP);
+//                finish();
+//                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+//            }
+//        });
     }
 
     public void login() {
@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
 
         _loginButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
+        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Autenticando...");
         progressDialog.show();
@@ -69,13 +69,16 @@ public class LoginActivity extends AppCompatActivity {
         String registry = _registryText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                   public void run() {
-                       onLoginSucess();
-                       progressDialog.dismiss();
-                   }
-                }, 3000);
+        if (registry.equals("123456") && password.equals("12345678")) {
+
+            new android.os.Handler().postDelayed(
+                    new Runnable() {
+                        public void run() {
+                            onLoginSucess();
+                            progressDialog.dismiss();
+                        }
+                    }, 3000);
+        }
     }
 
     @Override
@@ -89,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        movedTaskToback(true);
+        moveTaskToBack(true);
     }
 
     public void onLoginSucess() {
@@ -109,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
             String registry = _registryText.getText().toString();
             String password = _passwordText.getText().toString();
 
-            if (registry.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(registry).matches()){
+            if (registry.isEmpty()){
                 _registryText.setError("Coloque um registro válido");
                 valid = false;
             } else {
@@ -123,5 +126,5 @@ public class LoginActivity extends AppCompatActivity {
                 _passwordText.setError(null);
             }
             return valid;
-        }*/
+        }
 }
