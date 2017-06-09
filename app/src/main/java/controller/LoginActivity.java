@@ -97,7 +97,10 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginSucess() {
         _loginButton.setEnabled(true);
-        finish();
+
+        Intent SMSScreen = new Intent();
+        SMSScreen.setClass(getBaseContext(), SMSActivity.class);
+        startActivity(SMSScreen);
     }
 
     public void onLoginFailed() {

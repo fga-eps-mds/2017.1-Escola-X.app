@@ -24,7 +24,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--<activity android:name="controller.LoginActivity" />-->
+
+        <activity
+            android:name="controller.SMSActivity" >
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity android:name="controller.MainActivity" android:theme="@style/AppTheme"/>
     </application>
 
