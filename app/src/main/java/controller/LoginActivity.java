@@ -17,7 +17,7 @@ import butterknife.*;
 import escola_x.escola_x.R;
 
 public class LoginActivity extends AppCompatActivity {
-    private static final String TAG = "LoginActivity";
+    /*private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
 
     @BindViews(R.id.input_registry) EditText _registryText;
@@ -123,5 +123,5 @@ public class LoginActivity extends AppCompatActivity {
                 _passwordText.setError(null);
             }
             return valid;
-        }
+        }*/
 }

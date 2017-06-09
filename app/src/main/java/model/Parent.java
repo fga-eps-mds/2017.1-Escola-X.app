@@ -4,10 +4,10 @@ public class Parent extends Person{
 
     private Integer idParent;
 
-    /*public Parent(String name, String phone,Integer idParent) {
+    public Parent(String name, String phone,Integer idParent) {
         super(name, phone);
         setIdParent(idParent);
-    }*/
+    }
 
     public Parent () {
 

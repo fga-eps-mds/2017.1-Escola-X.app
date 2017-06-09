@@ -22,7 +22,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String PARENT_ID = "[IDParent]";
 
     private static final String CREATE_ALUMN = "CREATE TABLE IF NOT EXISTS " + ALUMN_TABLE+ " (" +
-            ALUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            ALUMN_ID + " INTEGER PRIMARY KEY ," +
             NAME_ALUMN + " VARCHAR(64) NOT NULL, "+
             REGISTRY_ALUMN + " VARCHAR(6) NOT NULL );";
 

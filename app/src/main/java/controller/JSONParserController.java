@@ -2,12 +2,10 @@ package controller;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -19,15 +17,17 @@ import java.util.HashMap;
 import java.util.List;
 
 import dao.AlumnDao;
+import dao.ParentDao;
 import escola_x.escola_x.R;
 import helper.HttpHandlerHelper;
-import helper.JSONParser;
 import model.Alumn;
+import model.Parent;
 
 public class JSONParserController extends Activity {
 
     private ProgressDialog pDialog;
     AlumnDao alumnDao;
+    ParentDao parentDao;
     List<Alumn> alumnList = new ArrayList<Alumn>();
     private static String url = "http://api.androidhive.info/contacts/";
 
@@ -40,13 +40,14 @@ public class JSONParserController extends Activity {
 
         contactList = new ArrayList<>();
         alumnDao = AlumnDao.getInstance(getApplicationContext());
+        parentDao = ParentDao.getInstance(getApplicationContext());
 
         alumnList = alumnDao.getAllAlumns();
 
         for(int aux = 0; aux < alumnList.size(); aux ++) {
-            Log.d("NOME : ",alumnList.get(aux).getNameAlumn());
+            Log.d("NOME : ",alumnList.get(aux).getName());
             Log.d("ID: ",String.valueOf(alumnList.get(aux).getIdAlumn()));
-            Log.d("REGISTRO: ",String.valueOf(alumnList.get(aux).getRegistryAlumn()));
+            Log.d("REGISTRO: ",String.valueOf(alumnList.get(aux).getRegistry()));
         }
 
         new GetAlumns().execute();
@@ -58,8 +59,15 @@ public class JSONParserController extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(JSONParserController.this);
-            pDialog.show();
+            if (alumnDao.isDbEmpty() == false) {
+                //Colocar em baixo a página de login
+                Intent intent = new Intent(getApplicationContext(), JSONParserController.class);
+                startActivityForResult(intent, 0);
+                finish();
+            } else {
+                pDialog = new ProgressDialog(JSONParserController.this);
+                pDialog.show();
+            }
         }
 
         @Override
@@ -78,8 +86,9 @@ public class JSONParserController extends Activity {
 
                         Alumn alumn = new Alumn();
 
-                        alumn.setNameAlumn(alumnsJson.getString("name"));
-                        alumn.setRegistryAlumn(123);
+                        /*alumn.setIdAlumn();
+                        alumn.setName();
+                        alumn.setRegistry();*/
 
                         alumnDao.insertAlumn(alumn);
                     }
@@ -96,7 +105,6 @@ public class JSONParserController extends Activity {
 
                 }
             } else {
-                //Log.e(TAG, "Couldn't get json from server.");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -113,6 +121,10 @@ public class JSONParserController extends Activity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
+            //Colocar a página de login
+            Intent intent = new Intent(getApplicationContext(), JSONParserController.class);
+            startActivityForResult(intent, 0);
+            finish();
         }
     }
 
@@ -121,8 +133,15 @@ public class JSONParserController extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(JSONParserController.this);
-            pDialog.show();
+            if (parentDao.isDbEmpty() == false) {
+                //Colocar em baixo a página de login
+                Intent intent = new Intent(getApplicationContext(), JSONParserController.class);
+                startActivityForResult(intent, 0);
+                finish();
+            } else {
+                pDialog = new ProgressDialog(JSONParserController.this);
+                pDialog.show();
+            }
         }
 
         @Override
@@ -134,47 +153,22 @@ public class JSONParserController extends Activity {
                 try {
                     JSONObject jsonObj = new JSONObject(jsonStr);
 
-                    // Getting JSON Array node
-                    JSONArray contacts = jsonObj.getJSONArray("contacts");
+                    JSONArray parents = jsonObj.getJSONArray("contacts");
 
-                    // looping through All Contacts
-                    for (int aux = 0; aux < contacts.length(); aux ++) {
-                        JSONObject c = contacts.getJSONObject(aux);
+                    for (int aux = 0; aux < parents.length(); aux ++) {
+                        JSONObject c = parents.getJSONObject(aux);
 
+                        Parent parent = new Parent();
                         Alumn alumn = new Alumn();
 
+                        /*parent.setIdParent();
+                        parent.setNameParent();
+                        parent.setPhoneParent();
+                        alumn.setIdAlumn();
 
-                        alumn.setNameAlumn("VICTOR");
-                        alumn.setRegistryAlumn(42);
-
-                        alumnDao.insertAlumn(alumn);
-
-                        String id = c.getString("id");
-                        String name = c.getString("name");
-                        String email = c.getString("email");
-                        String address = c.getString("address");
-                        String gender = c.getString("gender");
-
-                        // Phone node is JSON Object
-                        JSONObject phone = c.getJSONObject("phone");
-                        String mobile = phone.getString("mobile");
-                        String home = phone.getString("home");
-                        String office = phone.getString("office");
-
-                        // tmp hash map for single contact
-                        HashMap<String, String> contact = new HashMap<>();
-
-                        // adding each child node to HashMap key => value
-                        contact.put("id", id);
-                        contact.put("name", name);
-                        contact.put("email", email);
-                        contact.put("mobile", mobile);
-
-                        // adding contact to contact list
-                        contactList.add(contact);
+                        parentDao.insertParent(parent,alumn);*/
                     }
                 } catch (final JSONException e) {
-                    //Log.e(TAG, "Json parsing error: " + e.getMessage());
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -187,7 +181,6 @@ public class JSONParserController extends Activity {
 
                 }
             } else {
-                //Log.e(TAG, "Couldn't get json from server.");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -204,6 +197,10 @@ public class JSONParserController extends Activity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
+            //Colocar a página de login
+            Intent intent = new Intent(getApplicationContext(), JSONParserController.class);
+            startActivityForResult(intent, 0);
+            finish();
         }
     }
 }
