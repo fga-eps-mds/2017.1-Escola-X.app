@@ -60,8 +60,7 @@ public class JSONParserController extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
             if (alumnDao.isDbEmpty() == false) {
-                //Colocar em baixo a página de login
-                Intent intent = new Intent(getApplicationContext(), JSONParserController.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivityForResult(intent, 0);
                 finish();
             } else {
@@ -122,7 +121,7 @@ public class JSONParserController extends Activity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             //Colocar a página de login
-            Intent intent = new Intent(getApplicationContext(), JSONParserController.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivityForResult(intent, 0);
             finish();
         }
@@ -134,8 +133,7 @@ public class JSONParserController extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
             if (parentDao.isDbEmpty() == false) {
-                //Colocar em baixo a página de login
-                Intent intent = new Intent(getApplicationContext(), JSONParserController.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivityForResult(intent, 0);
                 finish();
             } else {
@@ -197,8 +195,7 @@ public class JSONParserController extends Activity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            //Colocar a página de login
-            Intent intent = new Intent(getApplicationContext(), JSONParserController.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivityForResult(intent, 0);
             finish();
         }
