@@ -6,91 +6,70 @@ import android.database.Cursor;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import helper.DatabaseHelper;
 import model.Alumn;
 
-public class AlumnDao extends SQLiteOpenHelper{
+public class AlumnDao extends Dao {
 
-    private static final String DATABASE_NAME = "treeHouse";
-    private static final int VERSION = 42;
+    private static final String TABLE_COLUMNS[] = {"nameAlumn","registryAlumn"};
+
     private static AlumnDao instance = null;
+    private static String TABLE_NAME = "Alumn";
 
-    public static final String ALUMN_TABLE = "Alumn";
-    private static final String DROP_TABLE_ALUMN = "DROP TABLE IF EXISTS " + ALUMN_TABLE;
-
-    private static final String NAME_ALUMN = "[nameAlumn]";
-    private static final String PHONE_ALUMN = "[phoneAlumn]";
-    public static final String ALUMN_ID = "[IDAlumn]";
-    private static final String REGISTRY_ALUMN = "[registry_alumn]";
-
-    public AlumnDao(Context context) {
-        super(context, DATABASE_NAME,null,VERSION);
+    private AlumnDao(Context context) {
+        AlumnDao.database = new DatabaseHelper(context);
     }
 
-    public static AlumnDao getInstance(Context context){
-        if(AlumnDao.instance != null){
+    public static AlumnDao getInstance(Context context) {
 
-        }else{
+        if(AlumnDao.instance != null) {
+
+        } else {
             AlumnDao.instance = new AlumnDao(context);
         }
+
         return AlumnDao.instance;
     }
 
-    private static final String CREATE_ALUMN = "CREATE TABLE IF NOT EXISTS " + ALUMN_TABLE+ " (" +
-            ALUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-            NAME_ALUMN + " VARCHAR(64) NOT NULL, "+
-            PHONE_ALUMN + " VARCHAR(13) NOT NULL, " +
-            REGISTRY_ALUMN + "INTEGER NOT NULL ) ; ";
+    public boolean insertAlumn (Alumn alumn) {
 
-    @Override
-    public void onCreate(SQLiteDatabase database) {
-        database.execSQL(CREATE_ALUMN);
-    }
+        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+        boolean valid = true;
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        ContentValues values = new ContentValues();
 
-    }
+        values.put(TABLE_COLUMNS[0], alumn.getNameAlumn());
+        values.put(TABLE_COLUMNS[1], alumn.getRegistryAlumn());
 
-    /*public boolean insertAlumn (Alumn alumn) {
+        long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);
 
-        SQLiteDatabase database = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(NAME_ALUMN, alumn.getName());
-        contentValues.put(PHONE_ALUMN, alumn.getPhone());
-        contentValues.put(REGISTRY_ALUMN, alumn.getRegistry());
-
-        long result = database.insert(ALUMN_TABLE,null,contentValues);
-        database.close();
-        if(result == -1){
-            return false;
-        }else {
-            return true;
+        if (result == -1) {
+            valid = false;
+        } else {
+            Log.e("FUNCIONOU, PEGOU","");
+            valid = true;
         }
+        return valid;
     }
 
     public List<Alumn> getAllAlumns() {
-
         List<Alumn> alumnList = new ArrayList<Alumn>();
-
-        SQLiteDatabase database = this.getWritableDatabase();
-        Cursor cursor = database.rawQuery("SELECT * FROM " + ALUMN_TABLE,null);
+        sqliteDatabase = database.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME;
+        Cursor cursor = sqliteDatabase.rawQuery( query, null );
 
         while(cursor.moveToNext()) {
-
             Alumn alumn = new Alumn();
-
             alumn.setIdAlumn(cursor.getInt(cursor.getColumnIndex("IDAlumn")));
-            alumn.setName(cursor.getString(cursor.getColumnIndex("nameAlumn")));
-            alumn.setPhone(cursor.getString(cursor.getColumnIndex("phoneAlumn")));
-            alumn.setRegistry(cursor.getInt(cursor.getColumnIndex("registry_alumn")));
-
+            alumn.setNameAlumn(cursor.getString(cursor.getColumnIndex("nameAlumn")));
+            alumn.setRegistryAlumn(cursor.getInt(cursor.getColumnIndex("registryAlumn")));
             alumnList.add(alumn);
         }
-
         return alumnList;
-    }*/
+    }
 }
