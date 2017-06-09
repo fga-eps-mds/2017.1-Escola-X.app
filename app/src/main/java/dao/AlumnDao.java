@@ -16,7 +16,7 @@ import model.Alumn;
 
 public class AlumnDao extends Dao {
 
-    private static final String TABLE_COLUMNS[] = {"nameAlumn","registryAlumn"};
+    private static final String TABLE_COLUMNS[] = {"IDAlumn","nameAlumn","registryAlumn"};
 
     private static AlumnDao instance = null;
     private static String TABLE_NAME = "Alumn";
@@ -36,6 +36,26 @@ public class AlumnDao extends Dao {
         return AlumnDao.instance;
     }
 
+    public boolean isDbEmpty(){
+        sqliteDatabase = database.getReadableDatabase();
+        String query = "SELECT  1 FROM " + TABLE_NAME;
+        Cursor cursor = sqliteDatabase.rawQuery(query, null);
+        boolean isEmpty = false;
+
+        if(cursor != null) {
+            if(cursor.getCount() <= 0) {
+                cursor.moveToFirst();
+                isEmpty = true;
+            } else {
+                /* Nothing to do.*/
+            }
+        } else {
+            isEmpty = true;
+        }
+
+        return isEmpty;
+    }
+
     public boolean insertAlumn (Alumn alumn) {
 
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
@@ -43,15 +63,15 @@ public class AlumnDao extends Dao {
 
         ContentValues values = new ContentValues();
 
-        values.put(TABLE_COLUMNS[0], alumn.getNameAlumn());
-        values.put(TABLE_COLUMNS[1], alumn.getRegistryAlumn());
+        values.put(TABLE_COLUMNS[0], alumn.getIdAlumn());
+        values.put(TABLE_COLUMNS[1], alumn.getName());
+        values.put(TABLE_COLUMNS[2], alumn.getRegistry());
 
         long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);
 
         if (result == -1) {
             valid = false;
         } else {
-            Log.e("FUNCIONOU, PEGOU","");
             valid = true;
         }
         return valid;
@@ -66,8 +86,8 @@ public class AlumnDao extends Dao {
         while(cursor.moveToNext()) {
             Alumn alumn = new Alumn();
             alumn.setIdAlumn(cursor.getInt(cursor.getColumnIndex("IDAlumn")));
-            alumn.setNameAlumn(cursor.getString(cursor.getColumnIndex("nameAlumn")));
-            alumn.setRegistryAlumn(cursor.getInt(cursor.getColumnIndex("registryAlumn")));
+            alumn.setName(cursor.getString(cursor.getColumnIndex("nameAlumn")));
+            alumn.setRegistry(cursor.getInt(cursor.getColumnIndex("registryAlumn")));
             alumnList.add(alumn);
         }
         return alumnList;
