@@ -2,10 +2,14 @@ package dao;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import helper.DatabaseHelper;
-import model.Parent;
+import model.Strike;
 import model.Suspension;
 
 public class SuspensionDao extends Dao{
@@ -52,5 +56,25 @@ public class SuspensionDao extends Dao{
             valid = true;
         }
         return valid;
+    }
+
+    public List<Suspension> getSuspension() {
+
+        Suspension suspension = new Suspension();
+        List<Suspension> suspensionList = new ArrayList<Suspension>();
+
+        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_NAME + "WHERE IDAlumn = " + DatabaseHelper.ALUMN_ID;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
+
+        while(cursor.moveToFirst()) {
+            suspension.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+            suspension.setDescription(cursor.getString(cursor.getColumnIndex("description")));
+            suspension.setQuantity_days(cursor.getInt(cursor.getColumnIndex("quantityDays")));
+            suspensionList.add(suspension);
+        }
+        return suspensionList;
     }
 }
