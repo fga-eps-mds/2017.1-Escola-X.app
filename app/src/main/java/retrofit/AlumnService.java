@@ -1,4 +1,4 @@
-package controller;
+package retrofit;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -9,6 +9,6 @@ import retrofit2.http.GET;
 
 public interface AlumnService {
 
-    @GET("alumn")
+    @GET("alumns")
     Call<AlumnSync> list();
 }

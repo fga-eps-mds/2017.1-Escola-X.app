@@ -92,4 +92,36 @@ public class AlumnDao extends Dao {
         }
         return alumnList;
     }
+
+    public void syncron (List<Alumn> alumns) {
+
+        for(int aux = 0;aux<alumns.size();aux++) {
+            Alumn alumn = new Alumn();
+
+            alumn.setIdAlumn(alumns.get(aux).getIdAlumn());
+            alumn.setName(alumns.get(aux).getName());
+            alumn.setRegistry(alumns.get(aux).getRegistry());
+
+            if(exists(alumn) == true ) {
+
+            } else {
+                insertAlumn(alumn);
+            }
+        }
+    }
+
+    private boolean exists(Alumn alumn) {
+        SQLiteDatabase sqLiteDatabase = database.getReadableDatabase();
+        String existe = "SELECT IDAlumn FROM Alumn WHERE IDAlumn =? LIMIT 1";
+        Cursor cursor = sqLiteDatabase.rawQuery(existe, new String[]{String.valueOf(alumn.getIdAlumn())});
+        int quantidade = cursor.getCount();
+        boolean valid = true;
+
+        if(quantidade > 0) {
+            valid = true;
+        } else {
+            valid = false;
+        }
+        return valid;
+    }
 }
