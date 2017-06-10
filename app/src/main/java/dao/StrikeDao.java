@@ -5,8 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import helper.DatabaseHelper;
-import model.Parent;
 import model.Strike;
 
 public class StrikeDao extends Dao {
@@ -72,5 +74,24 @@ public class StrikeDao extends Dao {
             valid = true;
         }
         return valid;
+    }
+
+    public List<Strike> getStrike() {
+
+        Strike strike = new Strike();
+        List<Strike> strikeList = new ArrayList<Strike>();
+
+        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_NAME + "WHERE IDAlumn = " + DatabaseHelper.ALUMN_ID;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
+
+        while(cursor.moveToFirst()) {
+            strike.setDescription_strike(cursor.getString(cursor.getColumnIndex("descriptionStrike")));
+            strike.setDate_strike(cursor.getString(cursor.getColumnIndex("dateStrike")));
+            strikeList.add(strike);
+        }
+        return strikeList;
     }
 }

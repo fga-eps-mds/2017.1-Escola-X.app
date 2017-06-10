@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import helper.DatabaseHelper;
@@ -73,5 +74,25 @@ public class ParentDao extends Dao{
             valid = true;
         }
         return valid;
+    }
+
+    public List<Parent> getParent() {
+
+        Parent parent = new Parent();
+        List<Parent> parentList = new ArrayList<Parent>();
+
+        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+
+        String query = "SELECT * FROM " + TABLE_NAME + "WHERE IDAlumn = " + DatabaseHelper.ALUMN_ID;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
+
+        while(cursor.moveToFirst()) {
+            parent.setName(cursor.getString(cursor.getColumnIndex("nameParent")));
+            parent.setPhone(cursor.getString(cursor.getColumnIndex("phoneParent")));
+            parent.setIdParent(cursor.getInt(cursor.getColumnIndex("IDParent")));
+            parentList.add(parent);
+        }
+        return parentList;
     }
 }
