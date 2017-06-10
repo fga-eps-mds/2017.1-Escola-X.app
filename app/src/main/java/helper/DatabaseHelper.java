@@ -10,26 +10,36 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final int VERSION = 42;
 
     private static final String ALUMN_TABLE = "Alumn";
-    private static final String DROP_TABLE_ALUMN = "DROP TABLE IF EXISTS " + ALUMN_TABLE;
-
     private static final String NAME_ALUMN = "[nameAlumn]";
-    private static final String ALUMN_ID = "[IDAlumn]";
+    public static final String ALUMN_ID = "[IDAlumn]";
     private static final String REGISTRY_ALUMN = "[registryAlumn]";
 
-    private static final String PARENT = "Parent";
+    private static final String PARENT_TABLE = "Parent";
     private static final String NAME_PARENT = "[nameParent]";
     private static final String PHONE_PARENT = "[phoneParent]";
     private static final String PARENT_ID = "[IDParent]";
 
-    private static final String CREATE_ALUMN = "CREATE TABLE IF NOT EXISTS " + ALUMN_TABLE+ " (" +
-            ALUMN_ID + " INTEGER PRIMARY KEY ," +
-            NAME_ALUMN + " VARCHAR(64) NOT NULL, "+
+    private static final String STRIKE_TABLE = "Strike";
+    private static final String STRIKE_ID = "[IDStrike]";
+    private static final String DESCRIPTION_STRIKE = "[descriptionStrike]";
+    private static final String DATE_STRIKE = "[dateStrike]";
+
+    private static final String CREATE_ALUMN = "CREATE TABLE IF NOT EXISTS " + ALUMN_TABLE + " (" +
+            ALUMN_ID + " INTEGER PRIMARY KEY NOT NULL," +
+            NAME_ALUMN + " VARCHAR(64) NOT NULL, " +
             REGISTRY_ALUMN + " VARCHAR(6) NOT NULL );";
 
-    private static final String TABLE_PARENT = "CREATE TABLE IF NOT EXISTS " + PARENT+ " (" +
-            PARENT_ID + "INTEGER NOT NULL," +
-            NAME_PARENT + " VARCHAR(64) NOT NULL, "+
-            PHONE_PARENT + " VARCHAR(13) NOT NULL, "+
+    private static final String CREATE_PARENT = "CREATE TABLE IF NOT EXISTS " + PARENT_TABLE + " (" +
+            PARENT_ID + " INTEGER PRIMARY KEY NOT NULL," +
+            NAME_PARENT + " VARCHAR(64) NOT NULL, " +
+            PHONE_PARENT + " VARCHAR(13) NOT NULL, " +
+            ALUMN_ID + " INTEGER, " +
+            "FOREIGN KEY ("+ALUMN_ID+") REFERENCES "+ ALUMN_TABLE + "("+ALUMN_ID+"));";
+
+    private static final String CREATE_STRIKE = "CREATE TABLE IF NOT EXISTS " + STRIKE_TABLE + " (" +
+            STRIKE_ID + " INTEGER PRIMARY KEY NOT NULL, " +
+            DESCRIPTION_STRIKE + " VARCHAR(150) NOT NULL, " +
+            DATE_STRIKE + "VARCHAR(10) NOT NULL, " +
             ALUMN_ID + " INTEGER, " +
             "FOREIGN KEY ("+ALUMN_ID+") REFERENCES "+ ALUMN_TABLE + "("+ALUMN_ID+"));";
 
@@ -40,7 +50,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase database) {
         database.execSQL(CREATE_ALUMN);
-        database.execSQL(TABLE_PARENT);
+        database.execSQL(CREATE_PARENT);
+        database.execSQL(CREATE_STRIKE);
     }
 
     @Override
