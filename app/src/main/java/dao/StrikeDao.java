@@ -73,6 +73,4 @@ public class StrikeDao extends Dao {
         }
         return valid;
     }
-
-
 }
