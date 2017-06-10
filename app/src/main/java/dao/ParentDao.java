@@ -5,11 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import helper.DatabaseHelper;
-import model.Alumn;
 import model.Parent;
 
 
@@ -19,10 +17,6 @@ public class ParentDao extends Dao{
 
     private static ParentDao instance = null;
     private static String TABLE_NAME = "Parent";
-    public static final String ALUMN_ID_WITH_PREFIX = "alumn.IDAlumn";
-    public static final String ALUMN_NAME_WITH_PREFIX = "alumn.nameAlumn";
-    public static final String PARENT_NAME_WITH_PREFIX = "parent.name";
-
 
     private ParentDao(Context context) {
         ParentDao.database = new DatabaseHelper(context);
@@ -80,10 +74,4 @@ public class ParentDao extends Dao{
         }
         return valid;
     }
-
-    /*public List<Parent> getParent () {
-
-        List<Parent> parentList = new ArrayList<Parent>();
-        String query = "SELECT " + ALUMN_ID_WITH_PREFIX + "," + A
-    }*/
 }
