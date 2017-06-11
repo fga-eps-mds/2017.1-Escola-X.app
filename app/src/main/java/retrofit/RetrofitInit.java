@@ -3,13 +3,11 @@ package retrofit;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import api.AlumnService;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
-/**
- * Created by matheusss03 on 10/06/17.
- */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RetrofitInit {
