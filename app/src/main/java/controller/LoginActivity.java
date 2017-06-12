@@ -12,11 +12,24 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.*;
+import dao.AlumnDao;
+import dao.ParentDao;
+import dao.StrikeDao;
+import dao.SuspensionDao;
 import escola_x.escola_x.R;
+import model.Alumn;
+import model.Parent;
+import model.ParentAlumn;
+import model.Strike;
+import model.Suspension;
 
 public class LoginActivity extends AppCompatActivity {
+
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
 

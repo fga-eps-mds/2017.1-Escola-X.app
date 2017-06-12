@@ -7,9 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import helper.DatabaseHelper;
+import model.Alumn;
 import model.Parent;
+import model.ParentAlumn;
 
 
 public class ParentDao extends Dao{
@@ -76,23 +79,81 @@ public class ParentDao extends Dao{
         return valid;
     }
 
-    public List<Parent> getParent() {
+    public void syncronParent (List<Parent> parentList, List<Alumn> alumnList) {
 
-        Parent parent = new Parent();
-        List<Parent> parentList = new ArrayList<Parent>();
+        /*Map<String,List> rel_pai = new Map<String, List>;
+
+        for (int aux = 0;aux<alumnList.size();aux ++) {
+            Parent parent = new Parent();
+
+            //rel_pai.put(id,list);
+        }*/
+
+
+        /*for(int aux = 0; aux < alumnList.size();aux ++) {
+            Parent parent = new Parent();
+            Alumn alumn = new Alumn();
+
+            parent.setIdParent(parentList.get(aux).getIdParent());
+            parent.setName(parentList.get(aux).getName());
+            parent.setPhone(parentList.get(aux).getPhone());
+            parent.setAlumn(alumnList.get(aux).getIdAlumn());
+        }*/
+
+        /*for(int aux = 0;aux<parentList.size();aux++) {
+            Parent parent = new Parent();
+
+            for(int alumnParent = 0; alumnParent < alumnList.size(); alumnParent ++) {
+
+            }
+
+            parent.setIdParent();
+
+            alumn.setIdAlumn(alumns.get(aux).getIdAlumn());
+            alumn.setName(alumns.get(aux).getName());
+            alumn.setRegistry(alumns.get(aux).getRegistry());
+
+            if(existsAlumn(alumn) == true ) {
+                updateAlumn(alumn);
+            } else {
+                insertAlumn(alumn);
+            }
+        }*/
+    }
+
+    public List<ParentAlumn> getParent () {
+
+        ParentAlumn parentAlumn = new ParentAlumn();
+        List<ParentAlumn> parentAlumnList = new ArrayList<ParentAlumn>();
 
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
 
-        String query = "SELECT * FROM " + TABLE_NAME + "WHERE IDAlumn = " + DatabaseHelper.ALUMN_ID;
+        String query = "SELECT * FROM " + TABLE_NAME + " LEFT JOIN " + DatabaseHelper.ALUMN_TABLE +
+                " ON " + TABLE_NAME +".IDAlumn = " + DatabaseHelper.ALUMN_TABLE + ".IDAlumn "; /*+
+                "LEFT JOIN " + DatabaseHelper.STRIKE_TABLE + "ON " + TABLE_NAME + ".IDAlumn = " +
+                DatabaseHelper.STRIKE_TABLE + ".IDAlumn " + " LEFT JOIN " +
+                DatabaseHelper.SUSPENSION_TABLE + " ON " + TABLE_NAME + ".IDAlumn = " +
+                DatabaseHelper.SUSPENSION_TABLE + ".IDAlumn";*/
 
         Cursor cursor = sqLiteDatabase.rawQuery(query,null);
 
-        while(cursor.moveToFirst()) {
-            parent.setName(cursor.getString(cursor.getColumnIndex("nameParent")));
-            parent.setPhone(cursor.getString(cursor.getColumnIndex("phoneParent")));
-            parent.setIdParent(cursor.getInt(cursor.getColumnIndex("IDParent")));
-            parentList.add(parent);
+        while (cursor.moveToFirst()) {
+            parentAlumn.setAlumnId(cursor.getInt(cursor.getColumnIndex("IDAlumn")));
+            parentAlumn.setNameAlumn(cursor.getString(cursor.getColumnIndex("nameAlumn")));
+            parentAlumn.setRegistryAlumn(cursor.getString(cursor.getColumnIndex("registryAlumn")));
+            parentAlumn.setIdParent(cursor.getInt(cursor.getColumnIndex("IDParent")));
+            parentAlumn.setNameParent(cursor.getString(cursor.getColumnIndex("nameParent")));
+            parentAlumn.setPhoneParent(cursor.getString(cursor.getColumnIndex("phoneParent")));
+            /*parentAlumn.setIdStrike(cursor.getInt(cursor.getColumnIndex("IDStrike")));
+            parentAlumn.setDescription_strike(cursor.getString(cursor.getColumnIndex("descriptionStrike")));
+            parentAlumn.setDate_strike(cursor.getString(cursor.getColumnIndex("dateStrike")));
+            parentAlumn.setIdSuspension(cursor.getInt(cursor.getColumnIndex("IDSuspension")));
+            parentAlumn.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+            parentAlumn.setDescription(cursor.getString(cursor.getColumnIndex("description")));
+            parentAlumn.setQuantity_days(cursor.getInt(cursor.getColumnIndex("quantityDays")));*/
+
+            parentAlumnList.add(parentAlumn);
         }
-        return parentList;
+        return parentAlumnList;
     }
 }

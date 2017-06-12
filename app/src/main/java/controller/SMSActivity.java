@@ -31,18 +31,7 @@ public class SMSActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sms);
         alumnDao = AlumnDao.getInstance(this);
-        List<Alumn> alumnList;
 
-        alumnList = alumnDao.getAllAlumns();
-
-        int teste = alumnList.size();
-
-
-        sms = (TextView)findViewById(R.id.sms);
-
-        for (int aux = 0; aux<alumnList.size();aux ++) {
-            Log.d("Nome: ",alumnList.get(aux).getName());
-        }
     }
 
     private void carregaList(Context applicationContext) {
@@ -50,13 +39,14 @@ public class SMSActivity extends AppCompatActivity{
 
         List<Alumn> alumns = alumnDao.getAllAlumns();
 
+        for(int aux = 0;aux < alumns.size(); aux ++) {
+            Log.d("NOME: ",alumns.get(aux).getName());
+        }
         Log.d("Tamanho = ", String.valueOf(alumns.size()));
 
         for (Alumn alumn :
                 alumns) {
             Log.i("carrega List", String.valueOf(alumn.getIdAlumn()));
-
-
         }
     }
 
@@ -70,8 +60,8 @@ public class SMSActivity extends AppCompatActivity{
             @Override
             public void onResponse(Call<AlumnSync> call, Response<AlumnSync> response) {
                 AlumnSync alumnSync = response.body();
-                alumnDao.syncron(alumnSync.getAlumns());
-                carregaList(getApplicationContext());
+                //alumnDao.syncronAlumn(alumnSync.getAlumns());
+                //carregaList(getApplicationContext());
 
             }
 

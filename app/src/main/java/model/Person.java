@@ -7,6 +7,7 @@ public class Person implements Serializable {
     private String name;
     private Integer registry;
     private String phone;
+    private Integer idPerson;
 
     public Person () {
 
@@ -20,6 +21,14 @@ public class Person implements Serializable {
     public Person (String name,String phone) {
         setName(name);
         setPhone(phone);
+    }
+
+    public Integer getIdPerson() {
+        return idPerson;
+    }
+
+    public void setIdPerson(Integer idPerson) {
+        this.idPerson = idPerson;
     }
 
     public String getName() {

@@ -13,10 +13,12 @@ import java.util.List;
 
 import helper.DatabaseHelper;
 import model.Alumn;
+import model.Parent;
+import model.Person;
 
 public class AlumnDao extends Dao {
 
-    private static final String TABLE_COLUMNS[] = {"IDAlumn","nameAlumn","registryAlumn"};
+    private static final String TABLE_COLUMNS[] = {"IDAlumn","nameAlumn","registryAlumn","IDParent"};
 
     private static AlumnDao instance = null;
     private static String TABLE_NAME = "Alumn";
@@ -56,7 +58,7 @@ public class AlumnDao extends Dao {
         return isEmpty;
     }
 
-    public boolean insertAlumn (Alumn alumn) {
+    public boolean insertAlumn (Alumn alumn, Parent parent) {
 
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
         boolean valid = true;
@@ -66,6 +68,7 @@ public class AlumnDao extends Dao {
         values.put(TABLE_COLUMNS[0], alumn.getIdAlumn());
         values.put(TABLE_COLUMNS[1], alumn.getName());
         values.put(TABLE_COLUMNS[2], alumn.getRegistry());
+        values.put(TABLE_COLUMNS[3], parent.getIdParent());
 
         long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);
 
@@ -85,6 +88,7 @@ public class AlumnDao extends Dao {
 
         while(cursor.moveToNext()) {
             Alumn alumn = new Alumn();
+
             alumn.setIdAlumn(cursor.getInt(cursor.getColumnIndex("IDAlumn")));
             alumn.setName(cursor.getString(cursor.getColumnIndex("nameAlumn")));
             alumn.setRegistry(cursor.getInt(cursor.getColumnIndex("registryAlumn")));
@@ -93,24 +97,26 @@ public class AlumnDao extends Dao {
         return alumnList;
     }
 
-    public void syncron (List<Alumn> alumns) {
+    public void syncronAlumn (List<Alumn> alumns, List<Person> personList) {
 
         for(int aux = 0;aux<alumns.size();aux++) {
             Alumn alumn = new Alumn();
+            Parent parent = new Parent();
 
             alumn.setIdAlumn(alumns.get(aux).getIdAlumn());
             alumn.setName(alumns.get(aux).getName());
             alumn.setRegistry(alumns.get(aux).getRegistry());
+            parent.setIdParent(personList.get(aux).getIdPerson());
 
-            if(exists(alumn) == true ) {
-
+            if(existsAlumn(alumn) == true ) {
+                updateAlumn(alumn);
             } else {
-                insertAlumn(alumn);
+                insertAlumn(alumn,parent);
             }
         }
     }
 
-    private boolean exists(Alumn alumn) {
+    private boolean existsAlumn(Alumn alumn) {
         SQLiteDatabase sqLiteDatabase = database.getReadableDatabase();
         String existe = "SELECT IDAlumn FROM Alumn WHERE IDAlumn =? LIMIT 1";
         Cursor cursor = sqLiteDatabase.rawQuery(existe, new String[]{String.valueOf(alumn.getIdAlumn())});
@@ -123,5 +129,19 @@ public class AlumnDao extends Dao {
             valid = false;
         }
         return valid;
+    }
+
+    private void updateAlumn(Alumn alumn) {
+        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(TABLE_COLUMNS[0], alumn.getIdAlumn());
+        values.put(TABLE_COLUMNS[1], alumn.getName());
+        values.put(TABLE_COLUMNS[2], alumn.getRegistry());
+
+        sqLiteDatabase.update(TABLE_NAME, values, "[IDAlumn] = ? ",new String[]
+                                            {String.valueOf(alumn.getIdAlumn())});
+        sqLiteDatabase.close();
+        database.close();
     }
 }
