@@ -5,16 +5,20 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import helper.DatabaseHelper;
+import helper.SMSHelper;
+import model.Alumn;
 import model.Notification;
 import model.Parent;
 import model.Suspension;
 
 public class NotificationDao extends Dao{
 
-    private static final String TABLE_COLUMNS[] = {"notificationText","motive","notificationDate"};
+    private static final String TABLE_COLUMNS[] = {"notificationID","notificationText","motive",
+                                                   "notificationDate"};
 
     private static NotificationDao instance = null;
     private static String TABLE_NAME = "Notification";
@@ -41,9 +45,10 @@ public class NotificationDao extends Dao{
 
         ContentValues values = new ContentValues();
 
-        values.put(TABLE_COLUMNS[0], notification.getNotification_text());
-        values.put(TABLE_COLUMNS[1], notification.getMotive());
-        values.put(TABLE_COLUMNS[2], notification.getNotificaton_date());
+        values.put(TABLE_COLUMNS[0], notification.getIdNotification());
+        values.put(TABLE_COLUMNS[1], notification.getNotification_text());
+        values.put(TABLE_COLUMNS[2], notification.getMotive());
+        values.put(TABLE_COLUMNS[3], notification.getNotificaton_date());
 
         long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);
 
@@ -57,6 +62,8 @@ public class NotificationDao extends Dao{
 
     public void syncronNotification (List<Notification> notificationList) {
 
+        SMSHelper smsHelper = new SMSHelper();
+
         for(int aux = 0;aux<notificationList.size();aux ++) {
 
             Notification notification = new Notification();
@@ -69,8 +76,10 @@ public class NotificationDao extends Dao{
 
             if(existsNotification(notification) == true ) {
                 updateNotification(notification);
+                smsHelper.sendSMSNotification(notification);
             } else {
                 insertNotification(notification);
+                smsHelper.sendSMSNotification(notification);
             }
         }
     }
@@ -103,5 +112,25 @@ public class NotificationDao extends Dao{
                                                 String.valueOf(notification.getIdNotification())});
         sqLiteDatabase.close();
         database.close();
+    }
+
+    public List<Notification> getAllNotification() {
+        List<Notification> notificationList = new ArrayList<Notification>();
+        sqliteDatabase = database.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME;
+        Cursor cursor = sqliteDatabase.rawQuery( query, null );
+
+        while(cursor.moveToNext()) {
+            Notification notification = new Notification();
+
+            notification.setIdNotification(cursor.getInt(cursor.getColumnIndex("notificationID")));
+            notification.setNotification_text(cursor.getString(
+                                              cursor.getColumnIndex("notificationText")));
+            notification.setMotive(cursor.getString(cursor.getColumnIndex("motive")));
+            notification.setNotificaton_date(cursor.getString(
+                                             cursor.getColumnIndex("notificationDate")));
+            notificationList.add(notification);
+        }
+        return notificationList;
     }
 }

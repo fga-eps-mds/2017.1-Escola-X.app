@@ -9,6 +9,7 @@ import java.util.List;
 
 import dao.NotificationDao;
 import dao.ParentDao;
+import model.Notification;
 import model.Parent;
 
 public class SMSHelper extends Activity{
@@ -24,18 +25,17 @@ public class SMSHelper extends Activity{
         notificationDao = NotificationDao.getInstance(getApplicationContext());
     }
 
-    public void sendSMSNotification () {
+    public void sendSMSNotification (Notification notification) {
 
         List<Parent> parentList = new ArrayList<Parent>();
-
         parentList = parentDao.getAllParents();
+
         for(int aux = 0;aux <parentList.size();aux ++) {
             SmsManager.getDefault().sendTextMessage(parentList.get(aux).getPhone(),null,
                     "Caro(a) Senhor(a) " + parentList.get(aux).getName()
-                            + "\n" + "",null,null);
+                            + "\n" + "haverá no dia "
+                            + notification.getNotificaton_date() + ", "
+                            + notification.getNotification_text(),null,null);
         }
-
-        /*SmsManager.getDefault().sendTextMessage(numeroTelefone,null,
-                "Leonardo Arthur" +mensagemEscrita,null,null);*/
     }
 }
