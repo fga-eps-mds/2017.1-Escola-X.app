@@ -17,7 +17,7 @@ import model.ParentAlumn;
 
 public class ParentDao extends Dao{
 
-    private static final String TABLE_COLUMNS[] = {"IDParent","nameParent","phoneParent","IDAlumn"};
+    private static final String TABLE_COLUMNS[] = {"IDParent","nameParent","phoneParent"};
 
     private static ParentDao instance = null;
     private static String TABLE_NAME = "Parent";
@@ -67,7 +67,6 @@ public class ParentDao extends Dao{
         values.put(TABLE_COLUMNS[0], parent.getIdParent());
         values.put(TABLE_COLUMNS[1], parent.getName());
         values.put(TABLE_COLUMNS[2], parent.getPhone());
-        values.put(TABLE_COLUMNS[3], parent.getAlumn().getIdAlumn());
 
         long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);
 
@@ -119,6 +118,23 @@ public class ParentDao extends Dao{
                 insertAlumn(alumn);
             }
         }*/
+    }
+
+    public List<Parent> getParents() {
+        List<Parent> parentList = new ArrayList<Parent>();
+        sqliteDatabase = database.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME;
+        Cursor cursor = sqliteDatabase.rawQuery( query, null );
+
+        while(cursor.moveToNext()) {
+            Parent parent = new Parent();
+
+            parent.setIdParent(cursor.getInt(cursor.getColumnIndex("IDParent")));
+            parent.setName(cursor.getString(cursor.getColumnIndex("nameParent")));
+            parent.setPhone(cursor.getString(cursor.getColumnIndex("phoneParent")));
+            parentList.add(parent);
+        }
+        return parentList;
     }
 
     public List<ParentAlumn> getParent () {

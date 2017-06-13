@@ -22,6 +22,7 @@ import dao.ParentDao;
 import dao.StrikeDao;
 import dao.SuspensionDao;
 import escola_x.escola_x.R;
+import helper.DatabaseHelper;
 import model.Alumn;
 import model.Parent;
 import model.ParentAlumn;

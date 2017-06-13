@@ -45,7 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             "FOREIGN KEY ("+PARENT_ID+") REFERENCES "+ PARENT_ID + "("+PARENT_ID+"));";
 
     private static final String CREATE_PARENT = "CREATE TABLE IF NOT EXISTS " + PARENT_TABLE + " (" +
-            PARENT_ID + " INTEGER NOT NULL," +
+            PARENT_ID + " INTEGER PRIMARY KEY NOT NULL," +
             NAME_PARENT + " VARCHAR(64) NOT NULL, " +
             PHONE_PARENT + " VARCHAR(13) NOT NULL);";
 
