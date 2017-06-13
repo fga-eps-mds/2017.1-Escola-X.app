@@ -64,7 +64,7 @@ public class StrikeDao extends Dao {
         values.put(TABLE_COLUMNS[0], strike.getIdStrike());
         values.put(TABLE_COLUMNS[1], strike.getDescription_strike());
         values.put(TABLE_COLUMNS[2], strike.getDate_strike());
-        values.put(TABLE_COLUMNS[3], strike.getAlumn().getIdAlumn());
+//        values.put(TABLE_COLUMNS[3], strike.getAlumn().getIdAlumn());
 
         long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);
 

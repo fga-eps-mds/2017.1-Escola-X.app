@@ -6,6 +6,6 @@ import retrofit2.http.GET;
 
 public interface ParentService {
 
-    @GET("parents")
+    @GET("aluno")
     Call<ParentSync> list();
 }
