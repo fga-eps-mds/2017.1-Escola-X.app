@@ -48,6 +48,7 @@ public class SuspensionDao extends Dao{
         values.put(TABLE_COLUMNS[3], suspension.getQuantity_days());
 //        values.put(TABLE_COLUMNS[4], suspension.getAlumn().getIdAlumn());
 
+
         long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);
 
         if (result == -1) {

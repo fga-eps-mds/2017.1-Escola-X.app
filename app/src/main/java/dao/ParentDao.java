@@ -126,6 +126,24 @@ public class ParentDao extends Dao{
         database.close();
     }
 
+    public List<Parent> getAllParents() {
+        List<Parent> parentList = new ArrayList<Parent>();
+        sqliteDatabase = database.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME;
+        Cursor cursor = sqliteDatabase.rawQuery( query, null );
+
+        while(cursor.moveToNext()) {
+            Parent parent = new Parent();
+
+            parent.setIdParent(cursor.getInt(cursor.getColumnIndex("IDParent")));
+            parent.setName(cursor.getString(cursor.getColumnIndex("nameParent")));
+            parent.setPhone(cursor.getString(cursor.getColumnIndex("phoneParent")));
+            parentList.add(parent);
+        }
+        return parentList;
+    }
+
+
     /*public List<ParentAlumn> getParent () {
 
         ParentAlumn parentAlumn = new ParentAlumn();

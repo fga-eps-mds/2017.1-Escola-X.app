@@ -33,8 +33,8 @@ public class SMSActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sms);
-        alumnDao = AlumnDao.getInstance(this);
-
+        alumnDao = AlumnDao.getInstance(getApplicationContext());
+        parentDao = ParentDao.getInstance(getApplicationContext());
     }
 
     private void carregaList() {
@@ -64,6 +64,7 @@ public class SMSActivity extends AppCompatActivity{
 
         callParent.enqueue(new Callback<ParentSync>() {
             @Override
+
             public void onResponse(Call<ParentSync> call, Response<ParentSync> response) {
                 ParentSync parentSync = response.body();
                 parentDao.syncronParent(parentSync.getParents());
@@ -74,6 +75,8 @@ public class SMSActivity extends AppCompatActivity{
                 Log.e("Falha chamada Parent", t.getMessage());
             }
         });
+//        carregaList();
+    }
 
 //        call.enqueue(new Callback<AlumnSync>() {
 //            @Override
@@ -89,7 +92,5 @@ public class SMSActivity extends AppCompatActivity{
 //                Log.e("Falha chamada", t.getMessage());
 //            }
 //            });
-
-        carregaList();
+//
     }
-}
