@@ -11,6 +11,8 @@ import dao.NotificationDao;
 import dao.ParentDao;
 import model.Notification;
 import model.Parent;
+import model.Strike;
+import model.Suspension;
 
 public class SMSHelper extends Activity{
 
@@ -37,5 +39,13 @@ public class SMSHelper extends Activity{
                             + notification.getNotificaton_date() + ", "
                             + notification.getNotification_text(),null,null);
         }
+    }
+
+    public void sendSMSStrike (Strike strike) {
+
+    }
+
+    public void sendSMSSuspension (Suspension suspension) {
+
     }
 }
