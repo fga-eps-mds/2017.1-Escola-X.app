@@ -3,6 +3,9 @@ package model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Alumn extends Person {
 
     private Integer idAlumn;

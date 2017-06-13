@@ -15,6 +15,7 @@ import dao.AlumnDao;
 import dao.ParentDao;
 import escola_x.escola_x.R;
 import model.Alumn;
+import model.Parent;
 import retrofit.AlumnSync;
 import retrofit.ParentSync;
 import retrofit.RetrofitInit;
@@ -35,6 +36,12 @@ public class SMSActivity extends AppCompatActivity{
         setContentView(R.layout.activity_sms);
         alumnDao = AlumnDao.getInstance(getApplicationContext());
         parentDao = ParentDao.getInstance(getApplicationContext());
+
+        List<Parent> parentList = parentDao.getAllParents();
+
+        for(int aux = 0;aux < parentList.size(); aux ++) {
+            Log.d("NOME: ",parentList.get(aux).getName());
+        }
     }
 
     private void carregaList() {
@@ -42,9 +49,7 @@ public class SMSActivity extends AppCompatActivity{
 
         List<Alumn> alumns = alumnDao.getAllAlumns();
 
-        for(int aux = 0;aux < alumns.size(); aux ++) {
-            Log.d("NOME: ",alumns.get(aux).getName());
-        }
+
         Log.d("Tamanho = ", String.valueOf(alumns.size()));
 
         for (Alumn alumn :
