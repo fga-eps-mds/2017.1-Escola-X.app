@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.AlumnDao;
+import dao.ParentDao;
 import escola_x.escola_x.R;
 import model.Alumn;
 import retrofit.AlumnSync;
@@ -25,13 +26,14 @@ public class SMSActivity extends AppCompatActivity{
 
     TextView sms;
     AlumnDao alumnDao;
+    ParentDao parentDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sms);
-        alumnDao = AlumnDao.getInstance(this);
-
+        alumnDao = AlumnDao.getInstance(getApplicationContext());
+        parentDao = ParentDao.getInstance(getApplicationContext());
     }
 
     private void carregaList(Context applicationContext) {
@@ -60,7 +62,8 @@ public class SMSActivity extends AppCompatActivity{
             @Override
             public void onResponse(Call<AlumnSync> call, Response<AlumnSync> response) {
                 AlumnSync alumnSync = response.body();
-                //alumnDao.syncronAlumn(alumnSync.getAlumns());
+
+                //alumnDao.syncronAlumn(alumnSync.getAlumns(),parentDao.getAllParents());
                 //carregaList(getApplicationContext());
 
             }
