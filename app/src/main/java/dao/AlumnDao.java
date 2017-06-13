@@ -97,7 +97,7 @@ public class AlumnDao extends Dao {
         return alumnList;
     }
 
-    public void syncronAlumn (List<Alumn> alumns, List<Person> personList) {
+    public void syncronAlumn (List<Alumn> alumns, List<Parent> personList) {
 
         for(int aux = 0;aux<alumns.size();aux++) {
             Alumn alumn = new Alumn();
@@ -118,12 +118,13 @@ public class AlumnDao extends Dao {
 
     private boolean existsAlumn(Alumn alumn) {
         SQLiteDatabase sqLiteDatabase = database.getReadableDatabase();
-        String existe = "SELECT IDAlumn FROM Alumn WHERE IDAlumn =? LIMIT 1";
-        Cursor cursor = sqLiteDatabase.rawQuery(existe, new String[]{String.valueOf(alumn.getIdAlumn())});
-        int quantidade = cursor.getCount();
+        String exists = "SELECT IDAlumn FROM Alumn WHERE IDAlumn =? LIMIT 1";
+        Cursor cursor = sqLiteDatabase.rawQuery(exists, new String[]{
+                                                            String.valueOf(alumn.getIdAlumn())});
+        int quantaty = cursor.getCount();
         boolean valid = true;
 
-        if(quantidade > 0) {
+        if(quantaty > 0) {
             valid = true;
         } else {
             valid = false;
@@ -139,8 +140,8 @@ public class AlumnDao extends Dao {
         values.put(TABLE_COLUMNS[1], alumn.getName());
         values.put(TABLE_COLUMNS[2], alumn.getRegistry());
 
-        sqLiteDatabase.update(TABLE_NAME, values, "[IDAlumn] = ? ",new String[]
-                                            {String.valueOf(alumn.getIdAlumn())});
+        sqLiteDatabase.update(TABLE_NAME, values, "[IDAlumn] = ? ",new String[]{
+                                                            String.valueOf(alumn.getIdAlumn())});
         sqLiteDatabase.close();
         database.close();
     }

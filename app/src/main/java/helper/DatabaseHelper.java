@@ -36,6 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String NOTIFICATION_TEXT = "[notificationText]";
     private static final String NOTIFICATION_MOTIVE = "[motive]";
     private static final String NOTIFICATION_DATE = "[notificationDate]";
+    private static final String NOTIFICATION_ID = "[notificationID]";
 
     private static final String CREATE_ALUMN = "CREATE TABLE IF NOT EXISTS " + ALUMN_TABLE + " (" +
             ALUMN_ID + " INTEGER PRIMARY KEY NOT NULL," +
@@ -67,6 +68,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     private static final String CREATE_NOTIFICATION = "CREATE TABLE IF NOT EXISTS " +
             NOTIFICATION_TABLE + " (" +
+            NOTIFICATION_ID + " INTEGER PRIMARY KEY NOT NULL, " +
             NOTIFICATION_TEXT + " VARCHAR(150) NOT NULL, " +
             NOTIFICATION_MOTIVE + "VARCHAR(30) NOT NULL, " +
             NOTIFICATION_DATE + "VARCHAR(10) NOT NULL );";

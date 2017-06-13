@@ -78,66 +78,55 @@ public class ParentDao extends Dao{
         return valid;
     }
 
-    public void syncronParent (List<Parent> parentList, List<Alumn> alumnList) {
+    public void syncronParent (List<Parent> parentList) {
 
-        /*Map<String,List> rel_pai = new Map<String, List>;
+        for(int aux = 0;aux<parentList.size();aux ++) {
 
-        for (int aux = 0;aux<alumnList.size();aux ++) {
             Parent parent = new Parent();
-
-            //rel_pai.put(id,list);
-        }*/
-
-
-        /*for(int aux = 0; aux < alumnList.size();aux ++) {
-            Parent parent = new Parent();
-            Alumn alumn = new Alumn();
 
             parent.setIdParent(parentList.get(aux).getIdParent());
             parent.setName(parentList.get(aux).getName());
             parent.setPhone(parentList.get(aux).getPhone());
-            parent.setAlumn(alumnList.get(aux).getIdAlumn());
-        }*/
 
-        /*for(int aux = 0;aux<parentList.size();aux++) {
-            Parent parent = new Parent();
-
-            for(int alumnParent = 0; alumnParent < alumnList.size(); alumnParent ++) {
-
-            }
-
-            parent.setIdParent();
-
-            alumn.setIdAlumn(alumns.get(aux).getIdAlumn());
-            alumn.setName(alumns.get(aux).getName());
-            alumn.setRegistry(alumns.get(aux).getRegistry());
-
-            if(existsAlumn(alumn) == true ) {
-                updateAlumn(alumn);
+            if(existsParent(parent) == true ) {
+                updateParent(parent);
             } else {
-                insertAlumn(alumn);
+                insertParent(parent);
             }
-        }*/
-    }
-
-    public List<Parent> getParents() {
-        List<Parent> parentList = new ArrayList<Parent>();
-        sqliteDatabase = database.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_NAME;
-        Cursor cursor = sqliteDatabase.rawQuery( query, null );
-
-        while(cursor.moveToNext()) {
-            Parent parent = new Parent();
-
-            parent.setIdParent(cursor.getInt(cursor.getColumnIndex("IDParent")));
-            parent.setName(cursor.getString(cursor.getColumnIndex("nameParent")));
-            parent.setPhone(cursor.getString(cursor.getColumnIndex("phoneParent")));
-            parentList.add(parent);
         }
-        return parentList;
     }
 
-    public List<ParentAlumn> getParent () {
+    private boolean existsParent(Parent parent) {
+        SQLiteDatabase sqLiteDatabase = database.getReadableDatabase();
+        String exists = "SELECT IDParent FROM Parent WHERE IDParent =? LIMIT 1";
+        Cursor cursor = sqLiteDatabase.rawQuery(exists, new String[]{
+                                                            String.valueOf(parent.getIdParent())});
+        int quantaty = cursor.getCount();
+        boolean valid = true;
+
+        if(quantaty > 0) {
+            valid = true;
+        } else {
+            valid = false;
+        }
+        return valid;
+    }
+
+    private void updateParent(Parent parent) {
+        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(TABLE_COLUMNS[0], parent.getIdParent());
+        values.put(TABLE_COLUMNS[1], parent.getName());
+        values.put(TABLE_COLUMNS[2], parent.getPhone());
+
+        sqLiteDatabase.update(TABLE_NAME, values, "[IDParent] = ? ",new String[]{
+                                                            String.valueOf(parent.getIdParent())});
+        sqLiteDatabase.close();
+        database.close();
+    }
+
+    /*public List<ParentAlumn> getParent () {
 
         ParentAlumn parentAlumn = new ParentAlumn();
         List<ParentAlumn> parentAlumnList = new ArrayList<ParentAlumn>();
@@ -151,9 +140,9 @@ public class ParentDao extends Dao{
                 DatabaseHelper.SUSPENSION_TABLE + " ON " + TABLE_NAME + ".IDAlumn = " +
                 DatabaseHelper.SUSPENSION_TABLE + ".IDAlumn";*/
 
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
+        /*Cursor cursor = sqLiteDatabase.rawQuery(query,null);
 
-        while (cursor.moveToFirst()) {
+        while (cursor.moveToNext()) {
             parentAlumn.setAlumnId(cursor.getInt(cursor.getColumnIndex("IDAlumn")));
             parentAlumn.setNameAlumn(cursor.getString(cursor.getColumnIndex("nameAlumn")));
             parentAlumn.setRegistryAlumn(cursor.getString(cursor.getColumnIndex("registryAlumn")));
@@ -168,8 +157,8 @@ public class ParentDao extends Dao{
             parentAlumn.setDescription(cursor.getString(cursor.getColumnIndex("description")));
             parentAlumn.setQuantity_days(cursor.getInt(cursor.getColumnIndex("quantityDays")));*/
 
-            parentAlumnList.add(parentAlumn);
+            /*parentAlumnList.add(parentAlumn);
         }
         return parentAlumnList;
-    }
+    }*/
 }
