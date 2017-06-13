@@ -16,6 +16,7 @@ import dao.ParentDao;
 import escola_x.escola_x.R;
 import model.Alumn;
 import retrofit.AlumnSync;
+import retrofit.ParentSync;
 import retrofit.RetrofitInit;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,7 +37,7 @@ public class SMSActivity extends AppCompatActivity{
         parentDao = ParentDao.getInstance(getApplicationContext());
     }
 
-    private void carregaList(Context applicationContext) {
+    private void carregaList() {
         alumnDao = AlumnDao.getInstance(getApplicationContext());
 
         List<Alumn> alumns = alumnDao.getAllAlumns();
@@ -56,24 +57,39 @@ public class SMSActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         alumnDao = AlumnDao.getInstance(getApplicationContext());
+        parentDao = ParentDao.getInstance(getApplicationContext());
+
+        Call<ParentSync> callParent = new RetrofitInit().getParentService().list();
         Call<AlumnSync> call = new RetrofitInit().getAlumnService().list();
 
-        call.enqueue(new Callback<AlumnSync>() {
+        callParent.enqueue(new Callback<ParentSync>() {
             @Override
-            public void onResponse(Call<AlumnSync> call, Response<AlumnSync> response) {
-                AlumnSync alumnSync = response.body();
 
-                //alumnDao.syncronAlumn(alumnSync.getAlumns(),parentDao.getAllParents());
-                //carregaList(getApplicationContext());
-
+            public void onResponse(Call<ParentSync> call, Response<ParentSync> response) {
+                Log.i("Chamada do sucesso", response.message());
             }
 
             @Override
-            public void onFailure(Call<AlumnSync> call, Throwable t) {
-                Log.e("Falha chamada", t.getMessage());
+            public void onFailure(Call<ParentSync> call, Throwable t) {
+                Log.e("Falha chamada Parent", t.getMessage());
             }
-            });
-
-        carregaList(getApplicationContext());
+        });
+//        carregaList();
     }
-}
+
+//        call.enqueue(new Callback<AlumnSync>() {
+//            @Override
+//            public void onResponse(Call<AlumnSync> call, Response<AlumnSync> response) {
+//                AlumnSync alumnSync = response.body();
+//                alumnDao.syncronAlumn(alumnSync.getAlumns(),);
+//                carregaList();
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<AlumnSync> call, Throwable t) {
+//                Log.e("Falha chamada", t.getMessage());
+//            }
+//            });
+//
+    }
