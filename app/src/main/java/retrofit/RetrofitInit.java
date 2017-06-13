@@ -24,13 +24,13 @@ public class RetrofitInit {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder client = new OkHttpClient.Builder();
-        client.connectTimeout(30, TimeUnit.SECONDS);
-        client.readTimeout(30, TimeUnit.SECONDS);
-        client.writeTimeout(30, TimeUnit.SECONDS);
+//        client.connectTimeout(60, TimeUnit.SECONDS);
+//        client.readTimeout(60, TimeUnit.SECONDS);
+//        client.writeTimeout(60, TimeUnit.SECONDS);
         client.addInterceptor(interceptor);
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://172.31.155.140:8080/api/")
+                .baseUrl("http://192.168.43.61:3000/api/")
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(client.build())
                 .build();

@@ -66,8 +66,7 @@ public class SMSActivity extends AppCompatActivity{
             @Override
 
             public void onResponse(Call<ParentSync> call, Response<ParentSync> response) {
-                ParentSync parentSync = response.body();
-                parentDao.syncronParent(parentSync.getParents());
+                Log.i("Chamada do sucesso", response.message());
             }
 
             @Override
