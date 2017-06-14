@@ -12,7 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.AlumnDao;
+import dao.NotificationDao;
 import dao.ParentDao;
+import dao.StrikeDao;
+import dao.SuspensionDao;
 import escola_x.escola_x.R;
 import model.Alumn;
 import model.Parent;
@@ -26,9 +29,11 @@ import retrofit2.Response;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SMSActivity extends AppCompatActivity{
 
-    TextView sms;
     AlumnDao alumnDao;
     ParentDao parentDao;
+    NotificationDao notificationDao;
+    SuspensionDao suspensionDao;
+    StrikeDao strikeDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +41,9 @@ public class SMSActivity extends AppCompatActivity{
         setContentView(R.layout.activity_sms);
         alumnDao = AlumnDao.getInstance(getApplicationContext());
         parentDao = ParentDao.getInstance(getApplicationContext());
-
-        List<Parent> parentList = parentDao.getAllParents();
-
-        for(int aux = 0;aux < parentList.size(); aux ++) {
-            Log.d("NOME: ",parentList.get(aux).getName());
-        }
+        notificationDao = NotificationDao.getInstance(getApplicationContext());
+        suspensionDao = SuspensionDao.getInstance(getApplicationContext());
+        strikeDao = StrikeDao.getInstance(getApplicationContext());
     }
 
     private void carregaList() {
