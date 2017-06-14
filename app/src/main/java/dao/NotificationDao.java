@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,13 +76,36 @@ public class NotificationDao extends Dao{
             notification.setMotive(notificationList.get(aux).getMotive());
 
             if(existsNotification(notification) == true ) {
-                updateNotification(notification);
-                smsHelper.sendSMSNotification(notification);
+                if(verifEqualsNotification(notification) == false) {
+                    updateNotification(notification);
+                    smsHelper.sendSMSNotification(notification);
+                } else {
+                    /* Nothing to do*/
+                }
             } else {
                 insertNotification(notification);
                 smsHelper.sendSMSNotification(notification);
             }
         }
+    }
+
+    private boolean verifEqualsNotification (Notification notification) {
+
+        List<Notification> notificationList;
+        boolean valid = true;
+
+        notificationList = getAllNotification();
+
+        for(int aux = 0; aux < notificationList.size();aux ++) {
+            if (notification.getMotive() == notificationList.get(aux).getMotive() ||
+                notification.getNotification_text() == notificationList.get(aux).getNotification_text()) {
+                Log.d("Notificações iguais","");
+                valid = true;
+            } else {
+                valid = false;
+            }
+        }
+        return valid;
     }
 
     private boolean existsNotification(Notification notification) {

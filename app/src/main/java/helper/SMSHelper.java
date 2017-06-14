@@ -3,6 +3,7 @@ package helper;
 import android.app.Activity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,8 @@ public class SMSHelper extends Activity{
                             + notification.getNotificaton_date() + ", "
                             + notification.getNotification_text(),null,null);
         }
+        Toast.makeText(this,"Foi enviado um SMS para os pais sobre os eventos semanais",
+                Toast.LENGTH_LONG).show();
     }
 
     public void sendSMSStrike (Strike strike) {
