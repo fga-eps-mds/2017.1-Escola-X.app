@@ -97,7 +97,7 @@ public class NotificationDao extends Dao{
         notificationList = getAllNotification();
 
         for(int aux = 0; aux < notificationList.size();aux ++) {
-            if (notification.getMotive() == notificationList.get(aux).getMotive() ||
+            if (notification.getMotive() == notificationList.get(aux).getMotive() &&
                 notification.getNotification_text() == notificationList.get(aux).getNotification_text()) {
                 Log.d("Notificações iguais","");
                 valid = true;

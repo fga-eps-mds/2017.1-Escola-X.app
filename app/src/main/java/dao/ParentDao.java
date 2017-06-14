@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 import helper.DatabaseHelper;
 import model.Alumn;
+import model.Notification;
 import model.Parent;
 import model.ParentAlumn;
 
@@ -90,11 +92,34 @@ public class ParentDao extends Dao{
             parent.setPhone(parentList.get(aux).getPhone());
 
             if(existe(parent) == true ) {
-                updateParent(parent);
+                if(verifEqualsParents(parent) == false ) {
+                    updateParent(parent);
+                } else {
+                    /*Nothing to do */
+                }
             } else {
                 insertParent(parent);
             }
         }
+    }
+
+    private boolean verifEqualsParents (Parent parent) {
+
+        List<Parent> parentList;
+        boolean valid = true;
+
+        parentList = getAllParents();
+
+        for(int aux = 0; aux < parentList.size();aux ++) {
+            if (parent.getName() == parentList.get(aux).getName()  &&
+                    parent.getPhone() == parentList.get(aux).getPhone()) {
+                Log.d("Parentes iguais","");
+                valid = true;
+            } else {
+                valid = false;
+            }
+        }
+        return valid;
     }
 
     public void sincroniza(List<Parent> parents){
