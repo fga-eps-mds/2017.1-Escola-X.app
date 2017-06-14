@@ -58,6 +58,21 @@ public class SMSActivity extends AppCompatActivity{
         }
     }
 
+    private void parentList(){
+        parentDao = ParentDao.getInstance(getApplicationContext());
+
+        List<Parent> parents = parentDao.getAllParents();
+
+        Log.d("Tamanho dos pais:", String.valueOf(parents.size()));
+
+        for (Parent parent:
+                parents) {
+            Log.i("Id do Pai",  String.valueOf(parent.getIdParent()));
+            Log.i("Nome do Pai",  String.valueOf(parent.getName()));
+            Log.i("Telefone do Pai",  String.valueOf(parent.getPhone()));
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -72,6 +87,12 @@ public class SMSActivity extends AppCompatActivity{
 
             public void onResponse(Call<ParentSync> call, Response<ParentSync> response) {
                 Log.i("Chamada do sucesso", response.message());
+                ParentSync parentSync = response.body();
+                parentDao.sincroniza(parentSync.getParents());
+
+                Log.i("Nome do responsável 1 é", parentSync.getParents().get(0).getName());
+
+                parentList();
             }
 
             @Override
@@ -79,7 +100,7 @@ public class SMSActivity extends AppCompatActivity{
                 Log.e("Falha chamada Parent", t.getMessage());
             }
         });
-//        carregaList();
+        parentList();
     }
 
 //        call.enqueue(new Callback<AlumnSync>() {

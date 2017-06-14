@@ -30,7 +30,7 @@ public class RetrofitInit {
         client.addInterceptor(interceptor);
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.10:3000/api/")
+                .baseUrl("http://192.168.0.9:3000/api/")
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(client.build())
                 .build();
