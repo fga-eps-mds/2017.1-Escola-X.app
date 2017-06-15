@@ -39,11 +39,11 @@ public class SMSActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sms);
-        alumnDao = AlumnDao.getInstance(getApplicationContext());
-        parentDao = ParentDao.getInstance(getApplicationContext());
-        notificationDao = NotificationDao.getInstance(getApplicationContext());
-        suspensionDao = SuspensionDao.getInstance(getApplicationContext());
-        strikeDao = StrikeDao.getInstance(getApplicationContext());
+//        alumnDao = AlumnDao.getInstance(getApplicationContext());
+//        parentDao = ParentDao.getInstance(getApplicationContext());
+//        notificationDao = NotificationDao.getInstance(getApplicationContext());
+//        suspensionDao = SuspensionDao.getInstance(getApplicationContext());
+//        strikeDao = StrikeDao.getInstance(getApplicationContext());
     }
 
     private void carregaList() {
@@ -61,7 +61,8 @@ public class SMSActivity extends AppCompatActivity{
     }
 
     private void parentList(){
-        parentDao = ParentDao.getInstance(getApplicationContext());
+        ParentDao parentDao = new ParentDao(SMSActivity.this);
+//        parentDao = ParentDao.getInstance(getApplicationContext());
 
         List<Parent> parents = parentDao.getAllParents();
 
@@ -79,7 +80,8 @@ public class SMSActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         alumnDao = AlumnDao.getInstance(getApplicationContext());
-        parentDao = ParentDao.getInstance(getApplicationContext());
+        ParentDao parentDao = new ParentDao(SMSActivity.this);
+//        parentDao = ParentDao.getInstance(getApplicationContext());
 
         Call<ParentSync> callParent = new RetrofitInit().getParentService().list();
         Call<AlumnSync> call = new RetrofitInit().getAlumnService().list();
@@ -90,7 +92,9 @@ public class SMSActivity extends AppCompatActivity{
             public void onResponse(Call<ParentSync> call, Response<ParentSync> response) {
                 Log.i("Chamada do sucesso", response.message());
                 ParentSync parentSync = response.body();
-                parentDao.sincroniza(parentSync.getParents());
+                ParentDao dao = new ParentDao(SMSActivity.this);
+                dao.syncronParent(parentSync.getParents());
+//                parentDao.syncronParent(parentSync.getParents());
 
                 Log.i("Nome do responsável 1 é", parentSync.getParents().get(0).getName());
 

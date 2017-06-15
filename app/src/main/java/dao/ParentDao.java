@@ -25,7 +25,7 @@ public class ParentDao extends Dao{
     private static ParentDao instance = null;
     private static String TABLE_NAME = "Parent";
 
-    private ParentDao(Context context) {
+    public ParentDao(Context context) {
         ParentDao.database = new DatabaseHelper(context);
     }
 
