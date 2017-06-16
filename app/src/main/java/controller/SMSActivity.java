@@ -90,11 +90,20 @@ public class SMSActivity extends AppCompatActivity{
             public void onResponse(Call<ParentSync> call, Response<ParentSync> response) {
                 Log.i("Chamada do sucesso", response.message());
                 ParentSync parentSync = response.body();
-                parentDao.sincroniza(parentSync.getParents());
+                parentDao.syncronParent(parentSync.getParents());
+
+                for(int aux = 0; aux < parentSync.getParents().size();aux ++ ) {
+                    Log.d("ID: ",String.valueOf(parentSync.getParents().get(aux).getIdParent()));
+                }
+
+                for(int aux = 0; aux<parentDao.getAllParents().size();aux ++) {
+                    Log.d("ID: ",String.valueOf(parentDao.getAllParents().get(aux).getIdParent()));
+                    Log.d("Nome: ",parentDao.getAllParents().get(aux).getName());
+                }
 
                 Log.i("Nome do responsável 1 é", parentSync.getParents().get(0).getName());
 
-                parentList();
+                //parentList();
             }
 
             @Override
