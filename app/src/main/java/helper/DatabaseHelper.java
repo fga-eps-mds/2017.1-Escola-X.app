@@ -31,6 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String DESCRIPTION_SUSPENSION = "[description]";
     private static final String QUANTITY_DAYS = "[quantityDays]";
     private static final String Suspension_TITLE = "[title]";
+    private static final String SUSPENSION_DATE = "[suspensionDate]";
 
     private static final String NOTIFICATION_TABLE = "Notification";
     private static final String NOTIFICATION_TEXT = "[notificationText]";
@@ -63,6 +64,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
             Suspension_TITLE + "VARCHAR(20) NOT NULL, " +
             DESCRIPTION_SUSPENSION + " VARCHAR(150) NOT NULL, " +
             QUANTITY_DAYS + " INTEGER NOT NULL, " +
+            SUSPENSION_DATE + " VARCHAR(10) NOT NULL, " +
             ALUMN_ID + " INTEGER, " +
             "FOREIGN KEY ("+ALUMN_ID+") REFERENCES "+ ALUMN_TABLE + "("+ALUMN_ID+"));";
 

@@ -38,24 +38,23 @@ public class AlumnDao extends Dao {
         return AlumnDao.instance;
     }
 
-    public boolean isDbEmpty(){
-        sqliteDatabase = database.getReadableDatabase();
-        String query = "SELECT  1 FROM " + TABLE_NAME;
-        Cursor cursor = sqliteDatabase.rawQuery(query, null);
-        boolean isEmpty = false;
+    private boolean verifEqualsAlumns (Alumn alumn) {
 
-        if(cursor != null) {
-            if(cursor.getCount() <= 0) {
-                cursor.moveToFirst();
-                isEmpty = true;
+        List<Alumn> alumnList;
+        boolean valid = true;
+
+        alumnList = getAllAlumns();
+
+        for(int aux = 0; aux < alumnList.size();aux ++) {
+            if (alumn.getName().equals(alumnList.get(aux).getName())  &&
+                    alumn.getRegistry().equals(alumnList.get(aux).getRegistry())) {
+                Log.d("Alunos iguais","");
+                valid = true;
             } else {
-                /* Nothing to do.*/
+                valid = false;
             }
-        } else {
-            isEmpty = true;
         }
-
-        return isEmpty;
+        return valid;
     }
 
     public boolean insertAlumn (Alumn alumn, Parent parent) {
@@ -97,7 +96,7 @@ public class AlumnDao extends Dao {
         return alumnList;
     }
 
-    public void syncronAlumn (List<Alumn> alumns, List<Parent> personList) {
+    public void syncronAlumn (List<Alumn> alumns, Parent parentID) {
 
         for(int aux = 0;aux<alumns.size();aux++) {
             Alumn alumn = new Alumn();
@@ -106,10 +105,12 @@ public class AlumnDao extends Dao {
             alumn.setIdAlumn(alumns.get(aux).getIdAlumn());
             alumn.setName(alumns.get(aux).getName());
             alumn.setRegistry(alumns.get(aux).getRegistry());
-            parent.setIdParent(personList.get(aux).getIdPerson());
+            parent.setIdParent(parentID.getIdParent());
 
             if(existsAlumn(alumn) == true ) {
-                updateAlumn(alumn);
+                if(verifEqualsAlumns(alumn) == false ) {
+                    updateAlumn(alumn);
+                }
             } else {
                 insertAlumn(alumn,parent);
             }
@@ -136,7 +137,6 @@ public class AlumnDao extends Dao {
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        values.put(TABLE_COLUMNS[0], alumn.getIdAlumn());
         values.put(TABLE_COLUMNS[1], alumn.getName());
         values.put(TABLE_COLUMNS[2], alumn.getRegistry());
 

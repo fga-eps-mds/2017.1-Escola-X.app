@@ -10,11 +10,6 @@ public class Alumn extends Person {
 
     private Integer idAlumn;
 
-    public Alumn(String name,Integer registry,Integer idAlumn) {
-        super(name,registry);
-        setIdAlumn(idAlumn);
-    }
-
     public Alumn () {
 
     }

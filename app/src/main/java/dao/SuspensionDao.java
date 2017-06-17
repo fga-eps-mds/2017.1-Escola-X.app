@@ -9,13 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import helper.DatabaseHelper;
+import model.Alumn;
 import model.Strike;
 import model.Suspension;
 
 public class SuspensionDao extends Dao{
 
     private static final String TABLE_COLUMNS[] = {"IDSuspension","title","description",
-                                                   "quantityDays","IDAlumn"};
+                                                   "quantityDays","suspensionDate","IDAlumn"};
 
     private static SuspensionDao instance = null;
     private static String TABLE_NAME = "Suspension";
@@ -35,7 +36,7 @@ public class SuspensionDao extends Dao{
         return SuspensionDao.instance;
     }
 
-    public boolean insertSuspension (Suspension suspension) {
+    public boolean insertSuspension (Suspension suspension, Alumn alumn) {
 
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
         boolean valid = true;
@@ -46,7 +47,8 @@ public class SuspensionDao extends Dao{
         values.put(TABLE_COLUMNS[1], suspension.getTitle());
         values.put(TABLE_COLUMNS[2], suspension.getDescription());
         values.put(TABLE_COLUMNS[3], suspension.getQuantity_days());
-//        values.put(TABLE_COLUMNS[4], suspension.getAlumn().getIdAlumn());
+        values.put(TABLE_COLUMNS[4], suspension.getDateSuspension());
+        values.put(TABLE_COLUMNS[5], alumn.getIdAlumn());
 
 
         long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);

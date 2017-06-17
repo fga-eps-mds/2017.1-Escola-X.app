@@ -15,15 +15,6 @@ public class Notification {
 
     }
 
-    public Notification (String notification_text,String title,String motive,
-                         String notificaton_date,Integer idNotification) {
-        setIdNotification(idNotification);
-        setMotive(motive);
-        setNotification_text(notification_text);
-        setNotificaton_date(notificaton_date);
-        setTitle(title);
-    }
-
     public String getNotification_text() {
         return notification_text;
     }

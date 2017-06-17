@@ -59,33 +59,31 @@ public class StrikeDao extends Dao {
         return isEmpty;
     }
 
-    public void syncronStrike (List<Strike> strikeList,Alumn alumn) {
-
-        SMSHelper smsHelper = new SMSHelper();
+    public void syncronStrike (List<Strike> strikeList,Alumn alumnID) {
 
         for(int aux = 0;aux<strikeList.size();aux ++) {
 
             Strike strike = new Strike();
+            Alumn alumn = new Alumn();
 
             strike.setIdStrike(strikeList.get(aux).getIdStrike());
             strike.setDescription_strike(strikeList.get(aux).getDescription_strike());
             strike.setDate_strike(strikeList.get(aux).getDate_strike());
+            alumn.setIdAlumn(alumnID.getIdAlumn());
 
             if(existsStrike(strike) == true ) {
                 if(verifEqualsStrikes(strike) == false) {
                     updateStrike(strike);
-                    //smsHelper.sendSMSNotification(strike);
                 } else {
                     /* Nothing to do*/
                 }
             } else {
                 insertStrike(strike,alumn);
-                //smsHelper.sendSMSNotification(notification);
             }
         }
     }
 
-    public boolean insertStrike (Strike strike, Alumn alumn) {
+    public boolean insertStrike (Strike strike, Alumn alumnID) {
 
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
         boolean valid = true;
@@ -95,7 +93,7 @@ public class StrikeDao extends Dao {
         values.put(TABLE_COLUMNS[0], strike.getIdStrike());
         values.put(TABLE_COLUMNS[1], strike.getDescription_strike());
         values.put(TABLE_COLUMNS[2], strike.getDate_strike());
-        values.put(TABLE_COLUMNS[3], alumn.getIdAlumn());
+        values.put(TABLE_COLUMNS[3], alumnID.getIdAlumn());
 
         long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);
 
@@ -134,7 +132,8 @@ public class StrikeDao extends Dao {
         strikeList = getAllStrikes();
 
         for (int aux = 0;aux<strikeList.size();aux ++) {
-            if(strike.getDescription_strike() == strikeList.get(aux).getDescription_strike()) {
+            if(strike.getDescription_strike().equals(strikeList.get(aux).getDescription_strike()) &&
+               strike.getDate_strike().equals(strikeList.get(aux).getDate_strike())) {
                 Log.d("Advertência repetida","");
                 valid = true;
             } else {
@@ -163,7 +162,7 @@ public class StrikeDao extends Dao {
 
     private boolean existsStrike(Strike strike) {
         SQLiteDatabase sqLiteDatabase = database.getReadableDatabase();
-        String exists = "SELECT IDStrike FROM Notification WHERE IDStrike =? LIMIT 1";
+        String exists = "SELECT IDStrike FROM Strike WHERE IDStrike =? LIMIT 1";
         Cursor cursor = sqLiteDatabase.rawQuery(exists, new String[]{
                 String.valueOf(strike.getIdStrike())});
         int quantaty = cursor.getCount();
@@ -181,7 +180,6 @@ public class StrikeDao extends Dao {
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        values.put(TABLE_COLUMNS[0], strike.getIdStrike());
         values.put(TABLE_COLUMNS[1], strike.getDescription_strike());
         values.put(TABLE_COLUMNS[2], strike.getDate_strike());
 

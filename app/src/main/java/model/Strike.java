@@ -16,12 +16,6 @@ public class Strike {
 
     }
 
-    public Strike (String description_strike,String date_strike,Integer idStrike) {
-        setDate_strike(date_strike);
-        setDescription_strike(description_strike);
-        setIdStrike(idStrike);
-    }
-
     public Integer getIdStrike() {
         return idStrike;
     }

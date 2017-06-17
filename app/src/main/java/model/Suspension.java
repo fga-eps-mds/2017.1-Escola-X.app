@@ -12,16 +12,18 @@ public class Suspension {
     private String description;
     private Integer quantity_days;
     private Integer idSuspension;
+    private String dateSuspension;
 
     public Suspension () {
 
     }
 
-    public Suspension (String title,String description,Integer quantity_days,Integer idSuspension) {
-        setTitle(title);
-        setDescription(description);
-        setQuantity_days(quantity_days);
-        setIdSuspension(idSuspension);
+    public String getDateSuspension() {
+        return dateSuspension;
+    }
+
+    public void setDateSuspension(String dateSuspension) {
+        this.dateSuspension = dateSuspension;
     }
 
     public Integer getIdSuspension() {

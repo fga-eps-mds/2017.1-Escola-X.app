@@ -63,7 +63,7 @@ public class NotificationDao extends Dao{
 
     public void syncronNotification (List<Notification> notificationList) {
 
-        SMSHelper smsHelper = new SMSHelper();
+//        SMSHelper smsHelper = new SMSHelper();
 
         for(int aux = 0;aux<notificationList.size();aux ++) {
 
@@ -78,13 +78,13 @@ public class NotificationDao extends Dao{
             if(existsNotification(notification) == true ) {
                 if(verifEqualsNotification(notification) == false) {
                     updateNotification(notification);
-                    smsHelper.sendSMSNotification(notification);
+                    //smsHelper.sendSMSNotification(notification);
                 } else {
                     /* Nothing to do*/
                 }
             } else {
                 insertNotification(notification);
-                smsHelper.sendSMSNotification(notification);
+                //smsHelper.sendSMSNotification(notification);
             }
         }
     }
@@ -97,8 +97,9 @@ public class NotificationDao extends Dao{
         notificationList = getAllNotification();
 
         for(int aux = 0; aux < notificationList.size();aux ++) {
-            if (notification.getMotive() == notificationList.get(aux).getMotive() &&
-                notification.getNotification_text() == notificationList.get(aux).getNotification_text()) {
+            if (notification.getMotive().equals(notificationList.get(aux).getMotive()) &&
+                notification.getNotification_text().equals(
+                                            notificationList.get(aux).getNotification_text())) {
                 Log.d("Notificações iguais","");
                 valid = true;
             } else {
@@ -128,7 +129,6 @@ public class NotificationDao extends Dao{
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        values.put(TABLE_COLUMNS[0], notification.getNotification_text());
         values.put(TABLE_COLUMNS[1], notification.getMotive());
         values.put(TABLE_COLUMNS[2], notification.getNotificaton_date());
 

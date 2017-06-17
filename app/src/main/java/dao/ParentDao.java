@@ -40,26 +40,6 @@ public class ParentDao extends Dao{
         return ParentDao.instance;
     }
 
-    public boolean isDbEmpty(){
-        sqliteDatabase = database.getReadableDatabase();
-        String query = "SELECT  1 FROM " + TABLE_NAME;
-        Cursor cursor = sqliteDatabase.rawQuery(query, null);
-        boolean isEmpty = false;
-
-        if(cursor != null) {
-            if(cursor.getCount() <= 0) {
-                cursor.moveToFirst();
-                isEmpty = true;
-            } else {
-                /* Nothing to do.*/
-            }
-        } else {
-            isEmpty = true;
-        }
-
-        return isEmpty;
-    }
-
     public boolean insertParent (Parent parent) {
 
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
