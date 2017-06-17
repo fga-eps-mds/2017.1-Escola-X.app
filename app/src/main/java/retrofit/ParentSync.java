@@ -12,8 +12,12 @@ public class ParentSync {
 
     public List<Parent> getParents() {
 
-        Log.d("ID: ",String.valueOf(parents.get(0).getIdParent()));
-        Log.d("TAMANHO: ",String.valueOf(parents.size()));
+        for(int aux = 0; aux < parents.size();aux ++) {
+            Log.d("ID: ",String.valueOf(parents.get(aux).getIdParent()));
+            Log.d("TAMANHO: ",String.valueOf(parents.size()));
+        }
+
+
         return parents;
     }
 }

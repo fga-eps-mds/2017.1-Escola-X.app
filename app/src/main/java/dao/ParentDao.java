@@ -91,7 +91,7 @@ public class ParentDao extends Dao{
             parent.setName(parentList.get(aux).getName());
             parent.setPhone(parentList.get(aux).getPhone());
 
-            if(existe(parent) == true ) {
+            if(existsParent(parent) == true ) {
                 if(verifEqualsParents(parent) == false ) {
                     updateParent(parent);
                 } else {
@@ -111,8 +111,8 @@ public class ParentDao extends Dao{
         parentList = getAllParents();
 
         for(int aux = 0; aux < parentList.size();aux ++) {
-            if (parent.getName() == parentList.get(aux).getName()  &&
-                    parent.getPhone() == parentList.get(aux).getPhone()) {
+            if (parent.getName().equals(parentList.get(aux).getName())  &&
+                    parent.getPhone().equals(parentList.get(aux).getPhone())) {
                 Log.d("Parentes iguais","");
                 valid = true;
             } else {
@@ -120,45 +120,6 @@ public class ParentDao extends Dao{
             }
         }
         return valid;
-    }
-
-    public void sincroniza(List<Parent> parents){
-        for (Parent parent :
-                parents) {
-            if (existe(parent)){
-                altera(parent);
-            } else {
-                insere(parent);
-            }
-        }
-    }
-
-    @NonNull
-    private ContentValues dataParent(Parent parent){
-        ContentValues dados = new ContentValues();
-
-        dados.put("IDParent", parent.getIdParent());
-        dados.put("nameParent", parent.getName());
-        dados.put("phoneParent", parent.getPhone());
-
-        return dados;
-    }
-
-    public void altera(Parent parent){
-        SQLiteDatabase db = database.getWritableDatabase();
-
-        ContentValues data = dataParent(parent);
-
-        String[] params = {parent.getIdParent().toString()};
-        db.update("Parent", data, "IDParent = ?", params);
-    }
-
-    public void insere (Parent parent){
-        SQLiteDatabase db = database.getWritableDatabase();
-
-        ContentValues data = dataParent(parent);
-
-        db.insert("Parent", null, data);
     }
 
     private boolean existsParent(Parent parent) {
@@ -175,15 +136,6 @@ public class ParentDao extends Dao{
             valid = false;
         }
         return valid;
-    }
-
-    private boolean existe(Parent parent){
-        SQLiteDatabase db = database.getReadableDatabase();
-        String existe = "SELECT IDParent FROM Parent WHERE IDParent=? LIMIT 1";
-        Cursor cursor = db.rawQuery(existe, new String[]{String.valueOf(parent.getIdParent())});
-        int qntd = cursor.getCount();
-
-        return qntd >0;
     }
 
     private void updateParent(Parent parent) {
