@@ -48,10 +48,10 @@ public class JSONParserController extends Activity {
     private static String urlParents = "http://murmuring-mountain-86195.herokuapp.com/api/parents";
     private static String urlAlumns = "http://murmuring-mountain-86195.herokuapp.com/api/alumns";
     private static String urlNotifications =
-                                  "http://murmuring-mountain-86195.herokuapp.com/api/notifications";
+            "http://murmuring-mountain-86195.herokuapp.com/api/notifications";
     private static String urlStrike = "http://murmuring-mountain-86195.herokuapp.com/api/strikes";
     private static String urlSuspension =
-                                    "http://murmuring-mountain-86195.herokuapp.com/api/suspensions";
+            "http://murmuring-mountain-86195.herokuapp.com/api/suspensions";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -184,7 +184,7 @@ public class JSONParserController extends Activity {
                         parent.setIdParent(Integer.parseInt(parentJSONObject.getString("id")));
 
                         alumnList.add(alumn);
-                        alumnDao.syncronAlumn(alumnList,parent);
+                        alumnDao.syncronAlumn(alumnList, parent);
                     }
                 } catch (final JSONException e) {
                     runOnUiThread(new Runnable() {
@@ -254,12 +254,12 @@ public class JSONParserController extends Activity {
                         Notification notification = new Notification();
 
                         notification.setIdNotification(Integer.parseInt(
-                                                          notificationsJSONObject.getString("id")));
+                                notificationsJSONObject.getString("id")));
                         notification.setTitle(notificationsJSONObject.getString("title"));
                         notification.setNotification_text(
-                                            notificationsJSONObject.getString("notification_text"));
+                                notificationsJSONObject.getString("notification_text"));
                         notification.setNotificaton_date(
-                                            notificationsJSONObject.getString("notification_date"));
+                                notificationsJSONObject.getString("notification_date"));
                         notification.setMotive(notificationsJSONObject.getString("motive"));
 
                         notificationList.add(notification);
@@ -335,14 +335,14 @@ public class JSONParserController extends Activity {
 
                         strike.setIdStrike(Integer.parseInt(strikesJSONObject.getString("id")));
                         strike.setDescription_strike(strikesJSONObject.getString(
-                                                                        "description_strike"));
+                                "description_strike"));
                         strike.setDate_strike(strikesJSONObject.getString("date_strike"));
 
                         JSONObject alumnJSONObject = strikesJSONObject.getJSONObject("alumn");
                         alumn.setIdAlumn(Integer.parseInt(alumnJSONObject.getString("id")));
 
                         strikeList.add(strike);
-                        strikeDao.syncronStrike(strikeList,alumn);
+                        strikeDao.syncronStrike(strikeList, alumn);
                     }
                 } catch (final JSONException e) {
                     runOnUiThread(new Runnable() {
@@ -399,12 +399,12 @@ public class JSONParserController extends Activity {
 
             HttpHandlerHelper httpHandlerHelper = new HttpHandlerHelper();
 
-            String jsonStr = httpHandlerHelper.makeServiceCall(urlSuspension);
+            String jsonParent = httpHandlerHelper.makeServiceCall(urlSuspension);
 
-            if (jsonStr != null) {
+            if (jsonParent != null) {
                 try {
-                    JSONObject jsonObj = new JSONObject(jsonStr);
-                    JSONArray suspensions = jsonObj.getJSONArray("suspension");
+                    JSONObject jsonObj = new JSONObject(jsonParent);
+                    JSONArray suspensions = jsonObj.getJSONArray("suspensions");
 
                     for (int aux = 0; aux < suspensions.length(); aux++) {
                         JSONObject suspensionsJSONObject = suspensions.getJSONObject(aux);
@@ -413,19 +413,17 @@ public class JSONParserController extends Activity {
                         Alumn alumn = new Alumn();
 
                         suspension.setIdSuspension(Integer.parseInt(
-                                                    suspensionsJSONObject.getString("id")));
-                        suspension.setTitle(suspensionsJSONObject.getString("title"));
-                        suspension.setDescription(suspensionsJSONObject.getString("suspension"));
-                        suspension.setDateSuspension(
-                                                suspensionsJSONObject.getString("date_suspension"));
+                                                            suspensionsJSONObject.getString("id")));
+                        suspension.setDescription(suspensionsJSONObject.getString("description"));
                         suspension.setQuantity_days(Integer.parseInt(
                                                 suspensionsJSONObject.getString("quantity_days")));
+                        suspension.setTitle(suspensionsJSONObject.getString("title"));
 
                         JSONObject alumnJSONObject = suspensionsJSONObject.getJSONObject("alumn");
                         alumn.setIdAlumn(Integer.parseInt(alumnJSONObject.getString("id")));
 
                         suspensionList.add(suspension);
-
+                        suspensionDao.syncronSuspension(suspensionList,alumn);
                     }
                 } catch (final JSONException e) {
                     runOnUiThread(new Runnable() {
