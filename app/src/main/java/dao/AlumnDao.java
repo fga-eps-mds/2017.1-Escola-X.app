@@ -57,7 +57,7 @@ public class AlumnDao extends Dao {
         return valid;
     }
 
-    public boolean insertAlumn (Alumn alumn, Parent parent) {
+    public boolean insertAlumn (Alumn alumn) {
 
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
         boolean valid = true;
@@ -67,7 +67,7 @@ public class AlumnDao extends Dao {
         values.put(TABLE_COLUMNS[0], alumn.getIdAlumn());
         values.put(TABLE_COLUMNS[1], alumn.getName());
         values.put(TABLE_COLUMNS[2], alumn.getRegistry());
-        values.put(TABLE_COLUMNS[3], parent.getIdParent());
+        values.put(TABLE_COLUMNS[3], alumn.getIdParent());
 
         long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);
 
@@ -96,23 +96,22 @@ public class AlumnDao extends Dao {
         return alumnList;
     }
 
-    public void syncronAlumn (List<Alumn> alumns, Parent parentID) {
+    public void syncronAlumn (List<Alumn> alumns) {
 
         for(int aux = 0;aux<alumns.size();aux++) {
             Alumn alumn = new Alumn();
-            Parent parent = new Parent();
 
             alumn.setIdAlumn(alumns.get(aux).getIdAlumn());
             alumn.setName(alumns.get(aux).getName());
             alumn.setRegistry(alumns.get(aux).getRegistry());
-            parent.setIdParent(parentID.getIdParent());
+            alumn.setIdParent(alumns.get(aux).getIdParent());
 
             if(existsAlumn(alumn) == true ) {
                 if(verifEqualsAlumns(alumn) == false ) {
                     updateAlumn(alumn);
                 }
             } else {
-                insertAlumn(alumn,parent);
+                insertAlumn(alumn);
             }
         }
     }

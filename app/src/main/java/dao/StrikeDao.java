@@ -1,18 +1,25 @@
 package dao;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.telephony.SmsManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import helper.DatabaseHelper;
-import helper.SMSHelper;
 import model.Alumn;
 import model.Notification;
+import model.ParentAlumn;
 import model.Strike;
 import model.Suspension;
 
@@ -39,51 +46,36 @@ public class StrikeDao extends Dao {
         return StrikeDao.instance;
     }
 
-    public boolean isDbEmpty(){
-        sqliteDatabase = database.getReadableDatabase();
-        String query = "SELECT  1 FROM " + TABLE_NAME;
-        Cursor cursor = sqliteDatabase.rawQuery(query, null);
-        boolean isEmpty = false;
+    public boolean syncronStrike (List<Strike> strikeList) {
 
-        if(cursor != null) {
-            if(cursor.getCount() <= 0) {
-                cursor.moveToFirst();
-                isEmpty = true;
-            } else {
-                /* Nothing to do.*/
-            }
-        } else {
-            isEmpty = true;
-        }
-
-        return isEmpty;
-    }
-
-    public void syncronStrike (List<Strike> strikeList,Alumn alumnID) {
+        boolean valid = true;
 
         for(int aux = 0;aux<strikeList.size();aux ++) {
 
             Strike strike = new Strike();
-            Alumn alumn = new Alumn();
 
             strike.setIdStrike(strikeList.get(aux).getIdStrike());
             strike.setDescription_strike(strikeList.get(aux).getDescription_strike());
             strike.setDate_strike(strikeList.get(aux).getDate_strike());
-            alumn.setIdAlumn(alumnID.getIdAlumn());
+            strike.setIdAlumn(strikeList.get(aux).getIdAlumn());
 
             if(existsStrike(strike) == true ) {
                 if(verifEqualsStrikes(strike) == false) {
                     updateStrike(strike);
+                    valid = true;
                 } else {
-                    /* Nothing to do*/
+                    valid = false;
                 }
             } else {
-                insertStrike(strike,alumn);
+                insertStrike(strike);
+                valid = true;
             }
         }
+
+        return valid;
     }
 
-    public boolean insertStrike (Strike strike, Alumn alumnID) {
+    public boolean insertStrike (Strike strike) {
 
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
         boolean valid = true;
@@ -93,7 +85,7 @@ public class StrikeDao extends Dao {
         values.put(TABLE_COLUMNS[0], strike.getIdStrike());
         values.put(TABLE_COLUMNS[1], strike.getDescription_strike());
         values.put(TABLE_COLUMNS[2], strike.getDate_strike());
-        values.put(TABLE_COLUMNS[3], alumnID.getIdAlumn());
+        values.put(TABLE_COLUMNS[3], strike.getIdAlumn());
 
         long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);
 
@@ -187,5 +179,42 @@ public class StrikeDao extends Dao {
                 String.valueOf(strike.getIdStrike())});
         sqLiteDatabase.close();
         database.close();
+    }
+
+    public List<ParentAlumn> getParentAlumn () {
+
+        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+        List<ParentAlumn> parentAlumnList = new ArrayList<ParentAlumn>();
+        Strike strike = new Strike();
+
+        String query = "SELECT * FROM Alumn " +
+                "LEFT JOIN Parent ON Alumn.IDParent = Parent.IDParent " +
+                "LEFT JOIN Strike ON Strike.IDAlumn = Alumn.IDAlumn " +
+                "where Alumn.IDAlumn =  " + strike.getIdAlumn();
+
+
+        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
+        while(cursor.moveToNext()) {
+            ParentAlumn parentAlumn = new ParentAlumn();
+
+            parentAlumn.setNameAlumn(cursor.getString(cursor.getColumnIndex("nameAlumn")));
+            parentAlumn.setDescription_strike(cursor.getString(cursor.getColumnIndex("descriptionStrike")));
+            parentAlumn.setNameParent(cursor.getString(cursor.getColumnIndex("nameParent")));
+            parentAlumn.setPhoneParent(cursor.getString(cursor.getColumnIndex("phoneParent")));
+            parentAlumnList.add(parentAlumn);
+        }
+        return parentAlumnList;
+    }
+
+    public void sendStrike () {
+
+        List<ParentAlumn> parentAlumnList;
+        parentAlumnList = getParentAlumn();
+
+        SmsManager.getDefault().sendTextMessage(parentAlumnList.get(0).getPhoneParent(),null,
+                "Caro(a) Senhor(a) " + parentAlumnList.get(0).getNameParent()
+                        + "\n" + " o aluno " + parentAlumnList.get(0).getNameAlumn()
+                        +  " foi advertido por " + parentAlumnList.get(0).getDescription_strike()
+                        + ". Caso queira mais detalhes, compareça à escola. ",null,null);
     }
 }

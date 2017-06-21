@@ -9,14 +9,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Alumn extends Person {
 
     private Integer idAlumn;
+    private Integer idParent;
 
     public Alumn () {
 
     }
 
-    protected Alumn(Parcel in) {
-        super();
-        setIdAlumn(in.readInt());
+    public Integer getIdParent() {
+        return idParent;
+    }
+
+    public void setIdParent(Integer idParent) {
+        this.idParent = idParent;
     }
 
     public Integer getIdAlumn() {

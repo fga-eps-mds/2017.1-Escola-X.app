@@ -13,9 +13,18 @@ public class Suspension {
     private Integer quantity_days;
     private Integer idSuspension;
     private String dateSuspension;
+    private Integer idAlumn;
 
     public Suspension () {
 
+    }
+
+    public Integer getIdAlumn() {
+        return idAlumn;
+    }
+
+    public void setIdAlumn(Integer idAlumn) {
+        this.idAlumn = idAlumn;
     }
 
     public String getDateSuspension() {

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.telephony.SmsManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import helper.DatabaseHelper;
 import model.Alumn;
+import model.ParentAlumn;
 import model.Strike;
 import model.Suspension;
 
@@ -37,7 +39,7 @@ public class SuspensionDao extends Dao{
         return SuspensionDao.instance;
     }
 
-    public boolean insertSuspension (Suspension suspension, Alumn alumn) {
+    public boolean insertSuspension (Suspension suspension) {
 
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
         boolean valid = true;
@@ -48,7 +50,7 @@ public class SuspensionDao extends Dao{
         values.put(TABLE_COLUMNS[1], suspension.getTitle());
         values.put(TABLE_COLUMNS[2], suspension.getDescription());
         values.put(TABLE_COLUMNS[3], suspension.getQuantity_days());
-        values.put(TABLE_COLUMNS[4], alumn.getIdAlumn());
+        values.put(TABLE_COLUMNS[4], suspension.getIdAlumn());
 
 
         long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);
@@ -72,7 +74,7 @@ public class SuspensionDao extends Dao{
 
         Cursor cursor = sqLiteDatabase.rawQuery(query,null);
 
-        while(cursor.moveToFirst()) {
+        while(cursor.moveToNext()) {
             suspension.setIdSuspension(cursor.getInt(cursor.getColumnIndex("IDSuspension")));
             suspension.setTitle(cursor.getString(cursor.getColumnIndex("title")));
             suspension.setDescription(cursor.getString(cursor.getColumnIndex("description")));
@@ -103,25 +105,25 @@ public class SuspensionDao extends Dao{
         return valid;
     }
 
-    public void syncronSuspension (List<Suspension> suspensionList, Alumn alumnID) {
+    public void syncronSuspension (List<Suspension> suspensionList) {
 
         for(int aux = 0; aux < suspensionList.size(); aux ++) {
             Suspension suspension = new Suspension();
-            Alumn alumn = new Alumn();
 
             suspension.setIdSuspension(suspensionList.get(aux).getIdSuspension());
             suspension.setDescription(suspensionList.get(aux).getDescription());
             suspension.setTitle(suspensionList.get(aux).getTitle());
             suspension.setQuantity_days(suspensionList.get(aux).getQuantity_days());
             suspension.setDateSuspension(suspensionList.get(aux).getDateSuspension());
-            alumn.setIdAlumn(alumnID.getIdAlumn());
+            suspension.setIdAlumn(suspensionList.get(aux).getIdAlumn());
 
             if(existsSuspension(suspension) == true) {
                 if(verifEqualsSuspension(suspension) == false) {
                     updateSuspension(suspension);
+
                 }
             } else {
-                insertSuspension(suspension,alumn);
+                insertSuspension(suspension);
             }
         }
     }
@@ -154,5 +156,14 @@ public class SuspensionDao extends Dao{
                 String.valueOf(suspension.getIdSuspension())});
         sqLiteDatabase.close();
         database.close();
+    }
+
+    private void sendSuspension (List<ParentAlumn> parentAlumns) {
+
+        /*SmsManager.getDefault().sendTextMessage(parentList.get(aux).getPhone(),null,
+                "Caro(a) Senhor(a) " + parentList.get(aux).getName()
+                        + "\n" + "haverá no dia "
+                        + notification.getNotificaton_date() + ", "
+                        + notification.getNotification_text(),null,null);*/
     }
 }

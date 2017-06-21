@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import helper.DatabaseHelper;
-import helper.SMSHelper;
 import model.Alumn;
 import model.Notification;
 import model.Parent;
@@ -62,8 +61,6 @@ public class NotificationDao extends Dao{
     }
 
     public void syncronNotification (List<Notification> notificationList) {
-
-//        SMSHelper smsHelper = new SMSHelper();
 
         for(int aux = 0;aux<notificationList.size();aux ++) {
 

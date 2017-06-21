@@ -11,9 +11,18 @@ public class Strike {
     private Integer idStrike;
     private String description_strike;
     private String date_strike;
+    private Integer idAlumn;
 
     public Strike () {
 
+    }
+
+    public Integer getIdAlumn() {
+        return idAlumn;
+    }
+
+    public void setIdAlumn(Integer idAlumn) {
+        this.idAlumn = idAlumn;
     }
 
     public Integer getIdStrike() {
