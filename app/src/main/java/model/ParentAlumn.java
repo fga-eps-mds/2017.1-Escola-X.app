@@ -9,15 +9,49 @@ public class ParentAlumn {
     private String nameParent;
     private String phoneParent;
     private Integer idStrike;
-    private String description_strike;
+    private String descriptionStrike;
     private String date_strike;
     private String title;
     private String description;
-    private Integer quantity_days;
+    private Integer quantityDays;
     private Integer idSuspension;
+    private String notificationDate;
+    private String notificationText;
 
     public ParentAlumn () {
 
+    }
+
+    public String getDescriptionStrike() {
+        return descriptionStrike;
+    }
+
+    public void setDescriptionStrike(String descriptionStrike) {
+        this.descriptionStrike = descriptionStrike;
+    }
+
+    public Integer getQuantityDays() {
+        return quantityDays;
+    }
+
+    public void setQuantityDays(Integer quantityDays) {
+        this.quantityDays = quantityDays;
+    }
+
+    public String getNotificationDate() {
+        return notificationDate;
+    }
+
+    public void setNotificationDate(String notificationDate) {
+        this.notificationDate = notificationDate;
+    }
+
+    public String getNotificationText() {
+        return notificationText;
+    }
+
+    public void setNotificationText(String notificationText) {
+        this.notificationText = notificationText;
     }
 
     public String getNameAlumn() {
@@ -76,14 +110,6 @@ public class ParentAlumn {
         this.idStrike = idStrike;
     }
 
-    public String getDescription_strike() {
-        return description_strike;
-    }
-
-    public void setDescription_strike(String description_strike) {
-        this.description_strike = description_strike;
-    }
-
     public String getDate_strike() {
         return date_strike;
     }
@@ -106,14 +132,6 @@ public class ParentAlumn {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Integer getQuantity_days() {
-        return quantity_days;
-    }
-
-    public void setQuantity_days(Integer quantity_days) {
-        this.quantity_days = quantity_days;
     }
 
     public Integer getIdSuspension() {

@@ -3,8 +3,12 @@ package controller;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -33,6 +37,7 @@ import helper.HttpHandlerHelper;
 import model.Alumn;
 import model.Notification;
 import model.Parent;
+import model.ParentAlumn;
 import model.Strike;
 import model.Suspension;
 
@@ -45,6 +50,8 @@ public class JSONParserController extends Activity {
     NotificationDao notificationDao;
     StrikeDao strikeDao;
     SuspensionDao suspensionDao;
+    private static final int MY_PERMISSION = 0;
+    private boolean sucess = true;
 
     private static String urlParents = "http://murmuring-mountain-86195.herokuapp.com/api/parents";
     private static String urlAlumns = "http://murmuring-mountain-86195.herokuapp.com/api/alumns";
@@ -65,14 +72,15 @@ public class JSONParserController extends Activity {
         strikeDao = StrikeDao.getInstance(getApplicationContext());
         suspensionDao = SuspensionDao.getInstance(getApplicationContext());
 
-        new GetParents().execute();
-        new GetAlumns().execute();
-        new GetNotification().execute();
-        new GetStrike().execute();
-        //new GetSuspension().execute();
+        new GetDatas().execute();
+        //new GetParents().execute();
+//        new GetAlumns().execute();
+//        new GetNotification().execute();
+//        new GetStrike().execute();
+//        new GetSuspension().execute();
     }
 
-    private class GetParents extends AsyncTask<Void, Void, Void> {
+    private class GetDatas extends AsyncTask<Void,Void,Void> {
 
         @Override
         protected void onPreExecute() {
@@ -81,16 +89,25 @@ public class JSONParserController extends Activity {
             pDialog = new ProgressDialog(JSONParserController.this);
             pDialog.setMessage("Por favor aguarde...");
             pDialog.setCancelable(false);
+            //pDialog.show();
         }
 
         @Override
         protected Void doInBackground(Void... arg0) {
 
             List<Parent> parentList = new ArrayList<Parent>();
+            List<Alumn> alumnList = new ArrayList<Alumn>();
+            List<Notification> notificationList = new ArrayList<Notification>();
+            List<Strike> strikeList = new ArrayList<Strike>();
+            List<Suspension> suspensionList = new ArrayList<Suspension>();
 
             HttpHandlerHelper httpHandlerHelper = new HttpHandlerHelper();
 
             String jsonParent = httpHandlerHelper.makeServiceCall(urlParents);
+            String jsonAlumn = httpHandlerHelper.makeServiceCall(urlAlumns);
+            String jsonNotification = httpHandlerHelper.makeServiceCall(urlNotifications);
+            String jsonStrike = httpHandlerHelper.makeServiceCall(urlStrike);
+            String jsonSuspension = httpHandlerHelper.makeServiceCall(urlSuspension);
 
             if (jsonParent != null) {
                 try {
@@ -108,6 +125,194 @@ public class JSONParserController extends Activity {
 
                         parentList.add(parent);
                         parentDao.syncronParent(parentList);
+                    }
+                } catch (final JSONException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Json parsing error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
+
+                }
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                "Couldn't get json from server. Check LogCat for possible errors!",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+            }
+
+            if (jsonAlumn != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(jsonAlumn);
+                    JSONArray alumns = jsonObj.getJSONArray("alumns");
+
+                    for (int aux = 0; aux < alumns.length(); aux++) {
+                        JSONObject alumnsJSONObject = alumns.getJSONObject(aux);
+
+                        Alumn alumn = new Alumn();
+
+                        alumn.setIdAlumn(Integer.parseInt(alumnsJSONObject.getString("id")));
+                        alumn.setName(alumnsJSONObject.getString("name"));
+                        alumn.setRegistry(Integer.parseInt(alumnsJSONObject.getString("registry")));
+
+                        JSONObject parentJSONObject = alumnsJSONObject.getJSONObject("parent");
+                        alumn.setIdParent(Integer.parseInt(parentJSONObject.getString("id")));
+
+                        alumnList.add(alumn);
+                        alumnDao.syncronAlumn(alumnList);
+                    }
+                } catch (final JSONException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Json parsing error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
+                }
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                "Couldn't get json from server. Check LogCat for possible errors!",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+
+            }
+
+            if (jsonNotification != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(jsonNotification);
+                    JSONArray notifications = jsonObj.getJSONArray("notifications");
+
+                    for (int aux = 0; aux < notifications.length(); aux++) {
+                        JSONObject notificationsJSONObject = notifications.getJSONObject(aux);
+
+                        Notification notification = new Notification();
+
+                        notification.setIdNotification(Integer.parseInt(
+                                notificationsJSONObject.getString("id")));
+                        notification.setTitle(notificationsJSONObject.getString("title"));
+                        notification.setNotification_text(
+                                notificationsJSONObject.getString("notification_text"));
+                        notification.setNotificaton_date(
+                                notificationsJSONObject.getString("notification_date"));
+                        notification.setMotive(notificationsJSONObject.getString("motive"));
+
+                        notificationList.add(notification);
+                        notificationDao.insertNotification(notification);
+                    }
+                } catch (final JSONException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Json parsing error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
+
+                }
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                "Couldn't get json from server. Check LogCat for possible errors!",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+            }
+
+            if (jsonStrike != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(jsonStrike);
+                    JSONArray strikes = jsonObj.getJSONArray("strikes");
+
+                    for (int aux = 0; aux < strikes.length(); aux++) {
+                        JSONObject strikesJSONObject = strikes.getJSONObject(aux);
+
+                        Strike strike = new Strike();
+
+                        strike.setIdStrike(Integer.parseInt(strikesJSONObject.getString("id")));
+                        strike.setDescription_strike(strikesJSONObject.getString(
+                                "description_strike"));
+                        strike.setDate_strike(strikesJSONObject.getString("date_strike"));
+
+                        JSONObject alumnJSONObject = strikesJSONObject.getJSONObject("alumn");
+                        strike.setIdAlumn(Integer.parseInt(alumnJSONObject.getString("id")));
+
+                        strikeList.add(strike);
+                        sucess = strikeDao.syncronStrike(strikeList);
+                        if (sucess == true) {
+
+                        } else {
+
+                        }
+                    }
+                } catch (final JSONException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Json parsing error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
+
+                }
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                "Couldn't get json from server. Check LogCat for possible errors!",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+
+            }
+
+            if (jsonSuspension != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(jsonSuspension);
+                    JSONArray suspensions = jsonObj.getJSONArray("suspensions");
+
+                    for (int aux = 0; aux < suspensions.length(); aux++) {
+                        JSONObject suspensionsJSONObject = suspensions.getJSONObject(aux);
+
+                        Suspension suspension = new Suspension();
+
+                        suspension.setIdSuspension(Integer.parseInt(
+                                suspensionsJSONObject.getString("id")));
+                        suspension.setDescription(suspensionsJSONObject.getString("description"));
+                        suspension.setQuantity_days(Integer.parseInt(
+                                suspensionsJSONObject.getString("quantity_days")));
+                        suspension.setTitle(suspensionsJSONObject.getString("title"));
+
+                        JSONObject alumnJSONObject = suspensionsJSONObject.getJSONObject("alumn");
+                        suspension.setIdAlumn(Integer.parseInt(alumnJSONObject.getString("id")));
+
+                        suspensionList.add(suspension);
+                        suspensionDao.syncronSuspension(suspensionList);
                     }
                 } catch (final JSONException e) {
                     runOnUiThread(new Runnable() {
@@ -237,10 +442,9 @@ public class JSONParserController extends Activity {
         @Override
         protected Void doInBackground(Void... arg0) {
 
-            List<Notification> notificationList = new ArrayList<Notification>();
-
             HttpHandlerHelper httpHandlerHelper = new HttpHandlerHelper();
 
+            List<Notification> notificationList = new ArrayList<Notification>();
             String jsonStr = httpHandlerHelper.makeServiceCall(urlNotifications);
 
             if (jsonStr != null) {
@@ -263,7 +467,7 @@ public class JSONParserController extends Activity {
                         notification.setMotive(notificationsJSONObject.getString("motive"));
 
                         notificationList.add(notification);
-                        notificationDao.syncronNotification(notificationList);
+                        notificationDao.insertNotification(notification);
                     }
                 } catch (final JSONException e) {
                     runOnUiThread(new Runnable() {
@@ -316,11 +520,12 @@ public class JSONParserController extends Activity {
         @Override
         protected Void doInBackground(Void... arg0) {
 
-            List<Strike> strikeList = new ArrayList<Strike>();
+
             boolean sucess = true;
 
             HttpHandlerHelper httpHandlerHelper = new HttpHandlerHelper();
 
+            List<Strike> strikeList = new ArrayList<Strike>();
             String jsonStr = httpHandlerHelper.makeServiceCall(urlStrike);
 
             if (jsonStr != null) {
@@ -344,7 +549,7 @@ public class JSONParserController extends Activity {
                         strikeList.add(strike);
                         sucess = strikeDao.syncronStrike(strikeList);
                         if (sucess == true) {
-                            strikeDao.sendStrike();
+
                         } else {
 
                         }
@@ -400,10 +605,11 @@ public class JSONParserController extends Activity {
         @Override
         protected Void doInBackground(Void... arg0) {
 
-            List<Suspension> suspensionList = new ArrayList<Suspension>();
+
 
             HttpHandlerHelper httpHandlerHelper = new HttpHandlerHelper();
 
+            List<Suspension> suspensionList = new ArrayList<Suspension>();
             String jsonParent = httpHandlerHelper.makeServiceCall(urlSuspension);
 
             if (jsonParent != null) {
@@ -417,10 +623,10 @@ public class JSONParserController extends Activity {
                         Suspension suspension = new Suspension();
 
                         suspension.setIdSuspension(Integer.parseInt(
-                                                            suspensionsJSONObject.getString("id")));
+                                suspensionsJSONObject.getString("id")));
                         suspension.setDescription(suspensionsJSONObject.getString("description"));
                         suspension.setQuantity_days(Integer.parseInt(
-                                                suspensionsJSONObject.getString("quantity_days")));
+                                suspensionsJSONObject.getString("quantity_days")));
                         suspension.setTitle(suspensionsJSONObject.getString("title"));
 
                         JSONObject alumnJSONObject = suspensionsJSONObject.getJSONObject("alumn");
@@ -465,4 +671,34 @@ public class JSONParserController extends Activity {
             finish();
         }
     }
+
+
+    private void sendNotification (List<ParentAlumn> parentAlumnList) {
+
+        for(int aux = 0; aux < parentAlumnList.size(); aux ++) {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(parentAlumnList.get(aux).getPhoneParent(),null,
+                    "Caro(a) " + parentAlumnList.get(aux).getNameParent() + "haverá, no dia "
+                               + parentAlumnList.get(aux).getNotificationDate() + ", "
+                               + parentAlumnList.get(aux).getNotificationText(),null,null);
+            Toast.makeText(getApplicationContext(),"SMS Enviado para " + parentAlumnList.get(aux).getNameParent(), Toast.LENGTH_LONG).show();
+        }
+    }
+    /*protected void sendStrike(){
+
+        List<ParentAlumn> parentAlumnList = strikeDao.getParentAlumn();
+        try {
+            for(int aux = 0; aux < parentAlumnList.size(); aux ++) {
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage(parentAlumnList.get(aux).getPhoneParent(), null, parentAlumnList.get(aux).getDescription_strike(), null, null);
+                Toast.makeText(getApplicationContext(), "SMS Enviado para o !" + parentAlumnList.get(aux).getNameParent(),
+                        Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(),
+                    "SMS faild, please try again later!",
+                    Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+    }*/
 }

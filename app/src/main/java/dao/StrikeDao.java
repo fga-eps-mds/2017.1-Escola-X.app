@@ -26,7 +26,7 @@ import model.Suspension;
 public class StrikeDao extends Dao {
 
     private static final String TABLE_COLUMNS[] = {"IDStrike","descriptionStrike","dateStrike",
-                                                   "IDAlumn"};
+            "IDAlumn"};
 
     private static StrikeDao instance = null;
     private static String TABLE_NAME = "Strike";
@@ -62,12 +62,15 @@ public class StrikeDao extends Dao {
             if(existsStrike(strike) == true ) {
                 if(verifEqualsStrikes(strike) == false) {
                     updateStrike(strike);
+                    //getParentAlumn(strike);
+                    //sendMessage(strike);
                     valid = true;
                 } else {
                     valid = false;
                 }
             } else {
                 insertStrike(strike);
+                //getParentAlumn(strike);
                 valid = true;
             }
         }
@@ -97,25 +100,6 @@ public class StrikeDao extends Dao {
         return valid;
     }
 
-    public List<Strike> getStrike() {
-
-        Strike strike = new Strike();
-        List<Strike> strikeList = new ArrayList<Strike>();
-
-        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
-
-        String query = "SELECT * FROM " + TABLE_NAME + "WHERE IDAlumn = " + DatabaseHelper.ALUMN_ID;
-
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-
-        while(cursor.moveToFirst()) {
-            strike.setDescription_strike(cursor.getString(cursor.getColumnIndex("descriptionStrike")));
-            strike.setDate_strike(cursor.getString(cursor.getColumnIndex("dateStrike")));
-            strikeList.add(strike);
-        }
-        return strikeList;
-    }
-
     private boolean verifEqualsStrikes (Strike strike) {
 
         List<Strike> strikeList;
@@ -125,7 +109,7 @@ public class StrikeDao extends Dao {
 
         for (int aux = 0;aux<strikeList.size();aux ++) {
             if(strike.getDescription_strike().equals(strikeList.get(aux).getDescription_strike()) &&
-               strike.getDate_strike().equals(strikeList.get(aux).getDate_strike())) {
+                    strike.getDate_strike().equals(strikeList.get(aux).getDate_strike())) {
                 Log.d("Advertência repetida","");
                 valid = true;
             } else {
@@ -185,12 +169,11 @@ public class StrikeDao extends Dao {
 
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
         List<ParentAlumn> parentAlumnList = new ArrayList<ParentAlumn>();
-        Strike strike = new Strike();
 
         String query = "SELECT * FROM Alumn " +
                 "LEFT JOIN Parent ON Alumn.IDParent = Parent.IDParent " +
                 "LEFT JOIN Strike ON Strike.IDAlumn = Alumn.IDAlumn " +
-                "where Alumn.IDAlumn =  " + strike.getIdAlumn();
+                "WHERE Alumn.IDAlumn =  4" ;
 
 
         Cursor cursor = sqLiteDatabase.rawQuery(query,null);
@@ -198,23 +181,11 @@ public class StrikeDao extends Dao {
             ParentAlumn parentAlumn = new ParentAlumn();
 
             parentAlumn.setNameAlumn(cursor.getString(cursor.getColumnIndex("nameAlumn")));
-            parentAlumn.setDescription_strike(cursor.getString(cursor.getColumnIndex("descriptionStrike")));
+            parentAlumn.setDescriptionStrike(cursor.getString(cursor.getColumnIndex("descriptionStrike")));
             parentAlumn.setNameParent(cursor.getString(cursor.getColumnIndex("nameParent")));
             parentAlumn.setPhoneParent(cursor.getString(cursor.getColumnIndex("phoneParent")));
             parentAlumnList.add(parentAlumn);
         }
         return parentAlumnList;
-    }
-
-    public void sendStrike () {
-
-        List<ParentAlumn> parentAlumnList;
-        parentAlumnList = getParentAlumn();
-
-        SmsManager.getDefault().sendTextMessage(parentAlumnList.get(0).getPhoneParent(),null,
-                "Caro(a) Senhor(a) " + parentAlumnList.get(0).getNameParent()
-                        + "\n" + " o aluno " + parentAlumnList.get(0).getNameAlumn()
-                        +  " foi advertido por " + parentAlumnList.get(0).getDescription_strike()
-                        + ". Caso queira mais detalhes, compareça à escola. ",null,null);
     }
 }

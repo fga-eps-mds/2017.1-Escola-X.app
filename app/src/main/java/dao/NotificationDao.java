@@ -13,6 +13,8 @@ import helper.DatabaseHelper;
 import model.Alumn;
 import model.Notification;
 import model.Parent;
+import model.ParentAlumn;
+import model.Strike;
 import model.Suspension;
 
 public class NotificationDao extends Dao{
@@ -60,82 +62,14 @@ public class NotificationDao extends Dao{
         return valid;
     }
 
-    public void syncronNotification (List<Notification> notificationList) {
+    public Integer deleteNotification (Notification notification) {
 
-        for(int aux = 0;aux<notificationList.size();aux ++) {
-
-            Notification notification = new Notification();
-
-            notification.setIdNotification(notificationList.get(aux).getIdNotification());
-            notification.setNotification_text(notificationList.get(aux).getNotification_text());
-            notification.setTitle(notificationList.get(aux).getTitle());
-            notification.setNotificaton_date(notificationList.get(aux).getNotificaton_date());
-            notification.setMotive(notificationList.get(aux).getMotive());
-
-            if(existsNotification(notification) == true ) {
-                if(verifEqualsNotification(notification) == false) {
-                    updateNotification(notification);
-                    //smsHelper.sendSMSNotification(notification);
-                } else {
-                    /* Nothing to do*/
-                }
-            } else {
-                insertNotification(notification);
-                //smsHelper.sendSMSNotification(notification);
-            }
-        }
-    }
-
-    private boolean verifEqualsNotification (Notification notification) {
-
-        List<Notification> notificationList;
-        boolean valid = true;
-
-        notificationList = getAllNotification();
-
-        for(int aux = 0; aux < notificationList.size();aux ++) {
-            if (notification.getMotive().equals(notificationList.get(aux).getMotive()) &&
-                notification.getNotification_text().equals(
-                                            notificationList.get(aux).getNotification_text())) {
-                Log.d("Notificações iguais","");
-                valid = true;
-            } else {
-                valid = false;
-            }
-        }
-        return valid;
-    }
-
-    private boolean existsNotification(Notification notification) {
-        SQLiteDatabase sqLiteDatabase = database.getReadableDatabase();
-        String exists = "SELECT notificationID FROM Notification WHERE notificationID =? LIMIT 1";
-        Cursor cursor = sqLiteDatabase.rawQuery(exists, new String[]{
-                String.valueOf(notification.getIdNotification())});
-        int quantaty = cursor.getCount();
-        boolean valid = true;
-
-        if(quantaty > 0) {
-            valid = true;
-        } else {
-            valid = false;
-        }
-        return valid;
-    }
-
-    private void updateNotification(Notification notification) {
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
-        ContentValues values = new ContentValues();
 
-        values.put(TABLE_COLUMNS[1], notification.getMotive());
-        values.put(TABLE_COLUMNS[2], notification.getNotificaton_date());
-
-        sqLiteDatabase.update(TABLE_NAME, values, "[notificationID] = ? ",new String[]{
-                                                String.valueOf(notification.getIdNotification())});
-        sqLiteDatabase.close();
-        database.close();
+        return sqLiteDatabase.delete(TABLE_NAME, "[notificationID] = " + notification.getIdNotification(),null);
     }
 
-    public List<Notification> getAllNotification() {
+    /*public List<Notification> getNotification() {
         List<Notification> notificationList = new ArrayList<Notification>();
         sqliteDatabase = database.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME;
@@ -144,14 +78,32 @@ public class NotificationDao extends Dao{
         while(cursor.moveToNext()) {
             Notification notification = new Notification();
 
-            notification.setIdNotification(cursor.getInt(cursor.getColumnIndex("notificationID")));
-            notification.setNotification_text(cursor.getString(
-                                              cursor.getColumnIndex("notificationText")));
             notification.setMotive(cursor.getString(cursor.getColumnIndex("motive")));
-            notification.setNotificaton_date(cursor.getString(
-                                             cursor.getColumnIndex("notificationDate")));
+            notification.setNotification_text(cursor.getString(cursor.getColumnIndex("notificationText")));
+            notification.setNotificaton_date(cursor.getString(cursor.getColumnIndex("notificationDate")));
+
             notificationList.add(notification);
         }
         return notificationList;
+    }*/
+
+    public List<ParentAlumn> getNotification () {
+
+        List<ParentAlumn> parentAlumnList = new ArrayList<ParentAlumn>();
+        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+
+        String query = "SELECT * FROM Parent LEFT JOIN Notification" ;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
+        while(cursor.moveToNext()) {
+            ParentAlumn parentAlumn = new ParentAlumn();
+
+            parentAlumn.setNameParent(cursor.getString(cursor.getColumnIndex("nameParent")));
+            parentAlumn.setPhoneParent(cursor.getString(cursor.getColumnIndex("phoneParent")));
+            parentAlumn.setNotificationDate(cursor.getString(cursor.getColumnIndex("notificationDate")));
+            parentAlumn.setNotificationText(cursor.getString(cursor.getColumnIndex("notificationText")));
+        }
+
+        return parentAlumnList;
     }
 }
