@@ -1,8 +1,12 @@
 package controller;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Patterns;
 import android.view.View;
@@ -33,11 +37,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 0;
 
-    @BindView(R.id.input_registry) EditText _registryText;
-    @BindView(R.id.input_password) EditText _passwordText;
-    @BindView(R.id.btn_login) Button _loginButton;
-//    @BindView(R.id.link_signup) TextView _signupLink;
+    @BindView(R.id.input_registry)
+    EditText _registryText;
+    @BindView(R.id.input_password)
+    EditText _passwordText;
+    @BindView(R.id.btn_login)
+    Button _loginButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,23 +52,28 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+        sendSMSMessage();
         _loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 login();
             }
         });
+    }
 
-//        _signupLink.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-//                startActivityForResult(intent, REQUEST_SIGNUP);
-//                finish();
-//                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-//            }
-//        });
+    protected void sendSMSMessage() {
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.SEND_SMS)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.SEND_SMS},
+                        MY_PERMISSIONS_REQUEST_SEND_SMS);
+            }
+        }
     }
 
     public void login() {
@@ -124,25 +136,25 @@ public class LoginActivity extends AppCompatActivity {
         _loginButton.setEnabled(true);
     }
 
-        public boolean validate() {
-            boolean valid = true;
+    public boolean validate() {
+        boolean valid = true;
 
-            String registry = _registryText.getText().toString();
-            String password = _passwordText.getText().toString();
+        String registry = _registryText.getText().toString();
+        String password = _passwordText.getText().toString();
 
-            if (registry.isEmpty()){
-                _registryText.setError("Coloque um registro válido");
-                valid = false;
-            } else {
-                _registryText.setError(null);
-            }
-
-            if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-                _passwordText.setError("Senha entre 4 e 10 caracteres");
-                valid = false;
-            } else {
-                _passwordText.setError(null);
-            }
-            return valid;
+        if (registry.isEmpty()) {
+            _registryText.setError("Coloque um registro válido");
+            valid = false;
+        } else {
+            _registryText.setError(null);
         }
+
+        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+            _passwordText.setError("Senha entre 4 e 10 caracteres");
+            valid = false;
+        } else {
+            _passwordText.setError(null);
+        }
+        return valid;
+    }
 }

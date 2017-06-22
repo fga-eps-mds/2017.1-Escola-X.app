@@ -62,30 +62,21 @@ public class NotificationDao extends Dao{
         return valid;
     }
 
-    public Integer deleteNotification (Notification notification) {
+    public boolean deleteNotification (Notification notification) {
 
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+        boolean sucess = true;
 
-        return sqLiteDatabase.delete(TABLE_NAME, "[notificationID] = " + notification.getIdNotification(),null);
-    }
+        long result = sqLiteDatabase.delete(TABLE_NAME, "[notificationID] = " +
+                                                            notification.getIdNotification(),null);
 
-    /*public List<Notification> getNotification() {
-        List<Notification> notificationList = new ArrayList<Notification>();
-        sqliteDatabase = database.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_NAME;
-        Cursor cursor = sqliteDatabase.rawQuery( query, null );
-
-        while(cursor.moveToNext()) {
-            Notification notification = new Notification();
-
-            notification.setMotive(cursor.getString(cursor.getColumnIndex("motive")));
-            notification.setNotification_text(cursor.getString(cursor.getColumnIndex("notificationText")));
-            notification.setNotificaton_date(cursor.getString(cursor.getColumnIndex("notificationDate")));
-
-            notificationList.add(notification);
+        if( result == -1) {
+            sucess = false;
+        } else {
+            sucess = true;
         }
-        return notificationList;
-    }*/
+        return sucess;
+    }
 
     public List<ParentAlumn> getNotification () {
 

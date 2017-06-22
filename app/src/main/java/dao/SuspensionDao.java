@@ -118,10 +118,7 @@ public class SuspensionDao extends Dao{
             suspension.setIdAlumn(suspensionList.get(aux).getIdAlumn());
 
             if(existsSuspension(suspension) == true) {
-                if(verifEqualsSuspension(suspension) == false) {
-                    updateSuspension(suspension);
 
-                }
             } else {
                 insertSuspension(suspension);
             }
