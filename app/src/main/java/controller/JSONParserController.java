@@ -50,8 +50,6 @@ public class JSONParserController extends Activity {
     NotificationDao notificationDao;
     StrikeDao strikeDao;
     SuspensionDao suspensionDao;
-    private static final int MY_PERMISSION = 0;
-    private boolean sucess = true;
 
     private static String urlParents = "http://murmuring-mountain-86195.herokuapp.com/api/parents";
     private static String urlAlumns = "http://murmuring-mountain-86195.herokuapp.com/api/alumns";
@@ -73,11 +71,6 @@ public class JSONParserController extends Activity {
         suspensionDao = SuspensionDao.getInstance(getApplicationContext());
 
         new GetDatas().execute();
-        //new GetParents().execute();
-//        new GetAlumns().execute();
-//        new GetNotification().execute();
-//        new GetStrike().execute();
-//        new GetSuspension().execute();
     }
 
     private class GetDatas extends AsyncTask<Void,Void,Void> {
@@ -212,7 +205,7 @@ public class JSONParserController extends Activity {
                                 notificationsJSONObject.getString("notification_date"));
                         notification.setMotive(notificationsJSONObject.getString("motive"));
 
-                        sucess = notificationDao.insertNotification(notification);
+                        notificationDao.insertNotification(notification);
 
                     }
                 } catch (final JSONException e) {
@@ -258,12 +251,7 @@ public class JSONParserController extends Activity {
                         strike.setIdAlumn(Integer.parseInt(alumnJSONObject.getString("id")));
 
                         strikeList.add(strike);
-                        sucess = strikeDao.syncronStrike(strikeList);
-                        if (sucess == true) {
-
-                        } else {
-
-                        }
+                        strikeDao.insertStrike(strike);
                     }
                 } catch (final JSONException e) {
                     runOnUiThread(new Runnable() {

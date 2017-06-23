@@ -4,18 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import helper.DatabaseHelper;
-import model.Alumn;
 import model.Notification;
-import model.Parent;
 import model.ParentAlumn;
-import model.Strike;
-import model.Suspension;
 
 public class NotificationDao extends Dao{
 
@@ -83,16 +78,18 @@ public class NotificationDao extends Dao{
         List<ParentAlumn> parentAlumnList = new ArrayList<ParentAlumn>();
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
 
-        String query = "SELECT * FROM Parent LEFT JOIN Notification" ;
+        String query = "SELECT * FROM Parent LEFT JOIN Notification;" ;
 
         Cursor cursor = sqLiteDatabase.rawQuery(query,null);
         while(cursor.moveToNext()) {
             ParentAlumn parentAlumn = new ParentAlumn();
 
+            parentAlumn.setIdNotification(cursor.getInt(cursor.getColumnIndex("notificationID")));
             parentAlumn.setNameParent(cursor.getString(cursor.getColumnIndex("nameParent")));
             parentAlumn.setPhoneParent(cursor.getString(cursor.getColumnIndex("phoneParent")));
             parentAlumn.setNotificationDate(cursor.getString(cursor.getColumnIndex("notificationDate")));
             parentAlumn.setNotificationText(cursor.getString(cursor.getColumnIndex("notificationText")));
+            parentAlumnList.add(parentAlumn);
         }
 
         return parentAlumnList;

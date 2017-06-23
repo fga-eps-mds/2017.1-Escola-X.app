@@ -15,11 +15,20 @@ public class ParentAlumn {
     private String description;
     private Integer quantityDays;
     private Integer idSuspension;
+    private Integer idNotification;
     private String notificationDate;
     private String notificationText;
 
     public ParentAlumn () {
 
+    }
+
+    public Integer getIdNotification() {
+        return idNotification;
+    }
+
+    public void setIdNotification(Integer idNotification) {
+        this.idNotification = idNotification;
     }
 
     public String getDescriptionStrike() {

@@ -173,13 +173,13 @@ public class StrikeDao extends Dao {
         String query = "SELECT * FROM Alumn " +
                 "LEFT JOIN Parent ON Alumn.IDParent = Parent.IDParent " +
                 "LEFT JOIN Strike ON Strike.IDAlumn = Alumn.IDAlumn " +
-                "WHERE Alumn.IDAlumn =  4" ;
-
+                "WHERE Strike.IDStrike NOT NULL ;";
 
         Cursor cursor = sqLiteDatabase.rawQuery(query,null);
         while(cursor.moveToNext()) {
             ParentAlumn parentAlumn = new ParentAlumn();
 
+            parentAlumn.setIdStrike(cursor.getInt(cursor.getColumnIndex("IDStrike")));
             parentAlumn.setNameAlumn(cursor.getString(cursor.getColumnIndex("nameAlumn")));
             parentAlumn.setDescriptionStrike(cursor.getString(cursor.getColumnIndex("descriptionStrike")));
             parentAlumn.setNameParent(cursor.getString(cursor.getColumnIndex("nameParent")));
@@ -187,5 +187,21 @@ public class StrikeDao extends Dao {
             parentAlumnList.add(parentAlumn);
         }
         return parentAlumnList;
+    }
+
+    public boolean deleteStrike (Strike strike) {
+
+        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+        boolean sucess = true;
+
+        long result = sqLiteDatabase.delete(TABLE_NAME, "[IDStrike] = " +
+                strike.getIdStrike(),null);
+
+        if( result == -1) {
+            sucess = false;
+        } else {
+            sucess = true;
+        }
+        return sucess;
     }
 }

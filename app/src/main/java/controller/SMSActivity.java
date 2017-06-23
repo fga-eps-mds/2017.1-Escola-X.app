@@ -1,30 +1,25 @@
 package controller;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.telephony.SmsManager;
-import android.util.Log;
-import android.widget.ListAdapter;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import java.util.List;
 
 import dao.NotificationDao;
 import dao.StrikeDao;
+import dao.SuspensionDao;
 import escola_x.escola_x.R;
+import model.Notification;
 import model.ParentAlumn;
+import model.Strike;
 
 public class SMSActivity extends Activity {
 
     StrikeDao strikeDao;
     NotificationDao notificationDao;
+    SuspensionDao suspensionDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,21 +28,48 @@ public class SMSActivity extends Activity {
 
         strikeDao = StrikeDao.getInstance(getApplicationContext());
         notificationDao = NotificationDao.getInstance(getApplicationContext());
-        Toast.makeText(this,"Tamanho = " + strikeDao.getParentAlumn().size(),Toast.LENGTH_LONG).show();
-        //sendMessageStrike();
+        suspensionDao = SuspensionDao.getInstance(getApplicationContext());
+        Toast.makeText(this,"Tamanho = " + notificationDao.getNotification().size(),Toast.LENGTH_LONG).show();
+        sendMessageStrike();
+        sendMessageNotification();
     }
 
     private void sendMessageStrike(){
 
-        boolean sucess = true;
         List<ParentAlumn> parentAlumnList = strikeDao.getParentAlumn();
         for(int aux = 0; aux < parentAlumnList.size(); aux ++) {
+            Strike strike = new Strike();
+
+            strike.setIdStrike(parentAlumnList.get(aux).getIdStrike());
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(parentAlumnList.get(aux).getPhoneParent(), null, "Nome :" + parentAlumnList.get(aux).getNameParent(), null, null);
-            Toast.makeText(getApplicationContext(), "SMS enviado para " + parentAlumnList.get(aux).getNameParent(),
-                    Toast.LENGTH_LONG).show();
+            smsManager.sendTextMessage(parentAlumnList.get(aux).getPhoneParent(), null,
+                        "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
+                        "o aluno " + parentAlumnList.get(aux).getNameAlumn() +
+                        ", foi advertido por " + parentAlumnList.get(aux).getDescriptionStrike() +
+                        ". Caso queira mais detalhes, compareça à escola.", null, null);
+            strikeDao.deleteStrike(strike);
         }
     }
 
+    private void sendMessageNotification() {
 
+        List<ParentAlumn> parentAlumnList = notificationDao.getNotification();
+
+        for(int aux = 0; aux < parentAlumnList.size(); aux ++) {
+            Notification notification = new Notification();
+
+            notification.setIdNotification(parentAlumnList.get(aux).getIdNotification());
+
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(parentAlumnList.get(aux).getPhoneParent(), null,
+                        "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
+                        ", haverá, no dia " + parentAlumnList.get(aux).getNotificationDate() +
+                        ", " + parentAlumnList.get(aux).getNotificationText() + ".", null, null);
+            notificationDao.deleteNotification(notification);
+        }
+    }
+
+    private void sendMessageSuspension() {
+
+    }
 }
