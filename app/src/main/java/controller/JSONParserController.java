@@ -38,13 +38,12 @@ public class JSONParserController extends Activity {
     StrikeDao strikeDao;
     SuspensionDao suspensionDao;
 
-    private static String urlParents = "http://murmuring-mountain-86195.herokuapp.com/api/parents";
-    private static String urlAlumns = "http://murmuring-mountain-86195.herokuapp.com/api/alumns";
-    private static String urlNotifications =
-            "http://murmuring-mountain-86195.herokuapp.com/api/notifications";
-    private static String urlStrike = "http://murmuring-mountain-86195.herokuapp.com/api/strikes";
-    private static String urlSuspension =
-            "http://murmuring-mountain-86195.herokuapp.com/api/suspensions";
+    private String urlParents = "http://escolax.herokuapp.com/api/parents";
+    private String urlAlumns = "http://escolax.herokuapp.com/api/alumns";
+    private String urlNotifications =
+            "http://escolax.herokuapp.com/api/notifications";
+    private String urlStrike = "http://escolax.herokuapp.com/api/strikes";
+    private String urlSuspension = "http://escolax.herokuapp.com/api/suspensions";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

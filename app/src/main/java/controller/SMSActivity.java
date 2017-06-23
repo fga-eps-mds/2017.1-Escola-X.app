@@ -3,7 +3,6 @@ package controller;
 import android.app.Activity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
-import android.widget.Toast;
 
 import java.util.List;
 
