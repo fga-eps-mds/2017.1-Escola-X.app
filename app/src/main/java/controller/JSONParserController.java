@@ -3,20 +3,9 @@ package controller;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBarActivity;
-import android.telephony.SmsManager;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -24,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import dao.AlumnDao;
@@ -37,7 +25,6 @@ import helper.HttpHandlerHelper;
 import model.Alumn;
 import model.Notification;
 import model.Parent;
-import model.ParentAlumn;
 import model.Strike;
 import model.Suspension;
 
@@ -89,9 +76,6 @@ public class JSONParserController extends Activity {
 
             List<Parent> parentList = new ArrayList<Parent>();
             List<Alumn> alumnList = new ArrayList<Alumn>();
-            List<Notification> notificationList = new ArrayList<Notification>();
-            List<Strike> strikeList = new ArrayList<Strike>();
-            List<Suspension> suspensionList = new ArrayList<Suspension>();
 
             HttpHandlerHelper httpHandlerHelper = new HttpHandlerHelper();
 
@@ -128,7 +112,6 @@ public class JSONParserController extends Activity {
                                     .show();
                         }
                     });
-
                 }
             } else {
                 runOnUiThread(new Runnable() {
@@ -183,7 +166,6 @@ public class JSONParserController extends Activity {
                                 .show();
                     }
                 });
-
             }
 
             if (jsonNotification != null) {
@@ -206,7 +188,6 @@ public class JSONParserController extends Activity {
                         notification.setMotive(notificationsJSONObject.getString("motive"));
 
                         notificationDao.insertNotification(notification);
-
                     }
                 } catch (final JSONException e) {
                     runOnUiThread(new Runnable() {
@@ -218,7 +199,6 @@ public class JSONParserController extends Activity {
                                     .show();
                         }
                     });
-
                 }
             } else {
                 runOnUiThread(new Runnable() {
@@ -250,7 +230,6 @@ public class JSONParserController extends Activity {
                         JSONObject alumnJSONObject = strikesJSONObject.getJSONObject("alumn");
                         strike.setIdAlumn(Integer.parseInt(alumnJSONObject.getString("id")));
 
-                        strikeList.add(strike);
                         strikeDao.insertStrike(strike);
                     }
                 } catch (final JSONException e) {
@@ -263,7 +242,6 @@ public class JSONParserController extends Activity {
                                     .show();
                         }
                     });
-
                 }
             } else {
                 runOnUiThread(new Runnable() {
@@ -275,7 +253,6 @@ public class JSONParserController extends Activity {
                                 .show();
                     }
                 });
-
             }
 
             if (jsonSuspension != null) {
@@ -298,8 +275,7 @@ public class JSONParserController extends Activity {
                         JSONObject alumnJSONObject = suspensionsJSONObject.getJSONObject("alumn");
                         suspension.setIdAlumn(Integer.parseInt(alumnJSONObject.getString("id")));
 
-                        suspensionList.add(suspension);
-                        suspensionDao.syncronSuspension(suspensionList);
+                        suspensionDao.insertSuspension(suspension);
                     }
                 } catch (final JSONException e) {
                     runOnUiThread(new Runnable() {
@@ -311,7 +287,6 @@ public class JSONParserController extends Activity {
                                     .show();
                         }
                     });
-
                 }
             } else {
                 runOnUiThread(new Runnable() {
@@ -323,7 +298,6 @@ public class JSONParserController extends Activity {
                                 .show();
                     }
                 });
-
             }
             return null;
         }
@@ -335,19 +309,6 @@ public class JSONParserController extends Activity {
             Intent intent = new Intent(getApplicationContext(), SMSActivity.class);
             startActivityForResult(intent, 0);
             finish();
-        }
-    }
-
-    private void sendNotification (List<ParentAlumn> parentAlumnList) {
-
-        SmsManager smsManager = SmsManager.getDefault();
-        for(int aux = 0; aux < parentAlumnList.size(); aux ++) {
-
-            smsManager.sendTextMessage(parentAlumnList.get(aux).getPhoneParent(),null,
-                    "Caro(a) " + parentAlumnList.get(aux).getNameParent() + "haverá, no dia "
-                               + parentAlumnList.get(aux).getNotificationDate() + ", "
-                               + parentAlumnList.get(aux).getNotificationText(),null,null);
-            Toast.makeText(getApplicationContext(),"SMS Enviado para " + parentAlumnList.get(aux).getNameParent(), Toast.LENGTH_LONG).show();
         }
     }
 }

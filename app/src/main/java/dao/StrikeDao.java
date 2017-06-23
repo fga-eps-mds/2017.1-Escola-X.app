@@ -1,27 +1,17 @@
 package dao;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.telephony.SmsManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import helper.DatabaseHelper;
-import model.Alumn;
-import model.Notification;
 import model.ParentAlumn;
 import model.Strike;
-import model.Suspension;
 
 public class StrikeDao extends Dao {
 

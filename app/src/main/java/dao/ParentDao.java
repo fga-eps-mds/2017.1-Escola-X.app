@@ -4,18 +4,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import helper.DatabaseHelper;
-import model.Alumn;
-import model.Notification;
+
 import model.Parent;
-import model.ParentAlumn;
+
 
 
 public class ParentDao extends Dao{
@@ -93,7 +89,6 @@ public class ParentDao extends Dao{
         for(int aux = 0; aux < parentList.size();aux ++) {
             if (parent.getName().equals(parentList.get(aux).getName())  &&
                     parent.getPhone().equals(parentList.get(aux).getPhone())) {
-                Log.d("Parentes iguais","");
                 valid = true;
             } else {
                 valid = false;
@@ -148,43 +143,4 @@ public class ParentDao extends Dao{
         }
         return parentList;
     }
-
-
-
-
-    /*public List<ParentAlumn> getParent () {
-
-        ParentAlumn parentAlumn = new ParentAlumn();
-        List<ParentAlumn> parentAlumnList = new ArrayList<ParentAlumn>();
-
-        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
-
-        String query = "SELECT * FROM " + TABLE_NAME + " LEFT JOIN " + DatabaseHelper.ALUMN_TABLE +
-                " ON " + TABLE_NAME +".IDAlumn = " + DatabaseHelper.ALUMN_TABLE + ".IDAlumn "; /*+
-                "LEFT JOIN " + DatabaseHelper.STRIKE_TABLE + "ON " + TABLE_NAME + ".IDAlumn = " +
-                DatabaseHelper.STRIKE_TABLE + ".IDAlumn " + " LEFT JOIN " +
-                DatabaseHelper.SUSPENSION_TABLE + " ON " + TABLE_NAME + ".IDAlumn = " +
-                DatabaseHelper.SUSPENSION_TABLE + ".IDAlumn";*/
-
-        /*Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-
-        while (cursor.moveToNext()) {
-            parentAlumn.setAlumnId(cursor.getInt(cursor.getColumnIndex("IDAlumn")));
-            parentAlumn.setNameAlumn(cursor.getString(cursor.getColumnIndex("nameAlumn")));
-            parentAlumn.setRegistryAlumn(cursor.getString(cursor.getColumnIndex("registryAlumn")));
-            parentAlumn.setIdParent(cursor.getInt(cursor.getColumnIndex("IDParent")));
-            parentAlumn.setNameParent(cursor.getString(cursor.getColumnIndex("nameParent")));
-            parentAlumn.setPhoneParent(cursor.getString(cursor.getColumnIndex("phoneParent")));
-            /*parentAlumn.setIdStrike(cursor.getInt(cursor.getColumnIndex("IDStrike")));
-            parentAlumn.setDescription_strike(cursor.getString(cursor.getColumnIndex("descriptionStrike")));
-            parentAlumn.setDate_strike(cursor.getString(cursor.getColumnIndex("dateStrike")));
-            parentAlumn.setIdSuspension(cursor.getInt(cursor.getColumnIndex("IDSuspension")));
-            parentAlumn.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-            parentAlumn.setDescription(cursor.getString(cursor.getColumnIndex("description")));
-            parentAlumn.setQuantity_days(cursor.getInt(cursor.getColumnIndex("quantityDays")));*/
-
-            /*parentAlumnList.add(parentAlumn);
-        }
-        return parentAlumnList;
-    }*/
 }

@@ -3,18 +3,13 @@ package dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import helper.DatabaseHelper;
 import model.Alumn;
-import model.Parent;
-import model.Person;
 
 public class AlumnDao extends Dao {
 
@@ -48,7 +43,6 @@ public class AlumnDao extends Dao {
         for(int aux = 0; aux < alumnList.size();aux ++) {
             if (alumn.getName().equals(alumnList.get(aux).getName())  &&
                     alumn.getRegistry().equals(alumnList.get(aux).getRegistry())) {
-                Log.d("Alunos iguais","");
                 valid = true;
             } else {
                 valid = false;

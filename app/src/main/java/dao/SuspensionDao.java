@@ -4,16 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.telephony.SmsManager;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import helper.DatabaseHelper;
-import model.Alumn;
-import model.ParentAlumn;
-import model.Strike;
 import model.Suspension;
 
 public class SuspensionDao extends Dao{
@@ -82,85 +77,5 @@ public class SuspensionDao extends Dao{
             suspensionList.add(suspension);
         }
         return suspensionList;
-    }
-
-    private boolean verifEqualsSuspension (Suspension suspension) {
-
-        List<Suspension> suspensionList;
-        boolean valid = true;
-
-        suspensionList = getSuspension();
-
-        for(int aux = 0; aux < suspensionList.size();aux ++) {
-            if (suspension.getDescription().equals(suspensionList.get(aux).getDescription()) &&
-                suspension.getTitle().equals(suspensionList.get(aux).getTitle()) &&
-                suspension.getQuantity_days().equals(suspensionList.get(aux).getQuantity_days()) &&
-                suspension.getDateSuspension().equals(suspensionList.get(aux).getDateSuspension())){
-                Log.d("Suspensões iguais","");
-                valid = true;
-            } else {
-                valid = false;
-            }
-        }
-        return valid;
-    }
-
-    public void syncronSuspension (List<Suspension> suspensionList) {
-
-        for(int aux = 0; aux < suspensionList.size(); aux ++) {
-            Suspension suspension = new Suspension();
-
-            suspension.setIdSuspension(suspensionList.get(aux).getIdSuspension());
-            suspension.setDescription(suspensionList.get(aux).getDescription());
-            suspension.setTitle(suspensionList.get(aux).getTitle());
-            suspension.setQuantity_days(suspensionList.get(aux).getQuantity_days());
-            suspension.setDateSuspension(suspensionList.get(aux).getDateSuspension());
-            suspension.setIdAlumn(suspensionList.get(aux).getIdAlumn());
-
-            if(existsSuspension(suspension) == true) {
-
-            } else {
-                insertSuspension(suspension);
-            }
-        }
-    }
-
-    private boolean existsSuspension(Suspension suspension) {
-        SQLiteDatabase sqLiteDatabase = database.getReadableDatabase();
-        String exists = "SELECT IDSuspension FROM Suspension WHERE IDSuspension =? LIMIT 1";
-        Cursor cursor = sqLiteDatabase.rawQuery(exists, new String[]{
-                String.valueOf(suspension.getIdSuspension())});
-        int quantaty = cursor.getCount();
-        boolean valid = true;
-
-        if(quantaty > 0) {
-            valid = true;
-        } else {
-            valid = false;
-        }
-        return valid;
-    }
-
-    private void updateSuspension(Suspension suspension) {
-        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        values.put(TABLE_COLUMNS[1], suspension.getTitle());
-        values.put(TABLE_COLUMNS[2], suspension.getDescription());
-        values.put(TABLE_COLUMNS[3], suspension.getQuantity_days());
-
-        sqLiteDatabase.update(TABLE_NAME, values, "[IDSuspension] = ? ",new String[]{
-                String.valueOf(suspension.getIdSuspension())});
-        sqLiteDatabase.close();
-        database.close();
-    }
-
-    private void sendSuspension (List<ParentAlumn> parentAlumns) {
-
-        /*SmsManager.getDefault().sendTextMessage(parentList.get(aux).getPhone(),null,
-                "Caro(a) Senhor(a) " + parentList.get(aux).getName()
-                        + "\n" + "haverá no dia "
-                        + notification.getNotificaton_date() + ", "
-                        + notification.getNotification_text(),null,null);*/
     }
 }

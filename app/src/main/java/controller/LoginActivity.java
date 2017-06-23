@@ -21,17 +21,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.*;
-import dao.AlumnDao;
-import dao.ParentDao;
-import dao.StrikeDao;
-import dao.SuspensionDao;
 import escola_x.escola_x.R;
-import helper.DatabaseHelper;
-import model.Alumn;
-import model.Parent;
-import model.ParentAlumn;
-import model.Strike;
-import model.Suspension;
 
 public class LoginActivity extends AppCompatActivity {
 
