@@ -10,9 +10,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String DATABASE_NAME = "escolaX.db";
     private static final int VERSION = 42;
 
-    public static final String ALUMN_TABLE = "Alumn";
+    private static final String ALUMN_TABLE = "Alumn";
     private static final String NAME_ALUMN = "[nameAlumn]";
-    public static final String ALUMN_ID = "[IDAlumn]";
+    private static final String ALUMN_ID = "[IDAlumn]";
     private static final String REGISTRY_ALUMN = "[registryAlumn]";
     private static final String ALUMNPARENT_ID = "[IDParent]";
 
@@ -21,18 +21,18 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String PHONE_PARENT = "[phoneParent]";
     private static final String PARENT_ID = "[IDParent]";
 
-    public static final String STRIKE_TABLE = "Strike";
+    private static final String STRIKE_TABLE = "Strike";
     private static final String STRIKE_ID = "[IDStrike]";
     private static final String DESCRIPTION_STRIKE = "[descriptionStrike]";
     private static final String DATE_STRIKE = "[dateStrike]";
-    public static final String STRIKEALUMN_ID = "[IDAlumn]";
+    private static final String STRIKEALUMN_ID = "[IDAlumn]";
 
-    public static final String SUSPENSION_TABLE = "Suspension";
+    private static final String SUSPENSION_TABLE = "Suspension";
     private static final String SUSPENSION_ID = "[IDSuspension]";
     private static final String DESCRIPTION_SUSPENSION = "[description]";
     private static final String QUANTITY_DAYS = "[quantityDays]";
     private static final String Suspension_TITLE = "[title]";
-    public static final String SUSPENSIONALUMN_ID = "[IDAlumn]";
+    private static final String SUSPENSIONALUMN_ID = "[IDAlumn]";
 
     private static final String NOTIFICATION_TABLE = "Notification";
     private static final String NOTIFICATION_TEXT = "[notificationText]";

@@ -23,15 +23,4 @@ public class Dao {
 
         return resultInsert;
     }
-
-    protected long deleteAndClose(SQLiteDatabase sqLiteDatabase, String table) {
-        assert (table != null) : "Table name never be null.";
-        assert (table.length() >= 1) : "Table name must have at least one character.";
-
-        int deleteFromDatabase = 0;
-        deleteFromDatabase = sqLiteDatabase.delete(table, null, null);
-        sqLiteDatabase.close();
-
-        return deleteFromDatabase;
-    }
 }

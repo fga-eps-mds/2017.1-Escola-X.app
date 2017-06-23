@@ -3,12 +3,12 @@ package dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import helper.DatabaseHelper;
+import model.ParentAlumn;
 import model.Suspension;
 
 public class SuspensionDao extends Dao{
@@ -36,7 +36,7 @@ public class SuspensionDao extends Dao{
 
     public boolean insertSuspension (Suspension suspension) {
 
-        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+        sqliteDatabase = database.getWritableDatabase();
         boolean valid = true;
 
         ContentValues values = new ContentValues();
@@ -48,34 +48,62 @@ public class SuspensionDao extends Dao{
         values.put(TABLE_COLUMNS[4], suspension.getIdAlumn());
 
 
-        long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);
+        long result = insertAndClose(sqliteDatabase, TABLE_NAME, values);
 
         if (result == -1) {
             valid = false;
         } else {
             valid = true;
         }
+        sqliteDatabase.close();
+        database.close();
         return valid;
     }
 
-    public List<Suspension> getSuspension() {
+    public List<ParentAlumn> getParentAlumnSuspension () {
 
-        Suspension suspension = new Suspension();
-        List<Suspension> suspensionList = new ArrayList<Suspension>();
+        sqliteDatabase = database.getWritableDatabase();
+        List<ParentAlumn> parentAlumnList = new ArrayList<ParentAlumn>();
 
-        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+        String query = "SELECT * FROM Alumn " +
+                       "LEFT JOIN Parent ON Alumn.IDParent = Parent.IDParent " +
+                       "LEFT JOIN Suspension ON Suspension.IDAlumn = " +
+                       "Alumn.IDAlumn WHERE Suspension.IDSuspension NOT NULL ;";
 
-        String query = "SELECT * FROM " + TABLE_NAME;
-
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
-
+        Cursor cursor = sqliteDatabase.rawQuery(query,null);
         while(cursor.moveToNext()) {
-            suspension.setIdSuspension(cursor.getInt(cursor.getColumnIndex("IDSuspension")));
-            suspension.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-            suspension.setDescription(cursor.getString(cursor.getColumnIndex("description")));
-            suspension.setQuantity_days(cursor.getInt(cursor.getColumnIndex("quantityDays")));
-            suspensionList.add(suspension);
+            ParentAlumn parentAlumn = new ParentAlumn();
+
+            parentAlumn.setIdNotification(cursor.getInt(cursor.getColumnIndex("IDSuspension")));
+            parentAlumn.setNameAlumn(cursor.getString(cursor.getColumnIndex("nameAlumn")));
+            parentAlumn.setNameParent(cursor.getString(cursor.getColumnIndex("nameParent")));
+            parentAlumn.setPhoneParent(cursor.getString(cursor.getColumnIndex("phoneParent")));
+            parentAlumn.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+            parentAlumn.setDescription(cursor.getString(cursor.getColumnIndex("description")));
+            parentAlumn.setQuantityDays(cursor.getInt(cursor.getColumnIndex("quantityDays")));
+
+            parentAlumnList.add(parentAlumn);
         }
-        return suspensionList;
+        sqliteDatabase.close();
+        database.close();
+        return parentAlumnList;
+    }
+
+    public boolean deleteSuspension (Suspension suspension) {
+
+        sqliteDatabase = database.getWritableDatabase();
+        boolean sucess = true;
+
+        long result = sqliteDatabase.delete(TABLE_NAME, "[IDSuspension] = " +
+                suspension.getIdSuspension(),null);
+
+        if( result == -1) {
+            sucess = false;
+        } else {
+            sucess = true;
+        }
+        sqliteDatabase.close();
+        database.close();
+        return sucess;
     }
 }

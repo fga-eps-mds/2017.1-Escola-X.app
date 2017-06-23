@@ -3,7 +3,6 @@ package dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class NotificationDao extends Dao{
 
     public boolean insertNotification (Notification notification) {
 
-        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+        sqliteDatabase = database.getWritableDatabase();
         boolean valid = true;
 
         ContentValues values = new ContentValues();
@@ -47,22 +46,24 @@ public class NotificationDao extends Dao{
         values.put(TABLE_COLUMNS[2], notification.getMotive());
         values.put(TABLE_COLUMNS[3], notification.getNotificaton_date());
 
-        long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);
+        long result = insertAndClose(sqliteDatabase, TABLE_NAME, values);
 
         if (result == -1) {
             valid = false;
         } else {
             valid = true;
         }
+        sqliteDatabase.close();
+        database.close();
         return valid;
     }
 
     public boolean deleteNotification (Notification notification) {
 
-        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+        sqliteDatabase = database.getWritableDatabase();
         boolean sucess = true;
 
-        long result = sqLiteDatabase.delete(TABLE_NAME, "[notificationID] = " +
+        long result = sqliteDatabase.delete(TABLE_NAME, "[notificationID] = " +
                                                             notification.getIdNotification(),null);
 
         if( result == -1) {
@@ -70,17 +71,19 @@ public class NotificationDao extends Dao{
         } else {
             sucess = true;
         }
+        sqliteDatabase.close();
+        database.close();
         return sucess;
     }
 
     public List<ParentAlumn> getNotification () {
 
         List<ParentAlumn> parentAlumnList = new ArrayList<ParentAlumn>();
-        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+        sqliteDatabase = database.getWritableDatabase();
 
         String query = "SELECT * FROM Parent LEFT JOIN Notification;" ;
 
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
+        Cursor cursor = sqliteDatabase.rawQuery(query,null);
         while(cursor.moveToNext()) {
             ParentAlumn parentAlumn = new ParentAlumn();
 
@@ -91,7 +94,8 @@ public class NotificationDao extends Dao{
             parentAlumn.setNotificationText(cursor.getString(cursor.getColumnIndex("notificationText")));
             parentAlumnList.add(parentAlumn);
         }
-
+        sqliteDatabase.close();
+        database.close();
         return parentAlumnList;
     }
 }

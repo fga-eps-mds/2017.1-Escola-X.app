@@ -3,7 +3,6 @@ package dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,63 +32,6 @@ public class AlumnDao extends Dao {
         return AlumnDao.instance;
     }
 
-    private boolean verifEqualsAlumns (Alumn alumn) {
-
-        List<Alumn> alumnList;
-        boolean valid = true;
-
-        alumnList = getAllAlumns();
-
-        for(int aux = 0; aux < alumnList.size();aux ++) {
-            if (alumn.getName().equals(alumnList.get(aux).getName())  &&
-                    alumn.getRegistry().equals(alumnList.get(aux).getRegistry())) {
-                valid = true;
-            } else {
-                valid = false;
-            }
-        }
-        return valid;
-    }
-
-    public boolean insertAlumn (Alumn alumn) {
-
-        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
-        boolean valid = true;
-
-        ContentValues values = new ContentValues();
-
-        values.put(TABLE_COLUMNS[0], alumn.getIdAlumn());
-        values.put(TABLE_COLUMNS[1], alumn.getName());
-        values.put(TABLE_COLUMNS[2], alumn.getRegistry());
-        values.put(TABLE_COLUMNS[3], alumn.getIdParent());
-
-        long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);
-
-        if (result == -1) {
-            valid = false;
-        } else {
-            valid = true;
-        }
-        return valid;
-    }
-
-    public List<Alumn> getAllAlumns() {
-        List<Alumn> alumnList = new ArrayList<Alumn>();
-        sqliteDatabase = database.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_NAME;
-        Cursor cursor = sqliteDatabase.rawQuery( query, null );
-
-        while(cursor.moveToNext()) {
-            Alumn alumn = new Alumn();
-
-            alumn.setIdAlumn(cursor.getInt(cursor.getColumnIndex("IDAlumn")));
-            alumn.setName(cursor.getString(cursor.getColumnIndex("nameAlumn")));
-            alumn.setRegistry(cursor.getInt(cursor.getColumnIndex("registryAlumn")));
-            alumnList.add(alumn);
-        }
-        return alumnList;
-    }
-
     public void syncronAlumn (List<Alumn> alumns) {
 
         for(int aux = 0;aux<alumns.size();aux++) {
@@ -110,10 +52,84 @@ public class AlumnDao extends Dao {
         }
     }
 
+    private boolean insertAlumn (Alumn alumn) {
+
+        sqliteDatabase = database.getWritableDatabase();
+        boolean valid = true;
+
+        ContentValues values = new ContentValues();
+
+        values.put(TABLE_COLUMNS[0], alumn.getIdAlumn());
+        values.put(TABLE_COLUMNS[1], alumn.getName());
+        values.put(TABLE_COLUMNS[2], alumn.getRegistry());
+        values.put(TABLE_COLUMNS[3], alumn.getIdParent());
+
+        long result = insertAndClose(sqliteDatabase, TABLE_NAME, values);
+
+        if (result == -1) {
+            valid = false;
+        } else {
+            valid = true;
+        }
+        database.close();
+        sqliteDatabase.close();
+        return valid;
+    }
+
+    private void updateAlumn(Alumn alumn) {
+        sqliteDatabase = database.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(TABLE_COLUMNS[1], alumn.getName());
+        values.put(TABLE_COLUMNS[2], alumn.getRegistry());
+
+        sqliteDatabase.update(TABLE_NAME, values, "[IDAlumn] = ? ",new String[]{
+                String.valueOf(alumn.getIdAlumn())});
+        sqliteDatabase.close();
+        database.close();
+    }
+
+    private boolean verifEqualsAlumns (Alumn alumn) {
+
+        List<Alumn> alumnList;
+        boolean valid = true;
+
+        alumnList = getAllAlumns();
+
+        for(int aux = 0; aux < alumnList.size();aux ++) {
+            if (alumn.getName().equals(alumnList.get(aux).getName())  &&
+                    alumn.getRegistry().equals(alumnList.get(aux).getRegistry())) {
+                valid = true;
+            } else {
+                valid = false;
+            }
+        }
+        return valid;
+    }
+
+    private List<Alumn> getAllAlumns() {
+        List<Alumn> alumnList = new ArrayList<Alumn>();
+        sqliteDatabase = database.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME;
+        Cursor cursor = sqliteDatabase.rawQuery( query, null );
+
+        while(cursor.moveToNext()) {
+            Alumn alumn = new Alumn();
+
+            alumn.setIdAlumn(cursor.getInt(cursor.getColumnIndex("IDAlumn")));
+            alumn.setName(cursor.getString(cursor.getColumnIndex("nameAlumn")));
+            alumn.setRegistry(cursor.getInt(cursor.getColumnIndex("registryAlumn")));
+            alumnList.add(alumn);
+        }
+        sqliteDatabase.close();
+        database.close();
+        return alumnList;
+    }
+
     private boolean existsAlumn(Alumn alumn) {
-        SQLiteDatabase sqLiteDatabase = database.getReadableDatabase();
+        sqliteDatabase = database.getReadableDatabase();
         String exists = "SELECT IDAlumn FROM Alumn WHERE IDAlumn =? LIMIT 1";
-        Cursor cursor = sqLiteDatabase.rawQuery(exists, new String[]{
+        Cursor cursor = sqliteDatabase.rawQuery(exists, new String[]{
                                                             String.valueOf(alumn.getIdAlumn())});
         int quantaty = cursor.getCount();
         boolean valid = true;
@@ -123,19 +139,8 @@ public class AlumnDao extends Dao {
         } else {
             valid = false;
         }
-        return valid;
-    }
-
-    private void updateAlumn(Alumn alumn) {
-        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        values.put(TABLE_COLUMNS[1], alumn.getName());
-        values.put(TABLE_COLUMNS[2], alumn.getRegistry());
-
-        sqLiteDatabase.update(TABLE_NAME, values, "[IDAlumn] = ? ",new String[]{
-                                                            String.valueOf(alumn.getIdAlumn())});
-        sqLiteDatabase.close();
+        sqliteDatabase.close();
         database.close();
+        return valid;
     }
 }

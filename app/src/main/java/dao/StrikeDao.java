@@ -3,8 +3,6 @@ package dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,41 +34,9 @@ public class StrikeDao extends Dao {
         return StrikeDao.instance;
     }
 
-    public boolean syncronStrike (List<Strike> strikeList) {
-
-        boolean valid = true;
-
-        for(int aux = 0;aux<strikeList.size();aux ++) {
-
-            Strike strike = new Strike();
-
-            strike.setIdStrike(strikeList.get(aux).getIdStrike());
-            strike.setDescription_strike(strikeList.get(aux).getDescription_strike());
-            strike.setDate_strike(strikeList.get(aux).getDate_strike());
-            strike.setIdAlumn(strikeList.get(aux).getIdAlumn());
-
-            if(existsStrike(strike) == true ) {
-                if(verifEqualsStrikes(strike) == false) {
-                    updateStrike(strike);
-                    //getParentAlumn(strike);
-                    //sendMessage(strike);
-                    valid = true;
-                } else {
-                    valid = false;
-                }
-            } else {
-                insertStrike(strike);
-                //getParentAlumn(strike);
-                valid = true;
-            }
-        }
-
-        return valid;
-    }
-
     public boolean insertStrike (Strike strike) {
 
-        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+        sqliteDatabase = database.getWritableDatabase();
         boolean valid = true;
 
         ContentValues values = new ContentValues();
@@ -80,84 +46,21 @@ public class StrikeDao extends Dao {
         values.put(TABLE_COLUMNS[2], strike.getDate_strike());
         values.put(TABLE_COLUMNS[3], strike.getIdAlumn());
 
-        long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);
+        long result = insertAndClose(sqliteDatabase, TABLE_NAME, values);
 
         if (result == -1) {
             valid = false;
         } else {
             valid = true;
         }
-        return valid;
-    }
-
-    private boolean verifEqualsStrikes (Strike strike) {
-
-        List<Strike> strikeList;
-        boolean valid = true;
-
-        strikeList = getAllStrikes();
-
-        for (int aux = 0;aux<strikeList.size();aux ++) {
-            if(strike.getDescription_strike().equals(strikeList.get(aux).getDescription_strike()) &&
-                    strike.getDate_strike().equals(strikeList.get(aux).getDate_strike())) {
-                Log.d("Advertência repetida","");
-                valid = true;
-            } else {
-                valid = false;
-            }
-        }
-        return valid;
-    }
-
-    public List<Strike> getAllStrikes () {
-        List<Strike> strikeList = new ArrayList<Strike>();
-        sqliteDatabase = database.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_NAME;
-        Cursor cursor = sqliteDatabase.rawQuery( query, null );
-
-        while(cursor.moveToNext()) {
-            Strike strike = new Strike();
-
-            strike.setIdStrike(cursor.getInt(cursor.getColumnIndex("IDStrike")));
-            strike.setDescription_strike(cursor.getString(cursor.getColumnIndex("descriptionStrike")));
-            strike.setDate_strike(cursor.getString(cursor.getColumnIndex("dateStrike")));
-            strikeList.add(strike);
-        }
-        return strikeList;
-    }
-
-    private boolean existsStrike(Strike strike) {
-        SQLiteDatabase sqLiteDatabase = database.getReadableDatabase();
-        String exists = "SELECT IDStrike FROM Strike WHERE IDStrike =? LIMIT 1";
-        Cursor cursor = sqLiteDatabase.rawQuery(exists, new String[]{
-                String.valueOf(strike.getIdStrike())});
-        int quantaty = cursor.getCount();
-        boolean valid = true;
-
-        if(quantaty > 0) {
-            valid = true;
-        } else {
-            valid = false;
-        }
-        return valid;
-    }
-
-    private void updateStrike(Strike strike) {
-        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        values.put(TABLE_COLUMNS[1], strike.getDescription_strike());
-        values.put(TABLE_COLUMNS[2], strike.getDate_strike());
-
-        sqLiteDatabase.update(TABLE_NAME, values, "[IDStrike] = ? ",new String[]{
-                String.valueOf(strike.getIdStrike())});
-        sqLiteDatabase.close();
+        sqliteDatabase.close();
         database.close();
+        return valid;
     }
 
-    public List<ParentAlumn> getParentAlumn () {
+    public List<ParentAlumn> getParentAlumnStrike () {
 
-        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+        sqliteDatabase = database.getWritableDatabase();
         List<ParentAlumn> parentAlumnList = new ArrayList<ParentAlumn>();
 
         String query = "SELECT * FROM Alumn " +
@@ -165,7 +68,7 @@ public class StrikeDao extends Dao {
                 "LEFT JOIN Strike ON Strike.IDAlumn = Alumn.IDAlumn " +
                 "WHERE Strike.IDStrike NOT NULL ;";
 
-        Cursor cursor = sqLiteDatabase.rawQuery(query,null);
+        Cursor cursor = sqliteDatabase.rawQuery(query,null);
         while(cursor.moveToNext()) {
             ParentAlumn parentAlumn = new ParentAlumn();
 
@@ -176,15 +79,17 @@ public class StrikeDao extends Dao {
             parentAlumn.setPhoneParent(cursor.getString(cursor.getColumnIndex("phoneParent")));
             parentAlumnList.add(parentAlumn);
         }
+        sqliteDatabase.close();
+        database.close();
         return parentAlumnList;
     }
 
     public boolean deleteStrike (Strike strike) {
 
-        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
+        sqliteDatabase = database.getWritableDatabase();
         boolean sucess = true;
 
-        long result = sqLiteDatabase.delete(TABLE_NAME, "[IDStrike] = " +
+        long result = sqliteDatabase.delete(TABLE_NAME, "[IDStrike] = " +
                 strike.getIdStrike(),null);
 
         if( result == -1) {
@@ -192,6 +97,8 @@ public class StrikeDao extends Dao {
         } else {
             sucess = true;
         }
+        database.close();
+        sqliteDatabase.close();
         return sucess;
     }
 }
