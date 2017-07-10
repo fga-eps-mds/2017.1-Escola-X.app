@@ -48,7 +48,6 @@ public class SMSActivity extends Activity {
         smsManager = SmsManager.getDefault();
 
 
-
         //sendMessageStrike();
         sendMessageNotification();
         //sendMessageSuspension();
@@ -74,22 +73,23 @@ public class SMSActivity extends Activity {
     private void sendMessageNotification() {
 
         Cursor result = notificationDao.getNotification();
-        long date = System.currentTimeMillis();
-        SimpleDateFormat atualDate = new SimpleDateFormat("yyyy-MM-dd");
-        String dateString = atualDate.format(date);
+        SimpleDateFormat formatCorrect = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString;
+        //long date = System.currentTimeMillis();
+        //dateString = dateFormat.format(date);
 
         if (result.getCount() != 0) {
             try {
-                while (result.moveToNext()) {
-                    if(dateString.equals(result.getString(DATE_NOTIFICATION))) {
-                        Toast.makeText(this,"TEXTO DA MENSAGEM: " + result.getString(NOTIFICATION_TEXT),Toast.LENGTH_SHORT).show();
-                        /*smsManager.sendTextMessage(result.getString(NUMBER_NOTIFICATION), null,
-                                "Caro(a) " + result.getString(NAME_PARENT_NOTIFICATION) +
-                                      ", haverá, no dia " + result.getString(DATE_NOTIFICATION) +
-                                      ", " + result.getString(NOTIFICATION_TEXT) + ".", null, null);*/
-                    } else {
-                        Toast.makeText(this,"DATA: " + result.getString(DATE_NOTIFICATION),Toast.LENGTH_SHORT).show();
-                    }
+                while (result.moveToNext()){
+                    String date = result.getString(DATE_NOTIFICATION);
+                    //dateString = formatCorrect.format(date);
+                    Toast.makeText(this,"DATA: " + date,Toast.LENGTH_SHORT).show();
+                    /*smsManager.sendTextMessage(result.getString(NUMBER_NOTIFICATION), null,
+                            "Caro(a) " + result.getString(NAME_PARENT_NOTIFICATION) +
+                                    ", haverá, no dia " + result.getString(DATE_NOTIFICATION) +
+                                    ", " + result.getString(NOTIFICATION_TEXT) + ".", null, null);*/
+                    Toast.makeText(this, "SMS ENVIADO", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception exception) {
                 Toast.makeText(getApplicationContext(), "SMS NÃO ENVIADO", Toast.LENGTH_LONG).show();

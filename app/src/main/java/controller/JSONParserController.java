@@ -92,7 +92,7 @@ public class JSONParserController extends Activity {
             Suspension suspension = new Suspension();
 
             parent.setIdParent(1);
-            parent.setName("Victor");
+            parent.setName("Victor Pai");
             parent.setPhone("61983104981");
             parentDao.insertParent(parent);
             parentList.add(parent);
@@ -105,7 +105,7 @@ public class JSONParserController extends Activity {
             alumnDao.insertAlumn(alumn);
 
             parent.setIdParent(2);
-            parent.setName("Matheus");
+            parent.setName("Matheus Batista");
             parent.setPhone("61985027449");
             parentList.add(parent);
             parentDao.insertParent(parent);
@@ -118,7 +118,7 @@ public class JSONParserController extends Activity {
             alumnDao.insertAlumn(alumn);
 
             parent.setIdParent(3);
-            parent.setName("Pedrinho");
+            parent.setName("Princesa");
             parent.setPhone("61991907175");
             parentList.add(parent);
             parentDao.insertParent(parent);
@@ -134,13 +134,6 @@ public class JSONParserController extends Activity {
             notification.setTitle("Esse é um motivo de teste");
             notification.setNotification_text("Luz que banha a noite e faz o sol adormecer");
             notification.setNotificaton_date("2017-07-10");
-            notification.setMotive("Esse é um motivo de teste");
-            notificationDao.insertNotification(notification);
-
-            notification.setIdNotification(2);
-            notification.setTitle("Esse é um motivo de teste");
-            notification.setNotification_text("OLHA A EVOLUÇÃO");
-            notification.setNotificaton_date("2017/07/10");
             notification.setMotive("Esse é um motivo de teste");
             notificationDao.insertNotification(notification);
 
