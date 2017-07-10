@@ -76,12 +76,12 @@ public class NotificationDao extends Dao{
         return sucess;
     }
 
-    public List<ParentAlumn> getNotification () {
+    /*public List<ParentAlumn> getNotification () {
 
         List<ParentAlumn> parentAlumnList = new ArrayList<ParentAlumn>();
-        sqliteDatabase = database.getWritableDatabase();
+        sqliteDatabase = database.getReadableDatabase();
 
-        String query = "SELECT * FROM Parent LEFT JOIN Notification;" ;
+        String query = "SELECT * FROM Parent LEFT JOIN Notification;";
 
         Cursor cursor = sqliteDatabase.rawQuery(query,null);
         while(cursor.moveToNext()) {
@@ -97,5 +97,14 @@ public class NotificationDao extends Dao{
         sqliteDatabase.close();
         database.close();
         return parentAlumnList;
+    }*/
+
+    public Cursor getNotification() {
+
+        sqliteDatabase = database.getReadableDatabase();
+        String query = "SELECT * FROM Parent LEFT JOIN Notification;";
+
+        Cursor cursor = sqliteDatabase.rawQuery(query,null);
+        return cursor;
     }
 }

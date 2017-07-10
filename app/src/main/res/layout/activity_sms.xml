@@ -35,8 +35,6 @@
             android:id="@+id/sms"
             android:textSize="30dp"
             android:textColor="@color/jumbo"/>
-
-
     </LinearLayout>
 
 </ScrollView>

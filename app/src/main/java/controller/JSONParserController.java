@@ -48,7 +48,7 @@ public class JSONParserController extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sms);
+        setContentView(R.layout.activity_main);
 
         parentDao = ParentDao.getInstance(getApplicationContext());
         alumnDao = AlumnDao.getInstance(getApplicationContext());
@@ -68,6 +68,7 @@ public class JSONParserController extends Activity {
             pDialog = new ProgressDialog(JSONParserController.this);
             pDialog.setMessage("Por favor aguarde...");
             pDialog.setCancelable(false);
+//            pDialog.show();
         }
 
         @Override
@@ -84,7 +85,66 @@ public class JSONParserController extends Activity {
             String jsonStrike = httpHandlerHelper.makeServiceCall(urlStrike);
             String jsonSuspension = httpHandlerHelper.makeServiceCall(urlSuspension);
 
-            if (jsonParent != null) {
+            Parent parent = new Parent();
+            Alumn alumn = new Alumn();
+            Notification notification = new Notification();
+            Strike strike = new Strike();
+            Suspension suspension = new Suspension();
+
+            parent.setIdParent(1);
+            parent.setName("Victor");
+            parent.setPhone("61983104981");
+            parentDao.insertParent(parent);
+            parentList.add(parent);
+
+            alumn.setIdAlumn(1);
+            alumn.setName("Victor");
+            alumn.setRegistry(123456);
+            alumn.setIdParent(1);
+            alumnList.add(alumn);
+            alumnDao.insertAlumn(alumn);
+
+            parent.setIdParent(2);
+            parent.setName("Matheus");
+            parent.setPhone("61985027449");
+            parentList.add(parent);
+            parentDao.insertParent(parent);
+
+            alumn.setIdAlumn(2);
+            alumn.setName("Matheus");
+            alumn.setRegistry(12345);
+            alumn.setIdParent(2);
+            alumnList.add(alumn);
+            alumnDao.insertAlumn(alumn);
+
+            parent.setIdParent(3);
+            parent.setName("Pedrinho");
+            parent.setPhone("61991907175");
+            parentList.add(parent);
+            parentDao.insertParent(parent);
+
+            alumn.setIdAlumn(3);
+            alumn.setName("Pedrinho");
+            alumn.setRegistry(54321);
+            alumn.setIdParent(3);
+            alumnList.add(alumn);
+            alumnDao.insertAlumn(alumn);
+
+            notification.setIdNotification(1);
+            notification.setTitle("Esse é um motivo de teste");
+            notification.setNotification_text("Luz que banha a noite e faz o sol adormecer");
+            notification.setNotificaton_date("2017-07-10");
+            notification.setMotive("Esse é um motivo de teste");
+            notificationDao.insertNotification(notification);
+
+            notification.setIdNotification(2);
+            notification.setTitle("Esse é um motivo de teste");
+            notification.setNotification_text("OLHA A EVOLUÇÃO");
+            notification.setNotificaton_date("2017/07/10");
+            notification.setMotive("Esse é um motivo de teste");
+            notificationDao.insertNotification(notification);
+
+            /*if (jsonParent != null) {
                 try {
                     JSONObject jsonObj = new JSONObject(jsonParent);
                     JSONArray parents = jsonObj.getJSONArray("parents");
@@ -141,8 +201,8 @@ public class JSONParserController extends Activity {
                         JSONObject parentJSONObject = alumnsJSONObject.getJSONObject("parent");
                         alumn.setIdParent(Integer.parseInt(parentJSONObject.getString("id")));
 
-                        alumnList.add(alumn);
-                        alumnDao.syncronAlumn(alumnList);
+                        //ææalumnList.add(alumn);
+                        alumnDao.insertAlumn(alumn);
                     }
                 } catch (final JSONException e) {
                     runOnUiThread(new Runnable() {
@@ -297,7 +357,7 @@ public class JSONParserController extends Activity {
                                 .show();
                     }
                 });
-            }
+            }*/
             return null;
         }
 

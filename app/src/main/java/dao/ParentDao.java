@@ -3,6 +3,7 @@ package dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,21 +44,20 @@ public class ParentDao extends Dao{
             parent.setName(parentList.get(aux).getName());
             parent.setPhone(parentList.get(aux).getPhone());
 
-            if(existsParent(parent) == true ) {
+
                 if(verifEqualsParents(parent) == false ) {
-                    updateParent(parent);
+                    insertParent(parent);
+              //      updateParent(parent);
                 } else {
                     /*Nothing to do */
                 }
-            } else {
-                insertParent(parent);
             }
-        }
+
     }
 
-    private boolean insertParent (Parent parent) {
+    public boolean insertParent (Parent parent) {
 
-        sqliteDatabase = database.getWritableDatabase();
+        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
         boolean valid = true;
 
         ContentValues values = new ContentValues();
@@ -66,37 +66,34 @@ public class ParentDao extends Dao{
         values.put(TABLE_COLUMNS[1], parent.getName());
         values.put(TABLE_COLUMNS[2], parent.getPhone());
 
-        long result = insertAndClose(sqliteDatabase, TABLE_NAME, values);
+        long result = insertAndClose(sqLiteDatabase, TABLE_NAME, values);
 
         if (result == -1) {
             valid = false;
         } else {
             valid = true;
         }
-        sqliteDatabase.close();
-        database.close();
         return valid;
     }
 
-    private void updateParent(Parent parent) {
-        sqliteDatabase = database.getWritableDatabase();
+    public void updateParent(Parent parent) {
+
+        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(TABLE_COLUMNS[0], parent.getIdParent());
         values.put(TABLE_COLUMNS[1], parent.getName());
         values.put(TABLE_COLUMNS[2], parent.getPhone());
 
-        sqliteDatabase.update(TABLE_NAME, values, "[IDParent] = ? ",new String[]{
+        sqLiteDatabase.update(TABLE_NAME, values, "[IDParent] = ? ",new String[]{
                 String.valueOf(parent.getIdParent())});
-        sqliteDatabase.close();
-        database.close();
     }
 
-    private List<Parent> getAllParents() {
+    public List<Parent> getAllParents() {
         List<Parent> parentList = new ArrayList<Parent>();
-        sqliteDatabase = database.getWritableDatabase();
+        SQLiteDatabase sqLiteDatabase = database.getReadableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME;
-        Cursor cursor = sqliteDatabase.rawQuery( query, null );
+        Cursor cursor = sqLiteDatabase.rawQuery( query, null );
 
         while(cursor.moveToNext()) {
             Parent parent = new Parent();
@@ -106,12 +103,10 @@ public class ParentDao extends Dao{
             parent.setPhone(cursor.getString(cursor.getColumnIndex("phoneParent")));
             parentList.add(parent);
         }
-        sqliteDatabase.close();
-        database.close();
         return parentList;
     }
 
-    private boolean verifEqualsParents (Parent parent) {
+    public boolean verifEqualsParents (Parent parent) {
 
         List<Parent> parentList;
         boolean valid = true;
@@ -129,21 +124,20 @@ public class ParentDao extends Dao{
         return valid;
     }
 
-    private boolean existsParent(Parent parent) {
-        sqliteDatabase = database.getReadableDatabase();
-        String exists = "SELECT IDParent FROM Parent WHERE IDParent =? LIMIT 1";
-        Cursor cursor = sqliteDatabase.rawQuery(exists, new String[]{
-                                                            String.valueOf(parent.getIdParent())});
-        int quantaty = cursor.getCount();
-        boolean valid = true;
-
-        if(quantaty > 0) {
-            valid = true;
-        } else {
-            valid = false;
-        }
-        sqliteDatabase.close();
-        database.close();
-        return valid;
-    }
+//    public boolean existsParent(Parent parent) {
+//
+//        SQLiteDatabase sqliteDatabase = database.getReadableDatabase();
+//        String exists = "SELECT IDParent FROM Parent WHERE IDParent =? LIMIT 1";
+//        Cursor cursor = sqliteDatabase.rawQuery(exists, new String[]{
+//                                                            String.valueOf(parent.getIdParent())});
+//        int quantaty = cursor.getCount();
+//        boolean valid = true;
+//
+//        if(quantaty > 0) {
+//            valid = true;
+//        } else {
+//            valid = false;
+//        }
+//        return valid;
+//    }
 }

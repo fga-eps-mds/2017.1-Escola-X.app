@@ -52,7 +52,7 @@ public class AlumnDao extends Dao {
         }
     }
 
-    private boolean insertAlumn (Alumn alumn) {
+    public boolean insertAlumn (Alumn alumn) {
 
         sqliteDatabase = database.getWritableDatabase();
         boolean valid = true;
@@ -107,7 +107,7 @@ public class AlumnDao extends Dao {
         return valid;
     }
 
-    private List<Alumn> getAllAlumns() {
+    public List<Alumn> getAllAlumns() {
         List<Alumn> alumnList = new ArrayList<Alumn>();
         sqliteDatabase = database.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME;

@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
 
-    private static final String DATABASE_NAME = "escolaX.db";
-    private static final int VERSION = 42;
+    public static final String DATABASE_NAME = "escolaX.db";
+    public static final int VERSION = 42;
 
     private static final String ALUMN_TABLE = "Alumn";
     private static final String NAME_ALUMN = "[nameAlumn]";
@@ -49,7 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String CREATE_PARENT = "CREATE TABLE IF NOT EXISTS " + PARENT_TABLE + " (" +
             PARENT_ID + " INTEGER PRIMARY KEY NOT NULL," +
             NAME_PARENT + " VARCHAR(64) NOT NULL, " +
-            PHONE_PARENT + " VARCHAR(13) NOT NULL);";
+            PHONE_PARENT + " VARCHAR(13) );";
 
     private static final String CREATE_STRIKE = "CREATE TABLE IF NOT EXISTS " + STRIKE_TABLE + " (" +
             STRIKE_ID + " INTEGER PRIMARY KEY NOT NULL, " +
