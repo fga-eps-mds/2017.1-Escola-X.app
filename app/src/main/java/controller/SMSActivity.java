@@ -13,7 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import dao.AlumnDao;
 import dao.NotificationDao;
@@ -73,23 +75,25 @@ public class SMSActivity extends Activity {
     private void sendMessageNotification() {
 
         Cursor result = notificationDao.getNotification();
-        SimpleDateFormat formatCorrect = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String dateString;
-        //long date = System.currentTimeMillis();
-        //dateString = dateFormat.format(date);
-
+        String currentDate;
+        String dateNotification;
+        long date = System.currentTimeMillis();
+        currentDate = dateFormat.format(date);
         if (result.getCount() != 0) {
             try {
                 while (result.moveToNext()){
-                    String date = result.getString(DATE_NOTIFICATION);
-                    //dateString = formatCorrect.format(date);
-                    Toast.makeText(this,"DATA: " + date,Toast.LENGTH_SHORT).show();
-                    /*smsManager.sendTextMessage(result.getString(NUMBER_NOTIFICATION), null,
-                            "Caro(a) " + result.getString(NAME_PARENT_NOTIFICATION) +
-                                    ", haverá, no dia " + result.getString(DATE_NOTIFICATION) +
-                                    ", " + result.getString(NOTIFICATION_TEXT) + ".", null, null);*/
-                    Toast.makeText(this, "SMS ENVIADO", Toast.LENGTH_SHORT).show();
+                    if(result.getString(DATE_NOTIFICATION).equals(currentDate)) {
+                        dateNotification = setDate(result.getString(DATE_NOTIFICATION));
+                        smsManager.sendTextMessage(result.getString(NUMBER_NOTIFICATION), null,
+                                "Caro(a) " + result.getString(NAME_PARENT_NOTIFICATION) +
+                                        ", haverá, no dia " + dateNotification +
+                                        ", " + result.getString(NOTIFICATION_TEXT) + ".", null, null);
+                        Toast.makeText(getApplicationContext(), "SMS ENVIADO", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(),"Não foi Possível Enviar o SMS",
+                                      Toast.LENGTH_LONG).show();
+                    }
                 }
             } catch (Exception exception) {
                 Toast.makeText(getApplicationContext(), "SMS NÃO ENVIADO", Toast.LENGTH_LONG).show();
@@ -97,6 +101,23 @@ public class SMSActivity extends Activity {
         } else {
             Toast.makeText(getApplicationContext(), "Nenhuma notificação", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private String setDate(String date) {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd");
+        Date myDate = null;
+        try {
+            myDate = dateFormat.parse(date);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat timeFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String finalDate = timeFormat.format(myDate);
+        return finalDate;
     }
 }
 
@@ -119,3 +140,5 @@ public class SMSActivity extends Activity {
             suspensionDao.deleteSuspension(suspension);
         }
     }*/
+
+
