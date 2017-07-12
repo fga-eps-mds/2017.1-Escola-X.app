@@ -8,16 +8,11 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.*;
@@ -146,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
         _loginButton.setEnabled(true);
 
         Intent jsonParserController = new Intent();
-        jsonParserController.setClass(getBaseContext(), JSONParserController.class);
+        jsonParserController.setClass(getBaseContext(), JSONParentController.class);
         startActivity(jsonParserController);
         finish();
     }

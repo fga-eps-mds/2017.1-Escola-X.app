@@ -6,12 +6,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +22,7 @@ import model.Parent;
 import model.Strike;
 import model.Suspension;
 
-public class JSONParserController extends Activity {
+public class JSONParentController extends Activity {
 
     private ProgressDialog pDialog;
 
@@ -65,7 +59,7 @@ public class JSONParserController extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            pDialog = new ProgressDialog(JSONParserController.this);
+            pDialog = new ProgressDialog(JSONParentController.this);
             pDialog.setMessage("Por favor aguarde...");
             pDialog.setCancelable(false);
 //            pDialog.show();
@@ -136,6 +130,15 @@ public class JSONParserController extends Activity {
             notification.setNotificaton_date("2017-07-12");
             notification.setMotive("Esse é um motivo de teste");
             notificationDao.insertNotification(notification);
+
+            suspension.setIdSuspension(1);
+            suspension.setDescription("I'M GOING BACK TO THE START");
+            suspension.setQuantity_days(42);
+            suspension.setTitle("The Scientist");
+            suspension.setDateSuspension("2017-07-12");
+            suspension.setIdAlumn(2);
+
+            suspensionDao.insertSuspension(suspension);
 
             /*if (jsonParent != null) {
                 try {

@@ -13,8 +13,8 @@ import model.Suspension;
 
 public class SuspensionDao extends Dao{
 
-    private static final String TABLE_COLUMNS[] = {"IDSuspension","title","description",
-                                                   "quantityDays","IDAlumn"};
+    private static final String TABLE_COLUMNS[] = {"IDSuspension","title","suspensionDate",
+                                                   "description","quantityDays","IDAlumn"};
 
     private static SuspensionDao instance = null;
     private static String TABLE_NAME = "Suspension";
@@ -43,9 +43,10 @@ public class SuspensionDao extends Dao{
 
         values.put(TABLE_COLUMNS[0], suspension.getIdSuspension());
         values.put(TABLE_COLUMNS[1], suspension.getTitle());
-        values.put(TABLE_COLUMNS[2], suspension.getDescription());
-        values.put(TABLE_COLUMNS[3], suspension.getQuantity_days());
-        values.put(TABLE_COLUMNS[4], suspension.getIdAlumn());
+        values.put(TABLE_COLUMNS[2], suspension.getDateSuspension());
+        values.put(TABLE_COLUMNS[3], suspension.getDescription());
+        values.put(TABLE_COLUMNS[4], suspension.getQuantity_days());
+        values.put(TABLE_COLUMNS[5], suspension.getIdAlumn());
 
 
         long result = insertAndClose(sqliteDatabase, TABLE_NAME, values);
@@ -81,6 +82,7 @@ public class SuspensionDao extends Dao{
             parentAlumn.setTitle(cursor.getString(cursor.getColumnIndex("title")));
             parentAlumn.setDescription(cursor.getString(cursor.getColumnIndex("description")));
             parentAlumn.setQuantityDays(cursor.getInt(cursor.getColumnIndex("quantityDays")));
+            parentAlumn.setDateSuspension(cursor.getString(cursor.getColumnIndex("suspensionDate")));
 
             parentAlumnList.add(parentAlumn);
         }

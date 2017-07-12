@@ -18,6 +18,7 @@ public class ParentAlumn {
     private Integer idNotification;
     private String notificationDate;
     private String notificationText;
+    private String dateSuspension;
 
     public ParentAlumn () {
 
@@ -149,5 +150,13 @@ public class ParentAlumn {
 
     public void setIdSuspension(Integer idSuspension) {
         this.idSuspension = idSuspension;
+    }
+
+    public String getDateSuspension() {
+        return dateSuspension;
+    }
+
+    public void setDateSuspension(String dateSuspension) {
+        this.dateSuspension = dateSuspension;
     }
 }

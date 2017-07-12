@@ -27,6 +27,7 @@ import dao.SuspensionDao;
 import escola_x.escola_x.R;
 import model.Notification;
 import model.ParentAlumn;
+import model.Suspension;
 
 public class SMSActivity extends Activity {
 
@@ -35,10 +36,6 @@ public class SMSActivity extends Activity {
     SuspensionDao suspensionDao;
     ParentDao parentDao;
     AlumnDao alumnDao;
-    private final int NUMBER_NOTIFICATION = 2;
-    private final int DATE_NOTIFICATION = 6;
-    private final int NOTIFICATION_TEXT = 4;
-    private final int NAME_PARENT_NOTIFICATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +50,7 @@ public class SMSActivity extends Activity {
 
         //sendMessageStrike();
         sendMessageNotification();
-        //sendMessageSuspension();
+        sendMessageSuspension();
     }
 
     /*private void sendMessageStrike(){
@@ -101,7 +98,46 @@ public class SMSActivity extends Activity {
                     ", " + parentAlumnList.get(aux).getNotificationText() +
                     ". CENTRO DE ENSINO MÉDIO 01 - GAMA";
                     parentAlumns = smsManager.divideMessage(message);
-                    smsManager.sendMultipartTextMessage(parentAlumnList.get(aux).getPhoneParent(), null, parentAlumns, null, null);
+                    smsManager.sendMultipartTextMessage(parentAlumnList.get(aux).getPhoneParent(),
+                                                        null, parentAlumns, null, null);
+                }
+            }
+        }
+    }
+
+    private void sendMessageSuspension() {
+
+        List<ParentAlumn> parentAlumnList = suspensionDao.getParentAlumnSuspension();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = "";
+        String dateSuspension = "";
+        String message = "";
+        long date = System.currentTimeMillis();
+        ArrayList<String> parentAlumns = new ArrayList<String>();
+
+        currentDate = dateFormat.format(date);
+        SmsManager smsManager = SmsManager.getDefault();
+
+        if(parentAlumnList.size() > 0) {
+            for(int aux = 0; aux < parentAlumnList.size();aux++) {
+
+                if (parentAlumnList.get(aux).getDateSuspension().equals(currentDate)) {
+
+                    Suspension suspension = new Suspension();
+
+                    suspension.setIdSuspension(parentAlumnList.get(aux).getIdSuspension());
+                    dateSuspension = setDate(parentAlumnList.get(aux).getDateSuspension());
+
+                    message = "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
+                            " o aluno " + parentAlumnList.get(aux).getNameAlumn() +
+                            ", foi suspenso por " + parentAlumnList.get(aux).getQuantityDays() +
+                            "dias . \n Motivo: " + parentAlumnList.get(aux).getDescription() + "," +
+                            " na data: " + dateSuspension + "." +
+                            "\n Caso queira mais detalhes compareça ao Centro de Ensino Médio 01 Gama";
+
+                    parentAlumns = smsManager.divideMessage(message);
+                    smsManager.sendMultipartTextMessage(parentAlumnList.get(aux).getPhoneParent(),
+                                                        null, parentAlumns, null, null);
                 }
             }
         }
@@ -124,25 +160,3 @@ public class SMSActivity extends Activity {
         return finalDate;
     }
 }
-
-
-    /*private void sendMessageSuspension() {
-
-        List<ParentAlumn> parentAlumnList = suspensionDao.getParentAlumnSuspension();
-
-        for(int aux = 0; aux < parentAlumnList.size(); aux ++) {
-            Suspension suspension = new Suspension();
-
-            suspension.setIdSuspension(parentAlumnList.get(aux).getIdSuspension());
-
-            smsManager.sendTextMessage(parentAlumnList.get(aux).getPhoneParent(), null,
-                    "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
-                            "o aluno " + parentAlumnList.get(aux).getNameAlumn() +
-                            ", foi suspenso por " + parentAlumnList.get(aux).getQuantityDays() +
-                            ". \n Motivo: " + parentAlumnList.get(aux).getDescription() + "." +
-                            "\n Caso queira mais detalhes compareça à escola", null, null);
-            suspensionDao.deleteSuspension(suspension);
-        }
-    }*/
-
-

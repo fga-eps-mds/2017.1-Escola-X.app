@@ -31,7 +31,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String SUSPENSION_ID = "[IDSuspension]";
     private static final String DESCRIPTION_SUSPENSION = "[description]";
     private static final String QUANTITY_DAYS = "[quantityDays]";
-    private static final String Suspension_TITLE = "[title]";
+    private static final String SUSPENSION_TITLE = "[title]";
+    private static final String SUSPENSION_DATE = "[suspensionDate]";
     private static final String SUSPENSIONALUMN_ID = "[IDAlumn]";
 
     private static final String NOTIFICATION_TABLE = "Notification";
@@ -60,7 +61,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String CREATE_SUSPENSION = "CREATE TABLE IF NOT EXISTS " +
             SUSPENSION_TABLE+ " (" +
             SUSPENSION_ID + " INTEGER PRIMARY KEY NOT NULL, " +
-            Suspension_TITLE + "VARCHAR(20) NOT NULL, " +
+            SUSPENSION_TITLE + "VARCHAR(20) NOT NULL, " +
+            SUSPENSION_DATE + "VARCHAR(10) NOT NULL, " +
             DESCRIPTION_SUSPENSION + " VARCHAR(150) NOT NULL, " +
             QUANTITY_DAYS + " INTEGER NOT NULL, " +
             SUSPENSIONALUMN_ID + " INTEGER NOT NULL);";
