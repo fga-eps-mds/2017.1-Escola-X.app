@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
 
         sendSMSMessage();
         permission();
+        readPhoneState();
         _loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,6 +78,20 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
+            }
+        }
+    }
+
+    protected void readPhoneState() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_PHONE_STATE)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_PHONE_STATE},
                         MY_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE);
             }
         }

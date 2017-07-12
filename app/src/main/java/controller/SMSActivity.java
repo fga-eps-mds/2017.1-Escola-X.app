@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -74,77 +75,37 @@ public class SMSActivity extends Activity {
 
     private void sendMessageNotification() {
 
-        //Cursor result = notificationDao.getNotification();
         List<ParentAlumn> parentAlumnList = notificationDao.getNotification();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String currentDate;
-        String dateNotification;
+        String currentDate = "";
+        String dateNotification = "";
+        String message = "";
         long date = System.currentTimeMillis();
+        ArrayList<String> parentAlumns = new ArrayList<String>();
+
         currentDate = dateFormat.format(date);
+        SmsManager smsManager = SmsManager.getDefault();
 
         if(parentAlumnList.size() > 0) {
             for(int aux = 0; aux < parentAlumnList.size();aux++) {
 
                 if (parentAlumnList.get(aux).getNotificationDate().equals(currentDate)) {
+
                     Notification notification = new Notification();
 
+                    notification.setIdNotification(parentAlumnList.get(aux).getIdNotification());
                     dateNotification = setDate(parentAlumnList.get(aux).getNotificationDate());
-                    SmsManager.getDefault().sendTextMessage(parentAlumnList.get(aux).getPhoneParent()
-                            , null, "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
-                                    " , haverá, no dia " + dateNotification +
-                                    ", " + parentAlumnList.get(aux).getNotificationText() + ".", null, null);
+                    message =
+                    "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
+                    " , haverá, no dia " + dateNotification +
+                    ", " + parentAlumnList.get(aux).getNotificationText() +
+                    ". CENTRO DE ENSINO MÉDIO 01 - GAMA";
+                    parentAlumns = smsManager.divideMessage(message);
+                    smsManager.sendMultipartTextMessage(parentAlumnList.get(aux).getPhoneParent(), null, parentAlumns, null, null);
                 }
             }
         }
-
-        /*if(result.getCount()!=0){
-            try{
-                while (result.moveToNext()){
-                    if(result.getString(DATE_NOTIFICATION).equals(currentDate)){
-                        dateNotification = setDate(result.getString(DATE_NOTIFICATION));
-                        SmsManager.getDefault().sendTextMessage(result.getString(NUMBER_NOTIFICATION)
-                                ,null, "Caro(a) " + result.getString(NAME_PARENT_NOTIFICATION) +
-                                " , haverá, no dia " + dateNotification +
-                                ", " + result.getString(NAME_PARENT_NOTIFICATION) + ".",null,null);
-                        Toast.makeText(this, "TEXTO: " + result.getString(NOTIFICATION_TEXT), Toast.LENGTH_SHORT).show();
-                    }
-                }
-                Toast.makeText(getApplicationContext(),"Ajuda a caminho!", Toast.LENGTH_LONG).show();
-            }catch (Exception exception){
-                Toast.makeText(getApplicationContext(),"Impossivel encaminhar o SMS", Toast.LENGTH_LONG).show();
-            }
-        }else{
-            Toast.makeText(getApplicationContext(),"Nenhum contato adicionado", Toast.LENGTH_LONG).show();
-        }*/
     }
-        /*SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String currentDate;
-        String dateNotification;
-        long date = System.currentTimeMillis();
-        currentDate = dateFormat.format(date);
-        if (result.getCount() != 0) {
-            try {
-                while (result.moveToNext()){
-                    if(result.getString(DATE_NOTIFICATION).equals(currentDate)) {
-                        dateNotification = setDate(result.getString(DATE_NOTIFICATION));
-                        smsManager.sendTextMessage(result.getString(NUMBER_NOTIFICATION), null,
-                                "Caro(a) " + result.getString(NAME_PARENT_NOTIFICATION) +
-                                        ", haverá, no dia " + dateNotification +
-                                        ", " + result.getString(NOTIFICATION_TEXT) + ".", null, null);
-                        Toast.makeText(getApplicationContext(), "SMS ENVIADO", Toast.LENGTH_SHORT).show();
-                        Toast.makeText(getApplicationContext(), "Número: " + result.getString(NUMBER_NOTIFICATION),Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(),"Não foi Possível Enviar o SMS",
-                                      Toast.LENGTH_LONG).show();
-                    }
-                }
-            } catch (Exception exception) {
-                Toast.makeText(getApplicationContext(), "SMS NÃO ENVIADO", Toast.LENGTH_LONG).show();
-            }
-        } else {
-            Toast.makeText(getApplicationContext(), "Nenhuma notificação", Toast.LENGTH_LONG).show();
-        }*/
-
 
     private String setDate(String date) {
 
