@@ -76,12 +76,35 @@ public class NotificationDao extends Dao{
         return sucess;
     }
 
-    public Cursor getNotification() {
+    /*public Cursor getNotification() {
 
         sqliteDatabase = database.getReadableDatabase();
         String query = "SELECT * FROM Parent LEFT JOIN Notification;";
 
         Cursor cursor = sqliteDatabase.rawQuery(query,null);
         return cursor;
+    }*/
+
+    public List<ParentAlumn> getNotification () {
+
+        List<ParentAlumn> parentAlumnList = new ArrayList<ParentAlumn>();
+        sqliteDatabase = database.getWritableDatabase();
+
+        String query = "SELECT * FROM Parent LEFT JOIN Notification;" ;
+
+        Cursor cursor = sqliteDatabase.rawQuery(query,null);
+        while(cursor.moveToNext()) {
+            ParentAlumn parentAlumn = new ParentAlumn();
+
+            parentAlumn.setIdNotification(cursor.getInt(cursor.getColumnIndex("notificationID")));
+            parentAlumn.setNameParent(cursor.getString(cursor.getColumnIndex("nameParent")));
+            parentAlumn.setPhoneParent(cursor.getString(cursor.getColumnIndex("phoneParent")));
+            parentAlumn.setNotificationDate(cursor.getString(cursor.getColumnIndex("notificationDate")));
+            parentAlumn.setNotificationText(cursor.getString(cursor.getColumnIndex("notificationText")));
+            parentAlumnList.add(parentAlumn);
+        }
+        sqliteDatabase.close();
+        database.close();
+        return parentAlumnList;
     }
 }

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import dao.AlumnDao;
 import dao.NotificationDao;
@@ -23,6 +24,8 @@ import dao.ParentDao;
 import dao.StrikeDao;
 import dao.SuspensionDao;
 import escola_x.escola_x.R;
+import model.Notification;
+import model.ParentAlumn;
 
 public class SMSActivity extends Activity {
 
@@ -31,7 +34,6 @@ public class SMSActivity extends Activity {
     SuspensionDao suspensionDao;
     ParentDao parentDao;
     AlumnDao alumnDao;
-    SmsManager smsManager;
     private final int NUMBER_NOTIFICATION = 2;
     private final int DATE_NOTIFICATION = 6;
     private final int NOTIFICATION_TEXT = 4;
@@ -47,8 +49,6 @@ public class SMSActivity extends Activity {
         suspensionDao = SuspensionDao.getInstance(getApplicationContext());
         parentDao = ParentDao.getInstance(getApplicationContext());
         alumnDao = AlumnDao.getInstance(getApplicationContext());
-        smsManager = SmsManager.getDefault();
-
 
         //sendMessageStrike();
         sendMessageNotification();
@@ -74,8 +74,50 @@ public class SMSActivity extends Activity {
 
     private void sendMessageNotification() {
 
-        Cursor result = notificationDao.getNotification();
+        //Cursor result = notificationDao.getNotification();
+        List<ParentAlumn> parentAlumnList = notificationDao.getNotification();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate;
+        String dateNotification;
+        long date = System.currentTimeMillis();
+        currentDate = dateFormat.format(date);
+
+        if(parentAlumnList.size() > 0) {
+            for(int aux = 0; aux < parentAlumnList.size();aux++) {
+
+                if (parentAlumnList.get(aux).getNotificationDate().equals(currentDate)) {
+                    Notification notification = new Notification();
+
+                    dateNotification = setDate(parentAlumnList.get(aux).getNotificationDate());
+                    SmsManager.getDefault().sendTextMessage(parentAlumnList.get(aux).getPhoneParent()
+                            , null, "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
+                                    " , haverá, no dia " + dateNotification +
+                                    ", " + parentAlumnList.get(aux).getNotificationText() + ".", null, null);
+                }
+            }
+        }
+
+        /*if(result.getCount()!=0){
+            try{
+                while (result.moveToNext()){
+                    if(result.getString(DATE_NOTIFICATION).equals(currentDate)){
+                        dateNotification = setDate(result.getString(DATE_NOTIFICATION));
+                        SmsManager.getDefault().sendTextMessage(result.getString(NUMBER_NOTIFICATION)
+                                ,null, "Caro(a) " + result.getString(NAME_PARENT_NOTIFICATION) +
+                                " , haverá, no dia " + dateNotification +
+                                ", " + result.getString(NAME_PARENT_NOTIFICATION) + ".",null,null);
+                        Toast.makeText(this, "TEXTO: " + result.getString(NOTIFICATION_TEXT), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                Toast.makeText(getApplicationContext(),"Ajuda a caminho!", Toast.LENGTH_LONG).show();
+            }catch (Exception exception){
+                Toast.makeText(getApplicationContext(),"Impossivel encaminhar o SMS", Toast.LENGTH_LONG).show();
+            }
+        }else{
+            Toast.makeText(getApplicationContext(),"Nenhum contato adicionado", Toast.LENGTH_LONG).show();
+        }*/
+    }
+        /*SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String currentDate;
         String dateNotification;
         long date = System.currentTimeMillis();
@@ -90,6 +132,7 @@ public class SMSActivity extends Activity {
                                         ", haverá, no dia " + dateNotification +
                                         ", " + result.getString(NOTIFICATION_TEXT) + ".", null, null);
                         Toast.makeText(getApplicationContext(), "SMS ENVIADO", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Número: " + result.getString(NUMBER_NOTIFICATION),Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getApplicationContext(),"Não foi Possível Enviar o SMS",
                                       Toast.LENGTH_LONG).show();
@@ -100,8 +143,8 @@ public class SMSActivity extends Activity {
             }
         } else {
             Toast.makeText(getApplicationContext(), "Nenhuma notificação", Toast.LENGTH_LONG).show();
-        }
-    }
+        }*/
+
 
     private String setDate(String date) {
 

@@ -133,7 +133,7 @@ public class JSONParserController extends Activity {
             notification.setIdNotification(1);
             notification.setTitle("Esse é um motivo de teste");
             notification.setNotification_text("Luz que banha a noite e faz o sol adormecer");
-            notification.setNotificaton_date("2017-07-10");
+            notification.setNotificaton_date("2017-07-12");
             notification.setMotive("Esse é um motivo de teste");
             notificationDao.insertNotification(notification);
 
