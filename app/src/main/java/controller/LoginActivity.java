@@ -141,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
         _loginButton.setEnabled(true);
 
         Intent jsonParserController = new Intent();
-        jsonParserController.setClass(getBaseContext(), JSONParentController.class);
+        jsonParserController.setClass(getBaseContext(), ParentController.class);
         startActivity(jsonParserController);
         finish();
     }
