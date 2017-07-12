@@ -140,6 +140,13 @@ public class JSONParentController extends Activity {
 
             suspensionDao.insertSuspension(suspension);
 
+            strike.setIdStrike(2);
+            strike.setDescription_strike("FALTA APENAS ALGUNS DETALHES");
+            strike.setDate_strike("2017-07-12");
+            strike.setIdAlumn(1);
+            strikeDao.insertStrike(strike);
+
+
             /*if (jsonParent != null) {
                 try {
                     JSONObject jsonObj = new JSONObject(jsonParent);

@@ -27,6 +27,7 @@ import dao.SuspensionDao;
 import escola_x.escola_x.R;
 import model.Notification;
 import model.ParentAlumn;
+import model.Strike;
 import model.Suspension;
 
 public class SMSActivity extends Activity {
@@ -48,27 +49,48 @@ public class SMSActivity extends Activity {
         parentDao = ParentDao.getInstance(getApplicationContext());
         alumnDao = AlumnDao.getInstance(getApplicationContext());
 
-        //sendMessageStrike();
+        sendMessageStrike();
         sendMessageNotification();
         sendMessageSuspension();
     }
 
-    /*private void sendMessageStrike(){
+    private void sendMessageStrike(){
 
         List<ParentAlumn> parentAlumnList = strikeDao.getParentAlumnStrike();
-        for(int aux = 0; aux < parentAlumnList.size(); aux ++) {
-            Strike strike = new Strike();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = "";
+        String dateStrike = "";
+        String messageStrike = "";
+        long date = System.currentTimeMillis();
+        ArrayList<String> parentAlumns = new ArrayList<String>();
 
-            strike.setIdStrike(parentAlumnList.get(aux).getIdStrike());
+        currentDate = dateFormat.format(date);
+        SmsManager smsManager = SmsManager.getDefault();
 
-            smsManager.sendTextMessage(parentAlumnList.get(aux).getPhoneParent(), null,
-                        "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
-                        " o aluno " + parentAlumnList.get(aux).getNameAlumn() +
-                        ", foi advertido por " + parentAlumnList.get(aux).getDescriptionStrike() +
-                        ". \n Caso queira mais detalhes, compareça à escola.", null, null);
-            strikeDao.deleteStrike(strike);
+        if(parentAlumnList.size() > 0) {
+            for(int aux = 0; aux < parentAlumnList.size();aux++) {
+
+                if (parentAlumnList.get(aux).getDateStrike().equals(currentDate)) {
+
+                    Strike strike = new Strike();
+
+                    strike.setIdStrike(parentAlumnList.get(aux).getIdStrike());
+
+                    dateStrike = setDate(parentAlumnList.get(aux).getDateStrike());
+
+                    messageStrike = "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
+                            " o aluno " + parentAlumnList.get(aux).getNameAlumn() +
+                            ", foi advertido por " + parentAlumnList.get(aux).getDescriptionStrike() +
+                            ". Este ocorrido aconteceu no dia " + dateStrike +
+                            ".\n" +
+                            "Caso queira mais detalhes compareça ao CENTRO DE ENSINO MÉDIO 01 GAMA";
+                    parentAlumns = smsManager.divideMessage(messageStrike);
+                    smsManager.sendMultipartTextMessage(parentAlumnList.get(aux).getPhoneParent(),
+                            null, parentAlumns, null, null);
+                }
+            }
         }
-    }*/
+    }
 
     private void sendMessageNotification() {
 
@@ -76,7 +98,7 @@ public class SMSActivity extends Activity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String currentDate = "";
         String dateNotification = "";
-        String message = "";
+        String messageNotification = "";
         long date = System.currentTimeMillis();
         ArrayList<String> parentAlumns = new ArrayList<String>();
 
@@ -92,12 +114,12 @@ public class SMSActivity extends Activity {
 
                     notification.setIdNotification(parentAlumnList.get(aux).getIdNotification());
                     dateNotification = setDate(parentAlumnList.get(aux).getNotificationDate());
-                    message =
+                    messageNotification =
                     "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
                     " , haverá, no dia " + dateNotification +
-                    ", " + parentAlumnList.get(aux).getNotificationText() +
-                    ". CENTRO DE ENSINO MÉDIO 01 - GAMA";
-                    parentAlumns = smsManager.divideMessage(message);
+                    " o evento " + parentAlumnList.get(aux).getNotificationText() +
+                    ". \n CENTRO DE ENSINO MÉDIO 01 - GAMA";
+                    parentAlumns = smsManager.divideMessage(messageNotification);
                     smsManager.sendMultipartTextMessage(parentAlumnList.get(aux).getPhoneParent(),
                                                         null, parentAlumns, null, null);
                 }
@@ -111,7 +133,7 @@ public class SMSActivity extends Activity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String currentDate = "";
         String dateSuspension = "";
-        String message = "";
+        String messageSuspension = "";
         long date = System.currentTimeMillis();
         ArrayList<String> parentAlumns = new ArrayList<String>();
 
@@ -128,14 +150,15 @@ public class SMSActivity extends Activity {
                     suspension.setIdSuspension(parentAlumnList.get(aux).getIdSuspension());
                     dateSuspension = setDate(parentAlumnList.get(aux).getDateSuspension());
 
-                    message = "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
+                    messageSuspension = "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
                             " o aluno " + parentAlumnList.get(aux).getNameAlumn() +
                             ", foi suspenso por " + parentAlumnList.get(aux).getQuantityDays() +
-                            "dias . \n Motivo: " + parentAlumnList.get(aux).getDescription() + "," +
-                            " na data: " + dateSuspension + "." +
-                            "\n Caso queira mais detalhes compareça ao Centro de Ensino Médio 01 Gama";
+                            "dias. \n" +
+                            "Motivo: " + parentAlumnList.get(aux).getDescription() + "," +
+                            " no dia " + dateSuspension + ".\n" +
+                            "Caso queira mais detalhes compareça ao CENTRO DE ENSINO MÉDIO 01 GAMA";
 
-                    parentAlumns = smsManager.divideMessage(message);
+                    parentAlumns = smsManager.divideMessage(messageSuspension);
                     smsManager.sendMultipartTextMessage(parentAlumnList.get(aux).getPhoneParent(),
                                                         null, parentAlumns, null, null);
                 }

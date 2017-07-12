@@ -10,7 +10,7 @@ public class ParentAlumn {
     private String phoneParent;
     private Integer idStrike;
     private String descriptionStrike;
-    private String date_strike;
+    private String dateStrike;
     private String title;
     private String description;
     private Integer quantityDays;
@@ -120,12 +120,12 @@ public class ParentAlumn {
         this.idStrike = idStrike;
     }
 
-    public String getDate_strike() {
-        return date_strike;
+    public String getDateStrike() {
+        return dateStrike;
     }
 
-    public void setDate_strike(String date_strike) {
-        this.date_strike = date_strike;
+    public void setDateStrike(String dateStrike) {
+        this.dateStrike = dateStrike;
     }
 
     public String getTitle() {
