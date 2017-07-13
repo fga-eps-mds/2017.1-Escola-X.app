@@ -76,6 +76,7 @@ public class SuspensionController extends Activity{
                         suspension.setQuantity_days(Integer.parseInt(
                                 suspensionsJSONObject.getString("quantity_days")));
                         suspension.setTitle(suspensionsJSONObject.getString("title"));
+                        suspension.setDateSuspension(suspensionsJSONObject.getString("date_suspension"));
 
                         JSONObject alumnJSONObject = suspensionsJSONObject.getJSONObject("alumn");
                         suspension.setIdAlumn(Integer.parseInt(alumnJSONObject.getString("id")));

@@ -75,7 +75,7 @@ public class SuspensionDao extends Dao{
         while(cursor.moveToNext()) {
             ParentAlumn parentAlumn = new ParentAlumn();
 
-            parentAlumn.setIdNotification(cursor.getInt(cursor.getColumnIndex("IDSuspension")));
+            parentAlumn.setIdSuspension(cursor.getInt(cursor.getColumnIndex("IDSuspension")));
             parentAlumn.setNameAlumn(cursor.getString(cursor.getColumnIndex("nameAlumn")));
             parentAlumn.setNameParent(cursor.getString(cursor.getColumnIndex("nameParent")));
             parentAlumn.setPhoneParent(cursor.getString(cursor.getColumnIndex("phoneParent")));

@@ -89,7 +89,7 @@ public class SMSController extends Activity {
                     parentAlumns = smsManager.divideMessage(messageStrike);
                     smsManager.sendMultipartTextMessage(parentAlumnList.get(aux).getPhoneParent(),
                             null, parentAlumns, null, null);
-                    //strikeDao.deleteStrike(strike);
+                    strikeDao.deleteStrike(strike);
                 }
             }
         }
@@ -125,7 +125,7 @@ public class SMSController extends Activity {
                     parentAlumns = smsManager.divideMessage(messageNotification);
                     smsManager.sendMultipartTextMessage(parentAlumnList.get(aux).getPhoneParent(),
                                                         null, parentAlumns, null, null);
-                    //notificationDao.deleteNotification(notification);
+                    notificationDao.deleteNotification(notification);
                 }
             }
         }
@@ -165,7 +165,7 @@ public class SMSController extends Activity {
                     parentAlumns = smsManager.divideMessage(messageSuspension);
                     smsManager.sendMultipartTextMessage(parentAlumnList.get(aux).getPhoneParent(),
                                                         null, parentAlumns, null, null);
-                    //suspensionDao.deleteSuspension(suspension);
+                    suspensionDao.deleteSuspension(suspension);
                 }
             }
         }
@@ -199,7 +199,7 @@ public class SMSController extends Activity {
 
             parent.setIdParent(parentList.get(aux).getIdParent());
 
-            //parentDao.deleteParent(parent);
+            parentDao.deleteParent(parent);
         }
     }
 
@@ -213,7 +213,7 @@ public class SMSController extends Activity {
 
             alumn.setIdParent(alumnList.get(aux).getIdParent());
 
-            //alumnDao.deleteAlumn(alumn);
+            alumnDao.deleteAlumn(alumn);
         }
     }
 }

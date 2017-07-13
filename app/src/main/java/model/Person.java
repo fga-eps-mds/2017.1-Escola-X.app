@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Person {
 
+
     private String name;
     private Integer registry;
     private String phone;
@@ -12,24 +13,6 @@ public class Person {
 
     public Person () {
 
-    }
-
-    public Person (String name,Integer registry) {
-        setName(name);
-        setRegistry(registry);
-    }
-
-    public Person (String name,String phone) {
-        setName(name);
-        setPhone(phone);
-    }
-
-    public Integer getIdPerson() {
-        return idPerson;
-    }
-
-    public void setIdPerson(Integer idPerson) {
-        this.idPerson = idPerson;
     }
 
     public String getName() {

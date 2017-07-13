@@ -12,9 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import dao.AlumnDao;
 import escola_x.escola_x.R;
 import helper.HttpHandlerHelper;

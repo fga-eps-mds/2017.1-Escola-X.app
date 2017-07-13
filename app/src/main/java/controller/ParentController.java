@@ -5,16 +5,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import dao.ParentDao;
 import escola_x.escola_x.R;
@@ -66,6 +62,7 @@ public class ParentController extends Activity {
             String jsonParent = httpHandlerHelper.makeServiceCall(urlParents);
 
             MaskHelper maskHelper = new MaskHelper();
+            String regex = "[A-Z&&[^IVX]]+";
 
             if (jsonParent != null) {
                 try {
@@ -75,19 +72,33 @@ public class ParentController extends Activity {
                     for (int aux = 0; aux < parents.length(); aux++) {
                         JSONObject parentsJSONObject = parents.getJSONObject(aux);
 
-                        if(parentsJSONObject.getString("phone").equals("null")) {
+                        if(parentsJSONObject.getString("phone").equals("null") ||
+                           parentsJSONObject.getString("phone").contains(regex)) {
 
                         } else {
 
-                            Parent parent = new Parent();
+                            if(parentsJSONObject.getString("phone").length() == 10) {
 
-                            parent.setIdParent(Integer.parseInt(parentsJSONObject.getString("id")));
-                            parent.setName(parentsJSONObject.getString("name"));
-                            parent.setPhone(maskHelper.phoneMask(parentsJSONObject.getString("phone")));
+                                Parent parent = new Parent();
 
-                            Log.i("Nome: ", parent.getName());
-                            Log.i("Telefone: ", parent.getPhone());
-                            Log.i("TAMANHO: ", String.valueOf(parent.getPhone().length()));
+                                parent.setIdParent(Integer.parseInt(
+                                                    parentsJSONObject.getString("id")));
+                                parent.setName(parentsJSONObject.getString("name"));
+                                parent.setPhone(maskHelper.phoneMask(
+                                                    parentsJSONObject.getString("phone")));
+
+                                parentDao.insertParent(parent);
+                            } else if(parentsJSONObject.getString("phone").length() == 11) {
+
+                                Parent parent = new Parent();
+
+                                parent.setIdParent(Integer.parseInt(
+                                                    parentsJSONObject.getString("id")));
+                                parent.setName(parentsJSONObject.getString("name"));
+                                parent.setPhone(parentsJSONObject.getString("phone"));
+
+                                parentDao.insertParent(parent);
+                            }
                         }
                     }
                 } catch (final JSONException e) {

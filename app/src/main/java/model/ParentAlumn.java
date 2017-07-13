@@ -3,9 +3,6 @@ package model;
 public class ParentAlumn {
 
     private String nameAlumn;
-    private String registryAlumn;
-    private Integer alumnId;
-    private Integer idParent;
     private String nameParent;
     private String phoneParent;
     private Integer idStrike;
@@ -70,30 +67,6 @@ public class ParentAlumn {
 
     public void setNameAlumn(String nameAlumn) {
         this.nameAlumn = nameAlumn;
-    }
-
-    public String getRegistryAlumn() {
-        return registryAlumn;
-    }
-
-    public void setRegistryAlumn(String registryAlumn) {
-        this.registryAlumn = registryAlumn;
-    }
-
-    public Integer getAlumnId() {
-        return alumnId;
-    }
-
-    public void setAlumnId(Integer alumnId) {
-        this.alumnId = alumnId;
-    }
-
-    public Integer getIdParent() {
-        return idParent;
-    }
-
-    public void setIdParent(Integer idParent) {
-        this.idParent = idParent;
     }
 
     public String getNameParent() {

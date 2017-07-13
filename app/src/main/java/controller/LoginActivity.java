@@ -98,7 +98,6 @@ public class LoginActivity extends AppCompatActivity {
         if (!validate()) {
             onLoginFailed();
             return;
-
         }
 
         _loginButton.setEnabled(false);
