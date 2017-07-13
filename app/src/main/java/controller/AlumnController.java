@@ -59,8 +59,6 @@ public class AlumnController extends Activity {
         @Override
         protected Void doInBackground(Void... arg0) {
 
-            List<Alumn> alumnList = new ArrayList<Alumn>();
-
             HttpHandlerHelper httpHandlerHelper = new HttpHandlerHelper();
 
             String jsonAlumn = httpHandlerHelper.makeServiceCall(urlAlumns);
@@ -82,8 +80,7 @@ public class AlumnController extends Activity {
                         JSONObject parentJSONObject = alumnsJSONObject.getJSONObject("parent");
                         alumn.setIdParent(Integer.parseInt(parentJSONObject.getString("id")));
 
-                        alumnList.add(alumn);
-                        alumnDao.syncronAlumn(alumnList);
+                        alumnDao.insertAlumn(alumn);
                     }
                 } catch (final JSONException e) {
                     runOnUiThread(new Runnable() {

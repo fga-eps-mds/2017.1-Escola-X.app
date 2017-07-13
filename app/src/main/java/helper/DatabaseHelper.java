@@ -41,18 +41,21 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     private static final String NOTIFICATION_DATE = "[notificationDate]";
     private static final String NOTIFICATION_ID = "[notificationID]";
 
-    private static final String CREATE_ALUMN = "CREATE TABLE IF NOT EXISTS " + ALUMN_TABLE + " (" +
+    private static final String CREATE_ALUMN = "CREATE TABLE IF NOT EXISTS " +
+            ALUMN_TABLE + " (" +
             ALUMN_ID + " INTEGER PRIMARY KEY NOT NULL," +
             NAME_ALUMN + " VARCHAR(64) NOT NULL, " +
             REGISTRY_ALUMN + " VARCHAR(6) NOT NULL, " +
             ALUMN_PARENT_ID + "INTEGER NOT NULL );";
 
-    private static final String CREATE_PARENT = "CREATE TABLE IF NOT EXISTS " + PARENT_TABLE + " (" +
+    private static final String CREATE_PARENT = "CREATE TABLE IF NOT EXISTS " +
+            PARENT_TABLE + " (" +
             PARENT_ID + " INTEGER PRIMARY KEY NOT NULL," +
             NAME_PARENT + " VARCHAR(64) NOT NULL, " +
             PHONE_PARENT + " VARCHAR(13) );";
 
-    private static final String CREATE_STRIKE = "CREATE TABLE IF NOT EXISTS " + STRIKE_TABLE + " (" +
+    private static final String CREATE_STRIKE = "CREATE TABLE IF NOT EXISTS " +
+            STRIKE_TABLE + " (" +
             STRIKE_ID + " INTEGER PRIMARY KEY NOT NULL, " +
             DESCRIPTION_STRIKE + " VARCHAR(150) NOT NULL, " +
             DATE_STRIKE + " VARCHAR(10) NOT NULL, " +

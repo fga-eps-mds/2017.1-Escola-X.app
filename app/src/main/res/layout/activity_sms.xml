@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#091028"
-            android:text="Deixe o aplicativo aberto em segundo plano, para poder enviar SMS's"
+            android:text=""
             android:gravity="center"
             android:textStyle="bold|italic"
             android:textSize="24dp"

@@ -13,11 +13,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import dao.StrikeDao;
-import dao.SuspensionDao;
 import escola_x.escola_x.R;
 import helper.HttpHandlerHelper;
 import model.Strike;
-import model.Suspension;
 
 public class StrikeController extends Activity {
 
@@ -111,7 +109,7 @@ public class StrikeController extends Activity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
 
-            Intent intent = new Intent(getApplicationContext(), SMSActivity.class);
+            Intent intent = new Intent(getApplicationContext(), SMSController.class);
             startActivityForResult(intent, 0);
             finish();
         }

@@ -32,26 +32,6 @@ public class AlumnDao extends Dao {
         return AlumnDao.instance;
     }
 
-    public void syncronAlumn (List<Alumn> alumns) {
-
-        for(int aux = 0;aux<alumns.size();aux++) {
-            Alumn alumn = new Alumn();
-
-            alumn.setIdAlumn(alumns.get(aux).getIdAlumn());
-            alumn.setName(alumns.get(aux).getName());
-            alumn.setRegistry(alumns.get(aux).getRegistry());
-            alumn.setIdParent(alumns.get(aux).getIdParent());
-
-            if(existsAlumn(alumn) == true ) {
-                if(verifEqualsAlumns(alumn) == false ) {
-                    updateAlumn(alumn);
-                }
-            } else {
-                insertAlumn(alumn);
-            }
-        }
-    }
-
     public boolean insertAlumn (Alumn alumn) {
 
         sqliteDatabase = database.getWritableDatabase();
@@ -76,37 +56,6 @@ public class AlumnDao extends Dao {
         return valid;
     }
 
-    private void updateAlumn(Alumn alumn) {
-        sqliteDatabase = database.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        values.put(TABLE_COLUMNS[1], alumn.getName());
-        values.put(TABLE_COLUMNS[2], alumn.getRegistry());
-
-        sqliteDatabase.update(TABLE_NAME, values, "[IDAlumn] = ? ",new String[]{
-                String.valueOf(alumn.getIdAlumn())});
-        sqliteDatabase.close();
-        database.close();
-    }
-
-    private boolean verifEqualsAlumns (Alumn alumn) {
-
-        List<Alumn> alumnList;
-        boolean valid = true;
-
-        alumnList = getAllAlumns();
-
-        for(int aux = 0; aux < alumnList.size();aux ++) {
-            if (alumn.getName().equals(alumnList.get(aux).getName())  &&
-                    alumn.getRegistry().equals(alumnList.get(aux).getRegistry())) {
-                valid = true;
-            } else {
-                valid = false;
-            }
-        }
-        return valid;
-    }
-
     public List<Alumn> getAllAlumns() {
         List<Alumn> alumnList = new ArrayList<Alumn>();
         sqliteDatabase = database.getWritableDatabase();
@@ -126,21 +75,20 @@ public class AlumnDao extends Dao {
         return alumnList;
     }
 
-    private boolean existsAlumn(Alumn alumn) {
-        sqliteDatabase = database.getReadableDatabase();
-        String exists = "SELECT IDAlumn FROM Alumn WHERE IDAlumn =? LIMIT 1";
-        Cursor cursor = sqliteDatabase.rawQuery(exists, new String[]{
-                                                            String.valueOf(alumn.getIdAlumn())});
-        int quantaty = cursor.getCount();
-        boolean valid = true;
+    public boolean deleteAlumn (Alumn alumn) {
 
-        if(quantaty > 0) {
-            valid = true;
+        sqliteDatabase = database.getWritableDatabase();
+        boolean sucess = true;
+
+        long result = sqliteDatabase.delete(TABLE_NAME,"[IDAlumn] = " + alumn.getIdAlumn(),null);
+
+        if( result == -1) {
+            sucess = false;
         } else {
-            valid = false;
+            sucess = true;
         }
         sqliteDatabase.close();
         database.close();
-        return valid;
+        return sucess;
     }
 }

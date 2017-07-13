@@ -34,27 +34,6 @@ public class ParentDao extends Dao{
         return ParentDao.instance;
     }
 
-    public void syncronParent (List<Parent> parentList) {
-
-        for(int aux = 0;aux<parentList.size();aux ++) {
-
-            Parent parent = new Parent();
-
-            parent.setIdParent(parentList.get(aux).getIdParent());
-            parent.setName(parentList.get(aux).getName());
-            parent.setPhone(parentList.get(aux).getPhone());
-
-
-                if(verifEqualsParents(parent) == false ) {
-                    insertParent(parent);
-              //      updateParent(parent);
-                } else {
-                    /*Nothing to do */
-                }
-            }
-
-    }
-
     public boolean insertParent (Parent parent) {
 
         SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
@@ -76,19 +55,6 @@ public class ParentDao extends Dao{
         return valid;
     }
 
-    public void updateParent(Parent parent) {
-
-        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        values.put(TABLE_COLUMNS[0], parent.getIdParent());
-        values.put(TABLE_COLUMNS[1], parent.getName());
-        values.put(TABLE_COLUMNS[2], parent.getPhone());
-
-        sqLiteDatabase.update(TABLE_NAME, values, "[IDParent] = ? ",new String[]{
-                String.valueOf(parent.getIdParent())});
-    }
-
     public List<Parent> getAllParents() {
         List<Parent> parentList = new ArrayList<Parent>();
         SQLiteDatabase sqLiteDatabase = database.getReadableDatabase();
@@ -106,38 +72,20 @@ public class ParentDao extends Dao{
         return parentList;
     }
 
-    public boolean verifEqualsParents (Parent parent) {
+    public boolean deleteParent (Parent parent) {
 
-        List<Parent> parentList;
-        boolean valid = true;
+        sqliteDatabase = database.getWritableDatabase();
+        boolean sucess = true;
 
-        parentList = getAllParents();
+        long result = sqliteDatabase.delete(TABLE_NAME,"[IDParent] = " + parent.getIdParent(),null);
 
-        for(int aux = 0; aux < parentList.size();aux ++) {
-            if (parent.getName().equals(parentList.get(aux).getName())  &&
-                    parent.getPhone().equals(parentList.get(aux).getPhone())) {
-                valid = true;
-            } else {
-                valid = false;
-            }
+        if( result == -1) {
+            sucess = false;
+        } else {
+            sucess = true;
         }
-        return valid;
+        sqliteDatabase.close();
+        database.close();
+        return sucess;
     }
-
-//    public boolean existsParent(Parent parent) {
-//
-//        SQLiteDatabase sqliteDatabase = database.getReadableDatabase();
-//        String exists = "SELECT IDParent FROM Parent WHERE IDParent =? LIMIT 1";
-//        Cursor cursor = sqliteDatabase.rawQuery(exists, new String[]{
-//                                                            String.valueOf(parent.getIdParent())});
-//        int quantaty = cursor.getCount();
-//        boolean valid = true;
-//
-//        if(quantaty > 0) {
-//            valid = true;
-//        } else {
-//            valid = false;
-//        }
-//        return valid;
-//    }
 }

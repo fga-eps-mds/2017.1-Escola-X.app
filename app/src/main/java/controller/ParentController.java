@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import java.util.List;
 import dao.ParentDao;
 import escola_x.escola_x.R;
 import helper.HttpHandlerHelper;
+import helper.MaskHelper;
 import model.Parent;
 
 public class ParentController extends Activity {
@@ -35,12 +37,11 @@ public class ParentController extends Activity {
         setContentView(R.layout.activity_sms);
 
         parentDao = ParentDao.getInstance(getApplicationContext());
+        parentTextView = (TextView) findViewById(R.id.jsonSMS);
 
         String message = "\t Por Favor aguarde enquanto estamos atualizando seu banco de dados" +
-                            " em relação aos parentes. Pode ser que demore um pouco, mas por favor" +
-                            " não feche o aplicativo";
-
-        parentTextView = (TextView) findViewById(R.id.jsonSMS);
+                            " em relação aos responsáveis. Pode ser que demore um pouco, " +
+                            "mas por favor não feche o aplicativo";
         parentTextView.setText(message);
 
         new GetParents().execute();
@@ -60,11 +61,11 @@ public class ParentController extends Activity {
         @Override
         protected Void doInBackground(Void... arg0) {
 
-            List<Parent> parentList = new ArrayList<Parent>();
-
             HttpHandlerHelper httpHandlerHelper = new HttpHandlerHelper();
 
             String jsonParent = httpHandlerHelper.makeServiceCall(urlParents);
+
+            MaskHelper maskHelper = new MaskHelper();
 
             if (jsonParent != null) {
                 try {
@@ -74,14 +75,20 @@ public class ParentController extends Activity {
                     for (int aux = 0; aux < parents.length(); aux++) {
                         JSONObject parentsJSONObject = parents.getJSONObject(aux);
 
-                        Parent parent = new Parent();
+                        if(parentsJSONObject.getString("phone").equals("null")) {
 
-                        parent.setIdParent(Integer.parseInt(parentsJSONObject.getString("id")));
-                        parent.setName(parentsJSONObject.getString("name"));
-                        parent.setPhone(parentsJSONObject.getString("phone"));
+                        } else {
 
-                        parentList.add(parent);
-                        parentDao.syncronParent(parentList);
+                            Parent parent = new Parent();
+
+                            parent.setIdParent(Integer.parseInt(parentsJSONObject.getString("id")));
+                            parent.setName(parentsJSONObject.getString("name"));
+                            parent.setPhone(maskHelper.phoneMask(parentsJSONObject.getString("phone")));
+
+                            Log.i("Nome: ", parent.getName());
+                            Log.i("Telefone: ", parent.getPhone());
+                            Log.i("TAMANHO: ", String.valueOf(parent.getPhone().length()));
+                        }
                     }
                 } catch (final JSONException e) {
                     runOnUiThread(new Runnable() {
@@ -105,96 +112,6 @@ public class ParentController extends Activity {
                     }
                 });
             }
-
-            /*
-
-            if (jsonStrike != null) {
-                try {
-                    JSONObject jsonObj = new JSONObject(jsonStrike);
-                    JSONArray strikes = jsonObj.getJSONArray("strikes");
-
-                    for (int aux = 0; aux < strikes.length(); aux++) {
-                        JSONObject strikesJSONObject = strikes.getJSONObject(aux);
-
-                        Strike strike = new Strike();
-
-                        strike.setIdStrike(Integer.parseInt(strikesJSONObject.getString("id")));
-                        strike.setDescription_strike(strikesJSONObject.getString(
-                                "description_strike"));
-                        strike.setDate_strike(strikesJSONObject.getString("date_strike"));
-
-                        JSONObject alumnJSONObject = strikesJSONObject.getJSONObject("alumn");
-                        strike.setIdAlumn(Integer.parseInt(alumnJSONObject.getString("id")));
-
-                        strikeDao.insertStrike(strike);
-                    }
-                } catch (final JSONException e) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(),
-                                    "Json parsing error: " + e.getMessage(),
-                                    Toast.LENGTH_LONG)
-                                    .show();
-                        }
-                    });
-                }
-            } else {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(),
-                                "Couldn't get json from server. Check LogCat for possible errors!",
-                                Toast.LENGTH_LONG)
-                                .show();
-                    }
-                });
-            }
-
-            if (jsonSuspension != null) {
-                try {
-                    JSONObject jsonObj = new JSONObject(jsonSuspension);
-                    JSONArray suspensions = jsonObj.getJSONArray("suspensions");
-
-                    for (int aux = 0; aux < suspensions.length(); aux++) {
-                        JSONObject suspensionsJSONObject = suspensions.getJSONObject(aux);
-
-                        Suspension suspension = new Suspension();
-
-                        suspension.setIdSuspension(Integer.parseInt(
-                                suspensionsJSONObject.getString("id")));
-                        suspension.setDescription(suspensionsJSONObject.getString("description"));
-                        suspension.setQuantity_days(Integer.parseInt(
-                                suspensionsJSONObject.getString("quantity_days")));
-                        suspension.setTitle(suspensionsJSONObject.getString("title"));
-
-                        JSONObject alumnJSONObject = suspensionsJSONObject.getJSONObject("alumn");
-                        suspension.setIdAlumn(Integer.parseInt(alumnJSONObject.getString("id")));
-
-                        suspensionDao.insertSuspension(suspension);
-                    }
-                } catch (final JSONException e) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(),
-                                    "Json parsing error: " + e.getMessage(),
-                                    Toast.LENGTH_LONG)
-                                    .show();
-                        }
-                    });
-                }
-            } else {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(),
-                                "Couldn't get json from server. Check LogCat for possible errors!",
-                                Toast.LENGTH_LONG)
-                                .show();
-                    }
-                });
-            }*/
             return null;
         }
 

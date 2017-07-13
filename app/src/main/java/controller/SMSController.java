@@ -3,6 +3,7 @@ package controller;
 import android.app.Activity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,18 +17,21 @@ import dao.ParentDao;
 import dao.StrikeDao;
 import dao.SuspensionDao;
 import escola_x.escola_x.R;
+import model.Alumn;
 import model.Notification;
+import model.Parent;
 import model.ParentAlumn;
 import model.Strike;
 import model.Suspension;
 
-public class SMSActivity extends Activity {
+public class SMSController extends Activity {
 
     StrikeDao strikeDao;
     NotificationDao notificationDao;
     SuspensionDao suspensionDao;
     ParentDao parentDao;
     AlumnDao alumnDao;
+    TextView smsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +43,17 @@ public class SMSActivity extends Activity {
         suspensionDao = SuspensionDao.getInstance(getApplicationContext());
         parentDao = ParentDao.getInstance(getApplicationContext());
         alumnDao = AlumnDao.getInstance(getApplicationContext());
+        smsTextView = (TextView) findViewById(R.id.jsonSMS);
+
+        String message = "\t Os SMS's de notificações gerais, advertências e suspensões foram " +
+                         "enviados aos devidos responsáveis.";
+        smsTextView.setText(message);
 
         sendMessageStrike();
         sendMessageNotification();
         sendMessageSuspension();
+        deleteParent();
+        deleteAlumn();
     }
 
     private void sendMessageStrike(){
@@ -78,6 +89,7 @@ public class SMSActivity extends Activity {
                     parentAlumns = smsManager.divideMessage(messageStrike);
                     smsManager.sendMultipartTextMessage(parentAlumnList.get(aux).getPhoneParent(),
                             null, parentAlumns, null, null);
+                    //strikeDao.deleteStrike(strike);
                 }
             }
         }
@@ -113,6 +125,7 @@ public class SMSActivity extends Activity {
                     parentAlumns = smsManager.divideMessage(messageNotification);
                     smsManager.sendMultipartTextMessage(parentAlumnList.get(aux).getPhoneParent(),
                                                         null, parentAlumns, null, null);
+                    //notificationDao.deleteNotification(notification);
                 }
             }
         }
@@ -152,6 +165,7 @@ public class SMSActivity extends Activity {
                     parentAlumns = smsManager.divideMessage(messageSuspension);
                     smsManager.sendMultipartTextMessage(parentAlumnList.get(aux).getPhoneParent(),
                                                         null, parentAlumns, null, null);
+                    //suspensionDao.deleteSuspension(suspension);
                 }
             }
         }
@@ -171,6 +185,35 @@ public class SMSActivity extends Activity {
 
         SimpleDateFormat timeFormat = new SimpleDateFormat("dd/MM/yyyy");
         String finalDate = timeFormat.format(myDate);
+
         return finalDate;
+    }
+
+    private void deleteParent() {
+
+        List<Parent> parentList = parentDao.getAllParents();
+
+        for(int aux = 0; aux < parentList.size(); aux ++) {
+
+            Parent parent = new Parent();
+
+            parent.setIdParent(parentList.get(aux).getIdParent());
+
+            //parentDao.deleteParent(parent);
+        }
+    }
+
+    private void deleteAlumn() {
+
+        List<Alumn> alumnList = alumnDao.getAllAlumns();
+
+        for(int aux = 0; aux < alumnList.size(); aux ++) {
+
+            Alumn alumn = new Alumn();
+
+            alumn.setIdParent(alumnList.get(aux).getIdParent());
+
+            //alumnDao.deleteAlumn(alumn);
+        }
     }
 }

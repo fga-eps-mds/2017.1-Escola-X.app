@@ -111,7 +111,7 @@ public class SuspensionController extends Activity{
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
 
-            Intent intent = new Intent(getApplicationContext(), AlumnController.class);
+            Intent intent = new Intent(getApplicationContext(), StrikeController.class);
             startActivityForResult(intent, 0);
             finish();
         }
