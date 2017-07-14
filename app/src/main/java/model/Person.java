@@ -3,13 +3,13 @@ package model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Person {
+
+public abstract class Person {
 
 
     private String name;
     private Integer registry;
     private String phone;
-    private Integer idPerson;
 
     public Person () {
 
