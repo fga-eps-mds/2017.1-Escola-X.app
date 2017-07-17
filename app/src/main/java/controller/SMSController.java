@@ -78,8 +78,6 @@ public class SMSController extends Activity {
                     Strike strike = new Strike();
 
                     strike.setIdStrike(parentAlumnList.get(aux).getIdStrike());
-                    Log.i("ID Strike: ", String.valueOf(strike.getIdStrike()));
-                    Log.i("Tua filha","Tá apé");
 
                     dateStrike = setDate(parentAlumnList.get(aux).getDateStrike());
                     messageStrike = "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
@@ -118,7 +116,6 @@ public class SMSController extends Activity {
                     Notification notification = new Notification();
 
                     notification.setIdNotification(parentAlumnList.get(aux).getIdNotification());
-                    Log.i("ID Notification: ",String.valueOf(notification.getIdNotification()));
 
                     dateNotification = setDate(parentAlumnList.get(aux).getNotificationDate());
                     messageNotification =
@@ -156,7 +153,6 @@ public class SMSController extends Activity {
                     Suspension suspension = new Suspension();
 
                     suspension.setIdSuspension(parentAlumnList.get(aux).getIdSuspension());
-                    Log.i("ID Suspension: ", String.valueOf(suspension.getIdSuspension()));
 
                     dateSuspension = setDate(parentAlumnList.get(aux).getDateSuspension());
                     messageSuspension = "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
