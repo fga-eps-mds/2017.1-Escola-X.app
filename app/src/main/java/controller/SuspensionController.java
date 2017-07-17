@@ -67,21 +67,27 @@ public class SuspensionController extends Activity{
 
                     for (int aux = 0; aux < suspensions.length(); aux++) {
                         JSONObject suspensionsJSONObject = suspensions.getJSONObject(aux);
-
-                        Suspension suspension = new Suspension();
-
-                        suspension.setIdSuspension(Integer.parseInt(
-                                suspensionsJSONObject.getString("id")));
-                        suspension.setDescription(suspensionsJSONObject.getString("description"));
-                        suspension.setQuantity_days(Integer.parseInt(
-                                suspensionsJSONObject.getString("quantity_days")));
-                        suspension.setTitle(suspensionsJSONObject.getString("title"));
-                        suspension.setDateSuspension(suspensionsJSONObject.getString("date_suspension"));
-
                         JSONObject alumnJSONObject = suspensionsJSONObject.getJSONObject("alumn");
-                        suspension.setIdAlumn(Integer.parseInt(alumnJSONObject.getString("id")));
 
-                        suspensionDao.insertSuspension(suspension);
+                        if(alumnJSONObject.getString("id").equals("null")) {
+
+                        } else {
+                            Suspension suspension = new Suspension();
+
+                            suspension.setIdSuspension(Integer.parseInt(
+                                                suspensionsJSONObject.getString("id")));
+                            suspension.setDescription(
+                                                suspensionsJSONObject.getString("description"));
+                            suspension.setQuantity_days(Integer.parseInt(
+                                                suspensionsJSONObject.getString("quantity_days")));
+                            suspension.setTitle(suspensionsJSONObject.getString("title"));
+                            suspension.setDateSuspension(
+                                                suspensionsJSONObject.getString("date_suspension"));
+
+                            suspension.setIdAlumn(Integer.parseInt(alumnJSONObject.getString("id")));
+
+                            suspensionDao.insertSuspension(suspension);
+                        }
                     }
                 } catch (final JSONException e) {
                     runOnUiThread(new Runnable() {

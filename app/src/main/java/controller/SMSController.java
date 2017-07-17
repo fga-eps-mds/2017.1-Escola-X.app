@@ -3,6 +3,7 @@ package controller;
 import android.app.Activity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -77,9 +78,9 @@ public class SMSController extends Activity {
                     Strike strike = new Strike();
 
                     strike.setIdStrike(parentAlumnList.get(aux).getIdStrike());
+                    Log.i("ID Strike: ", String.valueOf(strike.getIdStrike()));
 
                     dateStrike = setDate(parentAlumnList.get(aux).getDateStrike());
-
                     messageStrike = "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
                             " o aluno " + parentAlumnList.get(aux).getNameAlumn() +
                             ", foi advertido por " + parentAlumnList.get(aux).getDescriptionStrike() +
@@ -116,6 +117,8 @@ public class SMSController extends Activity {
                     Notification notification = new Notification();
 
                     notification.setIdNotification(parentAlumnList.get(aux).getIdNotification());
+                    Log.i("ID Notification: ",String.valueOf(notification.getIdNotification()));
+
                     dateNotification = setDate(parentAlumnList.get(aux).getNotificationDate());
                     messageNotification =
                     "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
@@ -152,8 +155,9 @@ public class SMSController extends Activity {
                     Suspension suspension = new Suspension();
 
                     suspension.setIdSuspension(parentAlumnList.get(aux).getIdSuspension());
-                    dateSuspension = setDate(parentAlumnList.get(aux).getDateSuspension());
+                    Log.i("ID Suspension: ", String.valueOf(suspension.getIdSuspension()));
 
+                    dateSuspension = setDate(parentAlumnList.get(aux).getDateSuspension());
                     messageSuspension = "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
                             " o aluno " + parentAlumnList.get(aux).getNameAlumn() +
                             ", foi suspenso por " + parentAlumnList.get(aux).getQuantityDays() +
@@ -198,6 +202,7 @@ public class SMSController extends Activity {
             Parent parent = new Parent();
 
             parent.setIdParent(parentList.get(aux).getIdParent());
+            Log.i("ID Parent: ", String.valueOf(parent.getIdParent()));
 
             parentDao.deleteParent(parent);
         }
@@ -212,6 +217,7 @@ public class SMSController extends Activity {
             Alumn alumn = new Alumn();
 
             alumn.setIdParent(alumnList.get(aux).getIdParent());
+            Log.i("ID Alumn: ",String.valueOf(alumn.getIdAlumn()));
 
             alumnDao.deleteAlumn(alumn);
         }

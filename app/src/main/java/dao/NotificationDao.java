@@ -94,8 +94,6 @@ public class NotificationDao extends Dao{
             parentAlumn.setNotificationText(cursor.getString(cursor.getColumnIndex("notificationText")));
             parentAlumnList.add(parentAlumn);
         }
-        sqliteDatabase.close();
-        database.close();
         return parentAlumnList;
     }
 }

@@ -82,18 +82,19 @@ public class ParentController extends Activity {
                                 Parent parent = new Parent();
 
                                 parent.setIdParent(Integer.parseInt(
-                                                    parentsJSONObject.getString("id")));
+                                                                parentsJSONObject.getString("id")));
                                 parent.setName(parentsJSONObject.getString("name"));
                                 parent.setPhone(maskHelper.phoneMask(
-                                                    parentsJSONObject.getString("phone")));
+                                                            parentsJSONObject.getString("phone")));
 
                                 parentDao.insertParent(parent);
+
                             } else if(parentsJSONObject.getString("phone").length() == 11) {
 
                                 Parent parent = new Parent();
 
                                 parent.setIdParent(Integer.parseInt(
-                                                    parentsJSONObject.getString("id")));
+                                                                parentsJSONObject.getString("id")));
                                 parent.setName(parentsJSONObject.getString("name"));
                                 parent.setPhone(parentsJSONObject.getString("phone"));
 

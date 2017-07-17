@@ -71,12 +71,12 @@ public class NotificationController extends Activity {
                         Notification notification = new Notification();
 
                         notification.setIdNotification(Integer.parseInt(
-                                notificationsJSONObject.getString("id")));
+                                            notificationsJSONObject.getString("id")));
                         notification.setTitle(notificationsJSONObject.getString("title"));
                         notification.setNotification_text(
-                                notificationsJSONObject.getString("notification_text"));
+                                            notificationsJSONObject.getString("notification_text"));
                         notification.setNotificaton_date(
-                                notificationsJSONObject.getString("notification_date"));
+                                            notificationsJSONObject.getString("notification_date"));
                         notification.setMotive(notificationsJSONObject.getString("motive"));
 
                         notificationDao.insertNotification(notification);

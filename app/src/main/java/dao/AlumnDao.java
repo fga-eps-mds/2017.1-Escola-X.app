@@ -3,6 +3,7 @@ package dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +58,9 @@ public class AlumnDao extends Dao {
     }
 
     public List<Alumn> getAllAlumns() {
+
         List<Alumn> alumnList = new ArrayList<Alumn>();
-        sqliteDatabase = database.getWritableDatabase();
+        SQLiteDatabase sqliteDatabase = database.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME;
         Cursor cursor = sqliteDatabase.rawQuery( query, null );
 
@@ -70,8 +72,6 @@ public class AlumnDao extends Dao {
             alumn.setRegistry(cursor.getInt(cursor.getColumnIndex("registryAlumn")));
             alumnList.add(alumn);
         }
-        sqliteDatabase.close();
-        database.close();
         return alumnList;
     }
 

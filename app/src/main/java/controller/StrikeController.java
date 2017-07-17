@@ -67,18 +67,23 @@ public class StrikeController extends Activity {
 
                     for (int aux = 0; aux < strikes.length(); aux++) {
                         JSONObject strikesJSONObject = strikes.getJSONObject(aux);
-
-                        Strike strike = new Strike();
-
-                        strike.setIdStrike(Integer.parseInt(strikesJSONObject.getString("id")));
-                        strike.setDescription_strike(strikesJSONObject.getString(
-                                "description_strike"));
-                        strike.setDate_strike(strikesJSONObject.getString("date_strike"));
-
                         JSONObject alumnJSONObject = strikesJSONObject.getJSONObject("alumn");
-                        strike.setIdAlumn(Integer.parseInt(alumnJSONObject.getString("id")));
 
-                        strikeDao.insertStrike(strike);
+                        if(alumnJSONObject.getString("id").equals("null")) {
+
+                        } else {
+                            Strike strike = new Strike();
+
+                            strike.setIdStrike(Integer.parseInt(strikesJSONObject.getString("id")));
+                            strike.setDescription_strike(
+                                    strikesJSONObject.getString("description_strike"));
+                            strike.setDate_strike(strikesJSONObject.getString("date_strike"));
+
+
+                            strike.setIdAlumn(Integer.parseInt(alumnJSONObject.getString("id")));
+
+                            strikeDao.insertStrike(strike);
+                        }
                     }
                 } catch (final JSONException e) {
                     runOnUiThread(new Runnable() {

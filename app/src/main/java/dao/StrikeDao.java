@@ -80,8 +80,6 @@ public class StrikeDao extends Dao {
             parentAlumn.setDateStrike(cursor.getString(cursor.getColumnIndex("dateStrike")));
             parentAlumnList.add(parentAlumn);
         }
-        sqliteDatabase.close();
-        database.close();
         return parentAlumnList;
     }
 

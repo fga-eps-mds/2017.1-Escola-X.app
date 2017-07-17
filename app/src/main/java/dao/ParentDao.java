@@ -56,6 +56,7 @@ public class ParentDao extends Dao{
     }
 
     public List<Parent> getAllParents() {
+
         List<Parent> parentList = new ArrayList<Parent>();
         SQLiteDatabase sqLiteDatabase = database.getReadableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME;

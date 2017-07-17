@@ -68,16 +68,21 @@ public class AlumnController extends Activity {
                     for (int aux = 0; aux < alumns.length(); aux++) {
                         JSONObject alumnsJSONObject = alumns.getJSONObject(aux);
 
-                        Alumn alumn = new Alumn();
-
-                        alumn.setIdAlumn(Integer.parseInt(alumnsJSONObject.getString("id")));
-                        alumn.setName(alumnsJSONObject.getString("name"));
-                        alumn.setRegistry(Integer.parseInt(alumnsJSONObject.getString("registry")));
-
                         JSONObject parentJSONObject = alumnsJSONObject.getJSONObject("parent");
-                        alumn.setIdParent(Integer.parseInt(parentJSONObject.getString("id")));
+                        if(parentJSONObject.getString("id").equals("null")) {
 
-                        alumnDao.insertAlumn(alumn);
+                        } else {
+
+                            Alumn alumn = new Alumn();
+
+                            alumn.setIdAlumn(Integer.parseInt(alumnsJSONObject.getString("id")));
+                            alumn.setName(alumnsJSONObject.getString("name"));
+                            alumn.setRegistry(Integer.parseInt(
+                                                        alumnsJSONObject.getString("registry")));
+                            alumn.setIdParent(Integer.parseInt(parentJSONObject.getString("id")));
+
+                            alumnDao.insertAlumn(alumn);
+                        }
                     }
                 } catch (final JSONException e) {
                     runOnUiThread(new Runnable() {
