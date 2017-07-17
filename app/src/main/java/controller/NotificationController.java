@@ -34,7 +34,7 @@ public class NotificationController extends Activity {
 
         String message = "\t Por Favor aguarde enquanto estamos atualizando seu banco de dados" +
                 " em relação as notificações gerais. Pode ser que demore um pouco, então pedimos " +
-                "que não feche o aplicativo";
+                "que não feche o aplicativo.";
 
         notificationTextView = (TextView) findViewById(R.id.jsonSMS);
         notificationTextView.setText(message);

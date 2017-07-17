@@ -34,7 +34,7 @@ public class AlumnController extends Activity {
 
         String message = "\t Por Favor aguarde enquanto estamos atualizando seu banco de dados" +
                 " em relação aos alunos. Pode ser que demore um pouco, então pedimos que não " +
-                "feche o aplicativo";
+                "feche o aplicativo.";
 
         alumnTextView = (TextView) findViewById(R.id.jsonSMS);
         alumnTextView.setText(message);

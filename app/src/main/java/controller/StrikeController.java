@@ -34,7 +34,7 @@ public class StrikeController extends Activity {
 
         String message = "\t Por Favor aguarde enquanto estamos atualizando seu banco de dados" +
                 " em relação as advertências. Pode ser que demore um pouco, então pedimos que " +
-                "não feche o aplicativo";
+                "não feche o aplicativo.";
 
         suspensionTextView = (TextView) findViewById(R.id.jsonSMS);
         suspensionTextView.setText(message);

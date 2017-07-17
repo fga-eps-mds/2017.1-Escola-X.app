@@ -37,7 +37,7 @@ public class ParentController extends Activity {
 
         String message = "\t Por Favor aguarde enquanto estamos atualizando seu banco de dados" +
                             " em relação aos responsáveis. Pode ser que demore um pouco, " +
-                            "então pedimos que não feche o aplicativo";
+                            "então pedimos que não feche o aplicativo.";
         parentTextView.setText(message);
 
         new GetParents().execute();

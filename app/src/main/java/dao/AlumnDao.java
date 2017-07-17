@@ -60,7 +60,7 @@ public class AlumnDao extends Dao {
     public List<Alumn> getAllAlumns() {
 
         List<Alumn> alumnList = new ArrayList<Alumn>();
-        SQLiteDatabase sqliteDatabase = database.getWritableDatabase();
+        sqliteDatabase = database.getReadableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME;
         Cursor cursor = sqliteDatabase.rawQuery( query, null );
 
@@ -68,10 +68,9 @@ public class AlumnDao extends Dao {
             Alumn alumn = new Alumn();
 
             alumn.setIdAlumn(cursor.getInt(cursor.getColumnIndex("IDAlumn")));
-            alumn.setName(cursor.getString(cursor.getColumnIndex("nameAlumn")));
-            alumn.setRegistry(cursor.getInt(cursor.getColumnIndex("registryAlumn")));
             alumnList.add(alumn);
         }
+        database.close();
         return alumnList;
     }
 

@@ -216,7 +216,7 @@ public class SMSController extends Activity {
 
             Alumn alumn = new Alumn();
 
-            alumn.setIdParent(alumnList.get(aux).getIdParent());
+            alumn.setIdAlumn(alumnList.get(aux).getIdAlumn());
             Log.i("ID Alumn: ",String.valueOf(alumn.getIdAlumn()));
 
             alumnDao.deleteAlumn(alumn);
