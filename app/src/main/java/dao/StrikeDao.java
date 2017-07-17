@@ -60,7 +60,7 @@ public class StrikeDao extends Dao {
 
     public List<ParentAlumn> getParentAlumnStrike () {
 
-        sqliteDatabase = database.getWritableDatabase();
+        sqliteDatabase = database.getReadableDatabase();
         List<ParentAlumn> parentAlumnList = new ArrayList<ParentAlumn>();
 
         String query = "SELECT * FROM Alumn " +

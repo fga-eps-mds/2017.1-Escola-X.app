@@ -79,7 +79,7 @@ public class NotificationDao extends Dao{
     public List<ParentAlumn> getNotification () {
 
         List<ParentAlumn> parentAlumnList = new ArrayList<ParentAlumn>();
-        sqliteDatabase = database.getWritableDatabase();
+        sqliteDatabase = database.getReadableDatabase();
 
         String query = "SELECT * FROM Parent LEFT JOIN Notification;" ;
 

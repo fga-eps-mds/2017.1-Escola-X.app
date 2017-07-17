@@ -26,6 +26,8 @@ public class ParentController extends Activity {
     TextView parentTextView;
 
     private String urlParents = "http://escolax.herokuapp.com/api/parents";
+    private final int MINIMUM_NUMBERS = 10;
+    private final int MAXIMUM_NUMBERS = 11;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,28 +79,39 @@ public class ParentController extends Activity {
 
                         } else {
 
-                            if(parentsJSONObject.getString("phone").length() == 10) {
+                            if(parentsJSONObject.getString("phone").length() == MINIMUM_NUMBERS) {
 
-                                Parent parent = new Parent();
+                                if(parentsJSONObject.getString("id").equals("null")) {
 
-                                parent.setIdParent(Integer.parseInt(
-                                                                parentsJSONObject.getString("id")));
-                                parent.setName(parentsJSONObject.getString("name"));
-                                parent.setPhone(maskHelper.phoneMask(
-                                                            parentsJSONObject.getString("phone")));
+                                } else {
 
-                                parentDao.insertParent(parent);
+                                    Parent parent = new Parent();
 
-                            } else if(parentsJSONObject.getString("phone").length() == 11) {
+                                    parent.setIdParent(Integer.parseInt(
+                                            parentsJSONObject.getString("id")));
+                                    parent.setName(parentsJSONObject.getString("name"));
+                                    parent.setPhone(maskHelper.phoneMask(
+                                            parentsJSONObject.getString("phone")));
 
-                                Parent parent = new Parent();
+                                    parentDao.insertParent(parent);
+                                }
 
-                                parent.setIdParent(Integer.parseInt(
-                                                                parentsJSONObject.getString("id")));
-                                parent.setName(parentsJSONObject.getString("name"));
-                                parent.setPhone(parentsJSONObject.getString("phone"));
+                            } else if(parentsJSONObject.getString("phone").length() ==
+                                                                                MAXIMUM_NUMBERS) {
 
-                                parentDao.insertParent(parent);
+                                if(parentsJSONObject.getString("id").equals("null")) {
+
+                                } else {
+
+                                    Parent parent = new Parent();
+
+                                    parent.setIdParent(Integer.parseInt(
+                                            parentsJSONObject.getString("id")));
+                                    parent.setName(parentsJSONObject.getString("name"));
+                                    parent.setPhone(parentsJSONObject.getString("phone"));
+
+                                    parentDao.insertParent(parent);
+                                }
                             }
                         }
                     }

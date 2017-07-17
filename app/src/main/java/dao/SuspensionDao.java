@@ -63,7 +63,7 @@ public class SuspensionDao extends Dao{
 
     public List<ParentAlumn> getParentAlumnSuspension () {
 
-        sqliteDatabase = database.getWritableDatabase();
+        sqliteDatabase = database.getReadableDatabase();
         List<ParentAlumn> parentAlumnList = new ArrayList<ParentAlumn>();
 
         String query = "SELECT * FROM Alumn " +

@@ -79,6 +79,7 @@ public class SMSController extends Activity {
 
                     strike.setIdStrike(parentAlumnList.get(aux).getIdStrike());
                     Log.i("ID Strike: ", String.valueOf(strike.getIdStrike()));
+                    Log.i("Tua filha","Tá apé");
 
                     dateStrike = setDate(parentAlumnList.get(aux).getDateStrike());
                     messageStrike = "Caro(a) " + parentAlumnList.get(aux).getNameParent() +
@@ -202,7 +203,6 @@ public class SMSController extends Activity {
             Parent parent = new Parent();
 
             parent.setIdParent(parentList.get(aux).getIdParent());
-            Log.i("ID Parent: ", String.valueOf(parent.getIdParent()));
 
             parentDao.deleteParent(parent);
         }
@@ -217,7 +217,6 @@ public class SMSController extends Activity {
             Alumn alumn = new Alumn();
 
             alumn.setIdAlumn(alumnList.get(aux).getIdAlumn());
-            Log.i("ID Alumn: ",String.valueOf(alumn.getIdAlumn()));
 
             alumnDao.deleteAlumn(alumn);
         }
