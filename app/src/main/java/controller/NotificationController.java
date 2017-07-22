@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ public class NotificationController extends Activity {
 
     NotificationDao notificationDao;
     TextView notificationTextView;
+    Button tryAgain;
 
     private String urlNotifications = "http://escolax.herokuapp.com/api/notifications";
 
@@ -37,7 +40,10 @@ public class NotificationController extends Activity {
                 "que não feche o aplicativo.";
 
         notificationTextView = (TextView) findViewById(R.id.jsonSMS);
+        tryAgain = (Button) findViewById(R.id.tryAgain);
+
         notificationTextView.setText(message);
+        tryAgain.setVisibility(View.INVISIBLE);
 
         new GetNotifications().execute();
     }

@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ public class SuspensionController extends Activity{
 
     SuspensionDao suspensionDao;
     TextView suspensionTextView;
+    Button tryAgain;
 
     private String urlSuspension = "http://escolax.herokuapp.com/api/suspensions";
 
@@ -37,7 +40,10 @@ public class SuspensionController extends Activity{
                 "não feche o aplicativo.";
 
         suspensionTextView = (TextView) findViewById(R.id.jsonSMS);
+        tryAgain = (Button) findViewById(R.id.tryAgain);
+
         suspensionTextView.setText(message);
+        tryAgain.setVisibility(View.INVISIBLE);
 
         new GetSuspensions().execute();
     }

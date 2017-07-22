@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ public class StrikeController extends Activity {
 
     StrikeDao strikeDao;
     TextView suspensionTextView;
+    Button tryAgain;
 
     private String urlStrike = "http://escolax.herokuapp.com/api/strikes";
 
@@ -37,7 +40,10 @@ public class StrikeController extends Activity {
                 "não feche o aplicativo.";
 
         suspensionTextView = (TextView) findViewById(R.id.jsonSMS);
+        tryAgain = (Button) findViewById(R.id.tryAgain);
+
         suspensionTextView.setText(message);
+        tryAgain.setVisibility(View.INVISIBLE);
 
         new GetStrike().execute();
     }

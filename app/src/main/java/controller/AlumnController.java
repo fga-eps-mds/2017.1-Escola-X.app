@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ public class AlumnController extends Activity {
 
     AlumnDao alumnDao;
     TextView alumnTextView;
+    Button tryAgain;
 
     private String urlAlumns = "http://escolax.herokuapp.com/api/alumns";
 
@@ -37,7 +40,10 @@ public class AlumnController extends Activity {
                 "feche o aplicativo.";
 
         alumnTextView = (TextView) findViewById(R.id.jsonSMS);
+        tryAgain = (Button) findViewById(R.id.tryAgain);
+
         alumnTextView.setText(message);
+        tryAgain.setVisibility(View.INVISIBLE);
 
         new GetAlumns().execute();
     }

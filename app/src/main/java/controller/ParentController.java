@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ public class ParentController extends Activity {
 
     ParentDao parentDao;
     TextView parentTextView;
+    Button tryAgain;
 
     private String urlParents = "http://escolax.herokuapp.com/api/parents";
     private final int MINIMUM_NUMBERS = 10;
@@ -36,11 +39,13 @@ public class ParentController extends Activity {
 
         parentDao = ParentDao.getInstance(getApplicationContext());
         parentTextView = (TextView) findViewById(R.id.jsonSMS);
+        tryAgain = (Button) findViewById(R.id.tryAgain);
 
         String message = "\t Por Favor aguarde enquanto estamos atualizando seu banco de dados" +
                             " em relação aos responsáveis. Pode ser que demore um pouco, " +
                             "então pedimos que não feche o aplicativo.";
         parentTextView.setText(message);
+        tryAgain.setVisibility(View.INVISIBLE);
 
         new GetParents().execute();
     }

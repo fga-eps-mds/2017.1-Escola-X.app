@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -33,6 +35,7 @@ public class SMSController extends Activity {
     ParentDao parentDao;
     AlumnDao alumnDao;
     TextView smsTextView;
+    Button tryAgain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +48,12 @@ public class SMSController extends Activity {
         parentDao = ParentDao.getInstance(getApplicationContext());
         alumnDao = AlumnDao.getInstance(getApplicationContext());
         smsTextView = (TextView) findViewById(R.id.jsonSMS);
+        tryAgain = (Button) findViewById(R.id.tryAgain);
 
         String message = "\t Os SMS's de notificações gerais, advertências e suspensões foram " +
                          "enviados aos devidos responsáveis.";
         smsTextView.setText(message);
+        tryAgain.setVisibility(View.INVISIBLE);
 
         sendMessageStrike();
         sendMessageNotification();
