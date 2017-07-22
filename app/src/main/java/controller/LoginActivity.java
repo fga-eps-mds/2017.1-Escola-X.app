@@ -2,8 +2,10 @@ package controller;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -24,6 +26,8 @@ public class LoginActivity extends AppCompatActivity {
     private static final int REQUEST_SIGNUP = 0;
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 0;
     private static final int MY_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
+    private final int MINIMUM_CARACTERE = 4;
+    private final int MAXIMUM_CARACTERE = 10;
 
     @BindView(R.id.input_registry)
     EditText _registryText;
@@ -92,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void login() {
+    private void login() {
         Log.d(TAG, "Login");
 
         if (!validate()) {
@@ -136,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
         moveTaskToBack(true);
     }
 
-    public void onLoginSucess() {
+    private void onLoginSucess() {
         _loginButton.setEnabled(true);
 
         Intent jsonParserController = new Intent();
@@ -145,13 +149,13 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    public void onLoginFailed() {
+    private void onLoginFailed() {
         Toast.makeText(getBaseContext(), "Login falhou", Toast.LENGTH_LONG).show();
 
         _loginButton.setEnabled(true);
     }
 
-    public boolean validate() {
+    private boolean validate() {
         boolean valid = true;
 
         String registry = _registryText.getText().toString();
@@ -164,12 +168,40 @@ public class LoginActivity extends AppCompatActivity {
             _registryText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+        if (password.isEmpty() ||
+                password.length() < MINIMUM_CARACTERE ||
+                password.length() > MAXIMUM_CARACTERE) {
             _passwordText.setError("Senha entre 4 e 10 caracteres");
             valid = false;
         } else {
             _passwordText.setError(null);
         }
         return valid;
+    }
+
+    public boolean verificConnection() {
+
+        boolean connection = true;
+        ConnectivityManager conectivtyManager = (ConnectivityManager) getSystemService(
+                                                                    Context.CONNECTIVITY_SERVICE);
+        if (conectivtyManager.getActiveNetworkInfo() != null
+                && conectivtyManager.getActiveNetworkInfo().isAvailable()
+                && conectivtyManager.getActiveNetworkInfo().isConnected()) {
+            connection = true;
+        } else {
+            connection = false;
+        }
+        return connection;
+    }
+
+    private void loginConnection () {
+
+        if(verificConnection() == true) {
+            login();
+        } else {
+            Intent intent = new Intent(getApplicationContext(), AlumnController.class);
+            startActivityForResult(intent, 0);
+            finish();
+        }
     }
 }
