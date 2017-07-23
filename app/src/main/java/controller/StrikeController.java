@@ -96,7 +96,7 @@ public class StrikeController extends Activity {
                         @Override
                         public void run() {
                             Toast.makeText(getApplicationContext(),
-                                    "Json parsing error: " + e.getMessage(),
+                                    "Problemas no JSON. Contate os responsáveis pelo app.",
                                     Toast.LENGTH_LONG)
                                     .show();
                         }
@@ -106,9 +106,9 @@ public class StrikeController extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(),
-                                "Couldn't get json from server. Check LogCat for possible errors!",
-                                Toast.LENGTH_LONG)
+                        Toast.makeText(getApplicationContext(),"Não foi encontrada internet. " +
+                                "Não será baixado os dados dos alunos " +
+                                "enquanto esse problema persistir.",Toast.LENGTH_LONG)
                                 .show();
                     }
                 });

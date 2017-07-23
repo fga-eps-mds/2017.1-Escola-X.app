@@ -1,6 +1,6 @@
 package helper;
 
-public class MaskHelper {
+public class Services {
 
     public String phoneMask(String phone) {
 

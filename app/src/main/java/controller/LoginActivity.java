@@ -1,6 +1,7 @@
 package controller;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +10,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.*;
 import escola_x.escola_x.R;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends Activity {
 
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         _loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login();
+                existsConnection();
             }
         });
     }
@@ -144,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
         _loginButton.setEnabled(true);
 
         Intent jsonParserController = new Intent();
-        jsonParserController.setClass(getBaseContext(), ParentController.class);
+        jsonParserController.setClass(getBaseContext(), ConnectionController.class);
         startActivity(jsonParserController);
         finish();
     }
@@ -179,11 +179,25 @@ public class LoginActivity extends AppCompatActivity {
         return valid;
     }
 
-    public boolean verificConnection() {
+    private void existsConnection () {
+
+        if(verificConnection() == true) {
+
+            login();
+        } else {
+
+            Intent intent = new Intent(getApplicationContext(), ConnectionController.class);
+            startActivityForResult(intent, 0);
+            finish();
+        }
+    }
+
+    private boolean verificConnection() {
 
         boolean connection = true;
+
         ConnectivityManager conectivtyManager = (ConnectivityManager) getSystemService(
-                                                                    Context.CONNECTIVITY_SERVICE);
+                Context.CONNECTIVITY_SERVICE);
         if (conectivtyManager.getActiveNetworkInfo() != null
                 && conectivtyManager.getActiveNetworkInfo().isAvailable()
                 && conectivtyManager.getActiveNetworkInfo().isConnected()) {
@@ -192,16 +206,5 @@ public class LoginActivity extends AppCompatActivity {
             connection = false;
         }
         return connection;
-    }
-
-    private void loginConnection () {
-
-        if(verificConnection() == true) {
-            login();
-        } else {
-            Intent intent = new Intent(getApplicationContext(), AlumnController.class);
-            startActivityForResult(intent, 0);
-            finish();
-        }
     }
 }
