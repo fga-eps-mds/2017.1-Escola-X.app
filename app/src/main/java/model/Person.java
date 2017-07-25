@@ -1,11 +1,6 @@
 package model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-
 public abstract class Person {
-
 
     private String name;
     private Integer registry;
